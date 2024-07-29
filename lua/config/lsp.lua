@@ -9,6 +9,11 @@ return {
          "tailwindcss-language-server",
          "typescript-language-server",
          "css-lsp",
+         "codelldb", -- rust.
+         "rust-analyzer", -- rust.
+         "taplo", -- rust.
+         "markdownlint-cli2", -- markdown.
+         "markdown-toc", -- markdown.
       })("williamboman/mason.nvim")
    end,
 }
