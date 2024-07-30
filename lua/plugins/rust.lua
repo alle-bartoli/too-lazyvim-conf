@@ -54,7 +54,7 @@ return {
                end, { desc = "Rust Debuggables", buffer = bufnr })
             end,
             default_settings = {
-               -- rust-analyzer language server configuration
+               -- rust-analyzer language server configuration.
                ["rust-analyzer"] = {
                   cargo = {
                      allFeatures = true,
@@ -92,6 +92,13 @@ return {
    {
       "neovim/nvim-lspconfig",
       opts = {
+
+         setup = {
+            -- fix rust-analyzer plugin mismatch.
+            rust_analyzer = function()
+               return true
+            end,
+         },
          servers = {
             taplo = {
                keys = {
