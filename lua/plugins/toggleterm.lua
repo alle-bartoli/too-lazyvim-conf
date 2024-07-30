@@ -1,4 +1,4 @@
--- See: https://github.com/akinsho/toggleterm.nvim
+-- See https://github.com/akinsho/toggleterm.nvim
 return {
    {
       "akinsho/toggleterm.nvim",

@@ -1,5 +1,6 @@
--- See: https://www.lazyvim.org/extras/lang/markdown
+-- See https://www.lazyvim.org/extras/lang/markdown
 return {
+   --  Improve viewing Markdown files.
    {
       "MeanderingProgrammer/markdown.nvim",
       opts = {
@@ -34,6 +35,7 @@ return {
       end,
    },
 
+   -- Formatter.
    {
       "stevearc/conform.nvim",
       optional = true,
@@ -64,17 +66,7 @@ return {
       },
    },
 
-   {
-      "nvimtools/none-ls.nvim",
-      optional = true,
-      opts = function(_, opts)
-         local nls = require("null-ls")
-         opts.sources = vim.list_extend(opts.sources or {}, {
-            nls.builtins.diagnostics.markdownlint_cli2,
-         })
-      end,
-   },
-
+   -- Use Neovim as a language server to inject LSP diagnostics, code actions, and more via Lua.
    {
       "nvimtools/none-ls.nvim",
       optional = true,

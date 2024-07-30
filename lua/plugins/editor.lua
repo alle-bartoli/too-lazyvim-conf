@@ -1,3 +1,4 @@
+-- Configure editor.
 return {
    "telescope.nvim",
    dependencies = {
@@ -145,5 +146,6 @@ return {
       end,
    },
 
+   -- Navigate your code with search labels.
    { "folke/flash.nvim", enabled = false },
 }

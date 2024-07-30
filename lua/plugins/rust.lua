@@ -1,6 +1,6 @@
--- See: https://www.lazyvim.org/extras/lang/rust
+-- See https://www.lazyvim.org/extras/lang/rust
 return {
-   -- extend auto completion
+   -- extend auto completion.
    {
       "hrsh7th/nvim-cmp",
       dependencies = {
@@ -41,7 +41,7 @@ return {
 
    {
       "mrcjkb/rustaceanvim",
-      version = "^4", -- Recommended
+      version = "^4", -- Recommended.
       ft = { "rust" },
       opts = {
          server = {

@@ -1,3 +1,4 @@
+-- See https://www.lazyvim.org/plugins/colorscheme
 return {
    {
       "craftzdog/solarized-osaka.nvim",
@@ -9,12 +10,16 @@ return {
          }
       end,
    },
+
+   -- midnight-desert.nvim.
    {
       "CosecSecCot/midnight-desert.nvim",
       dependencies = {
          "rktjmp/lush.nvim",
       },
    },
+
+   -- chama-chomo/grail.
    {
       "chama-chomo/grail",
       version = false,
@@ -32,6 +37,8 @@ return {
          })
       end,
    },
+
+   -- deviuspro.nvim.
    {
       "DeviusVim/deviuspro.nvim",
    },

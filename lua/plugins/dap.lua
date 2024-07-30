@@ -1,5 +1,6 @@
--- See: https://www.lazyvim.org/extras/dap/core
+-- See https://www.lazyvim.org/extras/dap/core
 return {
+   -- Debug Adapter Protocol client.
    {
       "mfussenegger/nvim-dap",
       recommended = true,
@@ -66,22 +67,32 @@ return {
       end,
    },
 
+   -- DAP UI.
    {
       "rcarriga/nvim-dap-ui",
-      -- virtual text for the debugger
+      dependencies = { "nvim-neotest/nvim-nio" },
+      -- virtual text for the debugger.
       {
          "theHamsta/nvim-dap-virtual-text",
          opts = {},
       },
-   },
-
-   {
-      "rcarriga/nvim-dap-ui",
-      dependencies = { "nvim-neotest/nvim-nio" },
-      -- stylua: ignore
+      -- stylua: ignore.
       keys = {
-        { "<leader>du", function() require("dapui").toggle({ }) end, desc = "Dap UI" },
-        { "<leader>de", function() require("dapui").eval() end, desc = "Eval", mode = {"n", "v"} },
+         {
+            "<leader>du",
+            function()
+               require("dapui").toggle({})
+            end,
+            desc = "Dap UI",
+         },
+         {
+            "<leader>de",
+            function()
+               require("dapui").eval()
+            end,
+            desc = "Eval",
+            mode = { "n", "v" },
+         },
       },
       opts = {},
       config = function(_, opts)
@@ -100,6 +111,7 @@ return {
       end,
    },
 
+   -- Adapter.
    {
       "jay-babu/mason-nvim-dap.nvim",
       dependencies = "mason.nvim",

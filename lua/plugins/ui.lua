@@ -1,3 +1,4 @@
+-- See http://www.lazyvim.org/plugins/ui
 return {
    opts = {
       options = {
@@ -7,8 +8,19 @@ return {
       },
    },
 
+   -- Replace the UI for `messages`, `cmdline` and the `popupmenu`.
    {
       "folke/noice.nvim",
+      event = "VeryLazy",
+      dependencies = {
+         -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
+         "MunifTanjim/nui.nvim",
+         -- OPTIONAL:
+         --   `nvim-notify` is only needed, if you want to use the notification view.
+         --   If not available, we use `mini` as the fallback
+         "rcarriga/nvim-notify",
+      },
+
       opts = function(_, opts)
          table.insert(opts.routes, {
             filter = {
@@ -22,6 +34,7 @@ return {
       end,
    },
 
+   -- Notification manager.
    {
       "rcarriga/nvim-notify",
       opts = {
@@ -29,7 +42,7 @@ return {
       },
    },
 
-   -- bufferline.
+   -- Bufferline.
    {
       "akinsho/bufferline.nvim",
       keys = {
@@ -45,53 +58,56 @@ return {
       },
    },
 
-   -- statusline
+   -- Statusline.
    {
       "nvim-lualine/lualine.nvim",
       event = "VeryLazy",
+      dependencies = { "nvim-tree/nvim-web-devicons" },
       opts = {
          options = {
             -- theme = "solarized_dark",
          },
       },
    },
-   -- filename
-   --{
-   -- "b0o/incline.nvim",
-   -- dependencies = { "craftzdog/solarized-osaka.nvim" },
-   -- event = "BufReadPre",
-   -- priority = 1200,
-   -- config = function()
-   -- local colors = require("solarized-osaka.colors").setup()
-   -- require("incline").setup({
-   -- highlight = {
-   -- groups = {
-   --    InlcineNormal = {
-   --        guibg = colors.magenta500,
-   --         guifg = colors.base04,
-   --       },
-   --       InclineNormalNC = {
-   --          guifg = colors.violet500,
-   --          guibg = colors.base03,
-   --       },
-   --    },
-   -- },
-   -- window = { margin = { vertical = 0, horizontal = 0 } },
-   -- hide = {
-   --  cursorline = true,
-   --},
-   --render = function(props)
-   --    local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":t")
-   --     if vim.bo[props.buf].modified then
-   --         filename = "[+]" .. filename
-   --      end
-   --        local icon, color = require("nvim-web-devicons").get_icon_color(filename)
-   --         return { { icon, guifg = color }, { " " }, { filename } }
-   --       end,
-   --     })
-   --  end,
-   --},
-   -- animations.
+
+   -- Filename.
+   {
+      "b0o/incline.nvim",
+      dependencies = { "craftzdog/solarized-osaka.nvim" },
+      event = "BufReadPre",
+      priority = 1200,
+      config = function()
+         local colors = require("solarized-osaka.colors").setup()
+         require("incline").setup({
+            highlight = {
+               groups = {
+                  InlcineNormal = {
+                     guibg = colors.magenta500,
+                     guifg = colors.base04,
+                  },
+                  InclineNormalNC = {
+                     guifg = colors.violet500,
+                     guibg = colors.base03,
+                  },
+               },
+            },
+            window = { margin = { vertical = 0, horizontal = 0 } },
+            hide = {
+               cursorline = true,
+            },
+            render = function(props)
+               local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":t")
+               if vim.bo[props.buf].modified then
+                  filename = "[+]" .. filename
+               end
+               local icon, color = require("nvim-web-devicons").get_icon_color(filename)
+               return { { icon, guifg = color }, { " " }, { filename } }
+            end,
+         })
+      end,
+   },
+
+   -- Animations.
    {
       "echasnovski/mini.animate",
       event = "VeryLazy",
@@ -101,7 +117,8 @@ return {
          }
       end,
    },
-   -- logo.
+
+   -- Logo.
    {
       "nvimdev/dashboard-nvim",
       event = "VimEnter",
