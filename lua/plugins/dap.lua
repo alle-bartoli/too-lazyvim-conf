@@ -5,7 +5,6 @@ return {
       "mfussenegger/nvim-dap",
       recommended = true,
       desc = "Debugging support. Requires language specific adapters to be configured. (see lang extras)",
-
       dependencies = {
          "rcarriga/nvim-dap-ui",
          -- virtual text for the debugger
@@ -13,6 +12,7 @@ return {
             "theHamsta/nvim-dap-virtual-text",
             opts = {},
          },
+         config = function() end,
       },
 
       -- stylua: ignore
@@ -67,15 +67,26 @@ return {
       end,
    },
 
-   -- DAP UI.
+   -- nvim-dap-virtual-text
+   {
+      "theHamsta/nvim-dap-virtual-text",
+      opts = {},
+   },
+
+   -- dap-ui
    {
       "rcarriga/nvim-dap-ui",
-      dependencies = { "nvim-neotest/nvim-nio" },
-      -- virtual text for the debugger.
+      -- virtual text for the debugger
       {
          "theHamsta/nvim-dap-virtual-text",
          opts = {},
       },
+   },
+
+   -- dap-ui
+   {
+      "rcarriga/nvim-dap-ui",
+      dependencies = { "nvim-neotest/nvim-nio" },
       -- stylua: ignore.
       keys = {
          {
@@ -110,6 +121,9 @@ return {
          end
       end,
    },
+
+   -- nvim-nio
+   { "nvim-neotest/nvim-nio" },
 
    -- Adapter.
    {
