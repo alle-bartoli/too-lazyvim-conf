@@ -77,4 +77,24 @@ return {
          })
       end,
    },
+
+   -- Disable line-length linting error MD013.
+   -- https://www.reddit.com/r/neovim/comments/19ceuoq/how_to_set_global_markdownlint_config_when_using/
+   {
+      "mfussenegger/nvim-lint",
+      opts = {
+         linters_by_ft = {
+            markdown = { "markdownlint" },
+         },
+      },
+      config = function()
+         local markdownlint = require("lint").linters.markdownlint
+         markdownlint.args = {
+            "--disable",
+            "MD013",
+            "MD007",
+            "--", -- Required
+         }
+      end,
+   },
 }
