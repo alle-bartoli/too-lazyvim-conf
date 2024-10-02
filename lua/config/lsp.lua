@@ -30,18 +30,5 @@ return {
          enabled = false,
          --exclude = { "vue" }, -- filetypes for which you don't want to enable inlay hints.
       }
-
-      -- LSP Setup for rust-analyzer.
-      require("lspconfig").rust_analyzer.setup({
-         settings = {
-            ["rust-analyzer"] = {
-               inlayHints = {
-                  parameterHints = false,
-                  variableHints = false,
-                  -- You can add more settings here if needed.
-               },
-            },
-         },
-      })
    end,
 }
