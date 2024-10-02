@@ -31,6 +31,7 @@ require("lazy").setup({
       { import = "lazyvim.plugins.extras.lang.markdown" },
       { import = "lazyvim.plugins.extras.lang.toml" },
       { import = "lazyvim.plugins.extras.vscode" },
+      { import = "lazyvim.plugins.extras.lsp.neoconf" },
       -- { import = "lazyvim.plugins.extras.coding.copilot" },
       -- { import = "lazyvim.plugins.extras.ui.mini-animate" },
       -- Import/override with your plugins.
