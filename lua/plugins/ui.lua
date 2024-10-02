@@ -22,15 +22,45 @@ return {
       },
 
       opts = function(_, opts)
-         table.insert(opts.routes, {
-            filter = {
-               event = "notify",
-               find = "No information available",
+         -- Merge the lsp config.
+         opts.lsp = {
+            override = {
+               ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+               ["vim.lsp.util.stylize_markdown"] = true,
+               ["cmp.entry.get_documentation"] = true,
             },
-            opts = { skip = true },
+         }
+
+         -- Merge the routes config.
+         opts.routes = opts.routes or {}
+         vim.list_extend(opts.routes, {
+            {
+               filter = {
+                  event = "notify",
+                  find = "No information available",
+               },
+               opts = { skip = true },
+            },
+            {
+               filter = {
+                  event = "msg_show",
+                  any = {
+                     { find = "%d+L, %d+B" },
+                     { find = "; after #%d+" },
+                     { find = "; before #%d+" },
+                  },
+               },
+               view = "mini",
+            },
          })
 
-         opts.presets.lsp_doc_border = true
+         -- Merge the presets config.
+         opts.presets = vim.tbl_deep_extend("force", opts.presets or {}, {
+            lsp_doc_border = true,
+            bottom_search = true,
+            command_palette = true,
+            long_message_to_split = true,
+         })
       end,
    },
 

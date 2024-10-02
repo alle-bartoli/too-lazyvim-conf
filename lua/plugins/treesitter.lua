@@ -6,6 +6,11 @@ return {
       indent = { enable = true },
       opts = {
          ensure_installed = {
+            "vimdoc",
+            "luadoc",
+            "vim",
+            "lua",
+            "markdown",
             "jsdoc",
             "json",
             "jsonc",
