@@ -117,6 +117,7 @@ return {
       opts = {
          options = {
             -- theme = "solarized_dark",
+            theme = "lackluster",
          },
       },
    },
