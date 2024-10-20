@@ -123,12 +123,12 @@ return {
             --   1) a hexcode like "#a1b2c3" for a custom color.
             --   2) "default" or nil will just use whatever lackluster's default is.
             tweak_syntax = {
-               string = color.orange, -- "#78b37d",
+               string = "#e5a8ff", -- "#78b37d",
                string_escape = color.yellow,
-               comment = "#542857", -- color.gray4, -- or gray5
+               comment = "#764279", -- color.gray4, -- or gray5
                builtin = color.yellow, -- builtin modules and functions
-               type = "#a1d1ed",
-               keyword = "#e5a8ff",
+               type = color.orange,
+               keyword = "#a1d1ed",
                keyword_return = color.yellow,
                keyword_exception = "default",
             },
