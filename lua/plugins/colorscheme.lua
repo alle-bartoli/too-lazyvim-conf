@@ -123,14 +123,14 @@ return {
             --   1) a hexcode like "#a1b2c3" for a custom color.
             --   2) "default" or nil will just use whatever lackluster's default is.
             tweak_syntax = {
-               string = "#e5a8ff", -- "#78b37d",
+               string = "#a1d1ed", -- "#e5a8ff",
                string_escape = color.yellow,
-               comment = "#764279", -- color.gray4, -- or gray5
-               builtin = color.yellow, -- builtin modules and functions
-               type = color.orange,
-               keyword = "#a1d1ed",
-               keyword_return = color.yellow,
-               keyword_exception = "default",
+               comment = color.gray5, -- "#78b37d", -- color.gray4, -- or gray5
+               builtin = color.yellow, -- builtin modules and functions.
+               type = "#e5a8ff", -- color.orange,
+               keyword = "#764279",
+               keyword_return = "#ffea70",
+               keyword_exception = "#ffea70", -- "default",
             },
             -- You can overwrite the following background colors by setting them to one of...
             --   1) a hexcode like "#a1b2c3" for a custom color
