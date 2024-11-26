@@ -170,6 +170,9 @@ return {
       end,
    },
 
+   -- Disable new dashboard.
+   { "folke/snacks.nvim", opts = { dashboard = { enabled = true } } },
+
    -- Logo.
    -- Generated with: https://patorjk.com/software/taag/#p=display&f=ANSI%20Shadow&t=TOO%20LAZY
    {
@@ -185,6 +188,8 @@ return {
    ╚═╝    ╚═════╝  ╚═════╝     ╚══════╝╚═╝  ╚═╝╚══════╝   ╚═╝   
          ]]
          logo = string.rep("\n", 8) .. logo .. "\n\n"
+
+         opts.config = opts.config or {} -- Ensure `opts.config` exists before indexing it to avoid errors.
          opts.config.header = vim.split(logo, "\n")
       end,
    },

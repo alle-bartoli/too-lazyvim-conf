@@ -16,10 +16,17 @@ require("lazy").setup({
          import = "lazyvim.plugins",
          opts = {
             -- Configure colorscheme
-            colorscheme = "flow", -- "lackluster", -- "habamax", -- "grail", -- "deviuspro", "midnight-desert", "solarized-osaka",
+            -- colorscheme = "flow",
+            colorscheme = "lackluster",
+            -- colorscheme = "habamax",
+            -- colorscheme = "grail",
+            -- colorscheme = "deviuspro"
+            -- colorscheme = "midnight-desert"
+            -- colorscheme = "solarized-osaka",
          },
       },
       -- Import any extras modules here.
+      { import = "lazyvim.plugins.extras.ui.dashboard-nvim" },
       { import = "lazyvim.plugins.extras.linting.eslint" },
       { import = "lazyvim.plugins.extras.formatting.prettier" },
       { import = "lazyvim.plugins.extras.util.mini-hipatterns" },
@@ -30,6 +37,7 @@ require("lazy").setup({
       { import = "lazyvim.plugins.extras.lang.tailwind" },
       { import = "lazyvim.plugins.extras.lang.markdown" },
       { import = "lazyvim.plugins.extras.lang.toml" },
+      { import = "lazyvim.plugins.extras.lang.python" },
       { import = "lazyvim.plugins.extras.vscode" },
       { import = "lazyvim.plugins.extras.lsp.neoconf" },
       -- { import = "lazyvim.plugins.extras.coding.copilot" },
