@@ -171,7 +171,7 @@ return {
    },
 
    -- Disable new dashboard.
-   { "folke/snacks.nvim", opts = { dashboard = { enabled = true } } },
+   { "folke/snacks.nvim", opts = { dashboard = { enabled = false } } },
 
    -- Logo.
    -- Generated with: https://patorjk.com/software/taag/#p=display&f=ANSI%20Shadow&t=TOO%20LAZY
