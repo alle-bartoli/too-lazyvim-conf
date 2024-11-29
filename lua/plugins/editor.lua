@@ -1,4 +1,15 @@
--- Configure editor.
+-- Configure editor
+
+-- `mfussenegger/nvim-lint`
+-- Thanks to `luigir-it`: https://github.com/LazyVim/LazyVim/discussions/4094#discussioncomment-10178217
+-- The issue is that "~" is not expanded.
+-- And this is the standard behavior in bash when quoted.
+-- I also tried with $HOME, which is also not expanded.
+-- This hints that the string is passed as literal to the shell.
+-- If you want your config to be machine agnostic,
+-- you can declare a local variable and substitute it in the args table.
+local HOME = os.getenv("HOME")
+
 return {
    "nvim-telescope/telescope.nvim",
    dependencies = {
@@ -149,4 +160,18 @@ return {
 
    -- Navigate your code with search labels
    { "folke/flash.nvim", enabled = false },
+
+   -- `markdownlint-cli2` config.
+   -- Thanks to `luigir-it`: https://github.com/LazyVim/LazyVim/discussions/4094#discussioncomment-10178217
+   {
+      "mfussenegger/nvim-lint",
+      optional = true,
+      opts = {
+         linters = {
+            ["markdownlint-cli2"] = {
+               args = { "--config", HOME .. "/.markdownlint-cli2.yaml", "--" },
+            },
+         },
+      },
+   },
 }
