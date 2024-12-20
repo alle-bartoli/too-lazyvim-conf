@@ -39,6 +39,7 @@ return {
          require("mason").setup()
       end,
    },
+
    {
       "williamboman/mason-lspconfig.nvim",
       lazy = false,
@@ -46,6 +47,7 @@ return {
          auto_install = true,
       },
    },
+
    {
       "neovim/nvim-lspconfig",
       lazy = false,
@@ -58,6 +60,20 @@ return {
          servers = {
             rust_analyzer = {
                mason = false,
+            },
+            pyright = {
+               settings = {
+                  python = {
+                     analysis = {
+                        diagnosticSeverityOverrides = {
+                           reportGeneralTypeIssues = "none", -- Disable general type issues warnings
+                           reportMissingImports = "none", -- Disable missing imports warnings
+                           reportMissingTypeStubs = "none", -- Disable missing type stubs warnings
+                           reportUnnecessaryTypeIgnoreComment = "none", -- Disable unnecessary 'type: ignore' comment warnings
+                        },
+                     },
+                  },
+               },
             },
          },
       },
