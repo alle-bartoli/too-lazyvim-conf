@@ -11,152 +11,175 @@
 local HOME = os.getenv("HOME")
 
 return {
-   "nvim-telescope/telescope.nvim",
-   dependencies = {
-      "nvim-telescope/telescope-file-browser.nvim",
-   },
-   keys = {
-      {
-         "<leader>fP",
-         function()
-            require("telescope.builtin").find_files({
-               cwd = require("lazy.core.config").options.root,
-            })
-         end,
-         desc = "Find Plugin File",
-      },
-      {
-         ";f",
-         function()
-            local builtin = require("telescope.builtin")
-            builtin.find_files({
-               no_ignore = false,
-               hidden = true,
-            })
-         end,
-      },
-      {
-         ";r",
-         function()
-            local builtin = require("telescope.builtin")
-            builtin.live_grep()
-         end,
-      },
-      {
-         "\\\\",
-         function()
-            local builtin = require("telescope.builtin")
-            builtin.buffers()
-         end,
-      },
-      {
-         ";t",
-         function()
-            local builtin = require("telescope.builtin")
-            builtin.help_tags()
-         end,
-      },
-      {
-         ";;",
-         function()
-            local builtin = require("telescope.builtin")
-            builtin.resume()
-         end,
-      },
-      {
-         ";e",
-         function()
-            local builtin = require("telescope.builtin")
-            builtin.diagnostics()
-         end,
-      },
-      {
-         ";s",
-         function()
-            local builtin = require("telescope.builtin")
-            builtin.treesitter()
-         end,
-      },
-      {
-         "sf",
-         function()
-            local telescope = require("telescope")
-            local function telescope_buffer_dir()
-               return vim.fn.expand("%:p:h")
-            end
-            telescope.extensions.file_browser.file_browser({
-               path = "%:p:h",
-               cwd = telescope_buffer_dir(),
-               respect_gitignore = false,
-               hidden = true,
-               grouped = true,
-               previewer = false,
-               initial_mode = "normal",
-               layout_config = { height = 40 },
-            })
-         end,
-      },
-   },
-   config = function(_, opts)
-      local telescope = require("telescope")
-      local actions = require("telescope.actions")
-      local fb_actions = require("telescope").extensions.file_browser.actions
-
-      opts.defaults = vim.tbl_deep_extend("force", opts.defaults, {
-         wrap_results = true,
-         layout_strategy = "horizontal",
-         layout_config = { prompt_position = "top" },
-         sorting_strategy = "ascending",
-         winblend = 0, -- Fixed typo here
-         mappings = {
-            n = {},
-         },
-      })
-
-      opts.pickers = {
-         diagnostics = {
-            theme = "ivy",
-            initial_mode = "normal",
-            layout_config = {
-               preview_cutoff = 9999,
-            },
-         },
-      }
-
-      opts.extensions = {
-         file_browser = {
-            theme = "dropdown",
-            -- disable netrw and use telescope-file-browser in its place
-            hijack_netrw = true, -- Fixed typo here
-            mappings = {
-               ["n"] = {
-                  -- your custom normal mode mappings
-                  ["N"] = fb_actions.create,
-                  ["h"] = fb_actions.goto_parent_dir,
-                  ["/"] = function()
-                     vim.cmd("startinsert")
-                  end,
-                  ["<C-u>"] = function(prompt_bufnr)
-                     for i = 1, 10 do
-                        actions.move_selection_previous(prompt_bufnr)
-                     end
-                  end,
-                  ["<C-d>"] = function(prompt_bufnr)
-                     for i = 1, 10 do
-                        actions.move_selection_next(prompt_bufnr)
-                     end
-                  end,
-                  ["<PageUp>"] = actions.preview_scrolling_up,
-                  ["<PageDown>"] = actions.preview_scrolling_down,
+   -- File browser
+   {
+      "ibhagwan/fzf-lua",
+      cmd = "FzfLua",
+      opts = function(_, opts)
+         local config = require("fzf-lua.config")
+         local actions = require("fzf-lua.actions")
+       
+         -- Quickfix
+         config.defaults.keymap.fzf["ctrl-q"] = "select-all+accept"
+         config.defaults.keymap.fzf["ctrl-u"] = "half-page-up"
+         config.defaults.keymap.fzf["ctrl-d"] = "half-page-down"
+         config.defaults.keymap.fzf["ctrl-x"] = "jump"
+         config.defaults.keymap.fzf["ctrl-f"] = "preview-page-down"
+         config.defaults.keymap.fzf["ctrl-b"] = "preview-page-up"
+         config.defaults.keymap.builtin["<c-f>"] = "preview-page-down"
+         config.defaults.keymap.builtin["<c-b>"] = "preview-page-up"
+       
+         -- Trouble
+         if LazyVim.has("trouble.nvim") then
+           config.defaults.actions.files["ctrl-t"] = require("trouble.sources.fzf").actions.open
+         end
+       
+         -- Toggle root dir / cwd
+         config.defaults.actions.files["ctrl-r"] = function(_, ctx)
+           local o = vim.deepcopy(ctx.__call_opts)
+           o.root = o.root == false
+           o.cwd = nil
+           o.buf = ctx.__CTX.bufnr
+           LazyVim.pick.open(ctx.__INFO.cmd, o)
+         end
+         config.defaults.actions.files["alt-c"] = config.defaults.actions.files["ctrl-r"]
+         config.set_action_helpstr(config.defaults.actions.files["ctrl-r"], "toggle-root-dir")
+       
+         local img_previewer ---@type string[]?
+         for _, v in ipairs({
+           { cmd = "ueberzug", args = {} },
+           { cmd = "chafa", args = { "{file}", "--format=symbols" } },
+           { cmd = "viu", args = { "-b" } },
+         }) do
+           if vim.fn.executable(v.cmd) == 1 then
+             img_previewer = vim.list_extend({ v.cmd }, v.args)
+             break
+           end
+         end
+       
+         return {
+           "default-title",
+           fzf_colors = true,
+           fzf_opts = {
+             ["--no-scrollbar"] = true,
+           },
+           defaults = {
+             -- formatter = "path.filename_first",
+             formatter = "path.dirname_first",
+           },
+           previewers = {
+             builtin = {
+               extensions = {
+                 ["png"] = img_previewer,
+                 ["jpg"] = img_previewer,
+                 ["jpeg"] = img_previewer,
+                 ["gif"] = img_previewer,
+                 ["webp"] = img_previewer,
                },
-            },
-         },
-      }
+               ueberzug_scaler = "fit_contain",
+             },
+           },
+           -- Custom LazyVim option to configure vim.ui.select
+           ui_select = function(fzf_opts, items)
+             return vim.tbl_deep_extend("force", fzf_opts, {
+               prompt = " ",
+               winopts = {
+                 title = " " .. vim.trim((fzf_opts.prompt or "Select"):gsub("%s*:%s*$", "")) .. " ",
+                 title_pos = "center",
+               },
+             }, fzf_opts.kind == "codeaction" and {
+               winopts = {
+                 layout = "vertical",
+                 -- height is number of items minus 15 lines for the preview, with a max of 80% screen height
+                 height = math.floor(math.min(vim.o.lines * 0.8 - 16, #items + 2) + 0.5) + 16,
+                 width = 0.5,
+                 preview = not vim.tbl_isempty(LazyVim.lsp.get_clients({ bufnr = 0, name = "vtsls" })) and {
+                   layout = "vertical",
+                   vertical = "down:15,border-top",
+                   hidden = "hidden",
+                 } or {
+                   layout = "vertical",
+                   vertical = "down:15,border-top",
+                 },
+               },
+             } or {
+               winopts = {
+                 width = 0.5,
+                 -- height is number of items, with a max of 80% screen height
+                 height = math.floor(math.min(vim.o.lines * 0.8, #items + 2) + 0.5),
+               },
+             })
+           end,
+           winopts = {
+             width = 0.8,
+             height = 0.8,
+             row = 0.5,
+             col = 0.5,
+             preview = {
+               scrollchars = { "┃", "" },
+             },
+           },
+           files = {
+             cwd_prompt = false,
+             actions = {
+               ["alt-i"] = { actions.toggle_ignore },
+               ["alt-h"] = { actions.toggle_hidden },
+             },
+           },
+           grep = {
+             actions = {
+               ["alt-i"] = { actions.toggle_ignore },
+               ["alt-h"] = { actions.toggle_hidden },
+             },
+           },
+           lsp = {
+             symbols = {
+               symbol_hl = function(s)
+                 return "TroubleIcon" .. s
+               end,
+               symbol_fmt = function(s)
+                 return s:lower() .. "\t"
+               end,
+               child_prefix = false,
+             },
+             code_actions = {
+               previewer = vim.fn.executable("delta") == 1 and "codeaction_native" or nil,
+             },
+           },
+         }
+       end
+   },
 
-      telescope.setup(opts)
-      require("telescope").load_extension("fzf")
-      require("telescope").load_extension("file_browser")
-   end,
+   -- fzf-lua
+   { 
+      "fzf-lua",-- opts = nil 
+   },
+
+   -- LSP
+   {
+      "neovim/nvim-lspconfig",
+      opts = function()
+         local Keys = require("lazyvim.plugins.lsp.keymaps").get()
+         -- stylua: ignore
+         vim.list_extend(Keys, {
+           { "gd", "<cmd>FzfLua lsp_definitions     jump_to_single_result=true ignore_current_line=true<cr>", desc = "Goto Definition", has = "definition" },
+           { "gr", "<cmd>FzfLua lsp_references      jump_to_single_result=true ignore_current_line=true<cr>", desc = "References", nowait = true },
+           { "gI", "<cmd>FzfLua lsp_implementations jump_to_single_result=true ignore_current_line=true<cr>", desc = "Goto Implementation" },
+           { "gy", "<cmd>FzfLua lsp_typedefs        jump_to_single_result=true ignore_current_line=true<cr>", desc = "Goto T[y]pe Definition" },
+         })
+       end,
+   },
+
+   -- Todo Comments
+   {
+      "folke/todo-comments.nvim",
+      optional = true,
+      -- stylua: ignore
+      keys = {
+         { "<leader>st", function() require("todo-comments.fzf").todo() end, desc = "Todo" },
+         { "<leader>sT", function () require("todo-comments.fzf").todo({ keywords = { "TODO", "FIX", "FIXME" } }) end, desc = "Todo/Fix/Fixme" },
+      },
+   },
 
    -- Navigate your code with search labels
    { "folke/flash.nvim", enabled = false },

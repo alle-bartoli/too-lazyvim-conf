@@ -32,15 +32,15 @@ require("lazy").setup({
       { import = "lazyvim.plugins.extras.util.mini-hipatterns" },
       { import = "lazyvim.plugins.extras.dap.core" },
       { import = "lazyvim.plugins.extras.lang.typescript" },
-      -- { import = "lazyvim.plugins.extras.lang.rust" },
       { import = "lazyvim.plugins.extras.lang.json" },
       { import = "lazyvim.plugins.extras.lang.tailwind" },
       { import = "lazyvim.plugins.extras.lang.markdown" },
       { import = "lazyvim.plugins.extras.lang.toml" },
       { import = "lazyvim.plugins.extras.lang.python" },
-      { import = "lazyvim.plugins.extras.vscode" },
       { import = "lazyvim.plugins.extras.lsp.neoconf" },
-      -- { import = "lazyvim.plugins.extras.coding.copilot" },
+      -- { import = "lazyvim.plugins.extras.lang.rust" }, Installed with :LazyExtras
+      -- { import = "lazyvim.plugins.extras.vscode" }, Installed with :LazyExtras
+      -- { import = "lazyvim.plugins.extras.coding.copilot" }, Installed with :LazyExtras
       -- { import = "lazyvim.plugins.extras.ui.mini-animate" },
       -- Import/override with your plugins.
       { import = "plugins" },

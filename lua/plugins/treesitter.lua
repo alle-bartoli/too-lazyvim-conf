@@ -29,14 +29,14 @@ return {
             "scss",
             "sql",
             "svelte",
-            "rust", -- Required for rust.
-            "toml", -- Required for rust.
+            "rust", -- Required for rust
+            "toml", -- Required for rust
          },
       },
       config = function(_, opts)
          require("nvim-treesitter.configs").setup(opts)
 
-         -- MDX.
+         -- MDX
          vim.filetype.add({
             extension = {
                mdx = "mdx",
