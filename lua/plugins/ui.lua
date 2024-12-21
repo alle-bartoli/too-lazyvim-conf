@@ -8,7 +8,7 @@ return {
       },
    },
 
-   -- Replace the UI for `messages`, `cmdline` and the `popupmenu`.
+   -- Replace the UI for `messages`, `cmdline` and the `popupmenu`
    {
       "folke/noice.nvim",
       event = "VeryLazy",
@@ -22,7 +22,7 @@ return {
       },
 
       opts = function(_, opts)
-         -- Merge the lsp config.
+         -- Merge the lsp config
          opts.lsp = {
             override = {
                ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
@@ -31,7 +31,7 @@ return {
             },
          }
 
-         -- Merge the routes config.
+         -- Merge the routes config
          opts.routes = opts.routes or {}
          vim.list_extend(opts.routes, {
             {
@@ -54,7 +54,7 @@ return {
             },
          })
 
-         -- Merge the presets config.
+         -- Merge the presets config
          opts.presets = vim.tbl_deep_extend("force", opts.presets or {}, {
             lsp_doc_border = true,
             bottom_search = true,
@@ -64,7 +64,7 @@ return {
       end,
    },
 
-   -- Neotree.
+   -- Neotree
    {
       "nvim-neo-tree/neo-tree.nvim",
       opts = {
@@ -85,7 +85,7 @@ return {
       },
    },
 
-   -- Notification manager.
+   -- Notification manager
    {
       "rcarriga/nvim-notify",
       opts = {
@@ -93,7 +93,7 @@ return {
       },
    },
 
-   -- Bufferline.
+   -- Bufferline
    {
       "akinsho/bufferline.nvim",
       keys = {
@@ -109,7 +109,7 @@ return {
       },
    },
 
-   -- Statusline.
+   -- Statusline
    {
       "nvim-lualine/lualine.nvim",
       event = "VeryLazy",
@@ -122,7 +122,7 @@ return {
       },
    },
 
-   -- Filename.
+   -- Filename
    {
       "b0o/incline.nvim",
       dependencies = { "craftzdog/solarized-osaka.nvim" },
@@ -159,7 +159,7 @@ return {
       end,
    },
 
-   -- Animations.
+   -- Animations
    {
       "echasnovski/mini.animate",
       event = "VeryLazy",
@@ -170,10 +170,10 @@ return {
       end,
    },
 
-   -- Disable new dashboard.
+   -- Disable new dashboard
    { "folke/snacks.nvim", opts = { dashboard = { enabled = false } } },
 
-   -- Logo.
+   -- Logo
    -- Generated with: https://patorjk.com/software/taag/#p=display&f=ANSI%20Shadow&t=TOO%20LAZY
    {
       "nvimdev/dashboard-nvim",

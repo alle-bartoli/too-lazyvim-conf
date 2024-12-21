@@ -11,7 +11,7 @@ return {
       end,
    },
 
-   -- midnight-desert.nvim.
+   -- midnight-desert.nvim
    {
       "CosecSecCot/midnight-desert.nvim",
       dependencies = {
@@ -19,7 +19,7 @@ return {
       },
    },
 
-   -- chama-chomo/grail.
+   -- chama-chomo/grail
    {
       "chama-chomo/grail",
       version = false,
@@ -38,12 +38,12 @@ return {
       end,
    },
 
-   -- deviuspro.nvim.
+   -- deviuspro.nvim
    {
       "DeviusVim/deviuspro.nvim",
    },
 
-   -- flow.nvim.
+   -- flow.nvim
    {
       "0xstepit/flow.nvim",
       lazy = false,
@@ -57,7 +57,7 @@ return {
       },
    },
 
-   -- lackluster.
+   -- lackluster
    {
       "slugbyte/lackluster.nvim",
       lazy = false,
@@ -70,7 +70,7 @@ return {
          lackluster.setup({
             disable_plugin = {
                bufferline = false,
-               cmp = false,
+               cmp = true,
                dashboard = false,
                flash = false,
                git_gutter = false,
@@ -88,7 +88,7 @@ return {
                oil = false,
                rainbow_delimiter = false,
                scrollbar = false,
-               telescope = false,
+               telescope = true,
                todo_comments = false,
                tree = false,
                trouble = false,
@@ -147,7 +147,7 @@ return {
             },
          })
 
-         -- Setup nvim-web-devicons.
+         -- Setup nvim-web-devicons
          require("nvim-web-devicons").setup({
             color_icons = false,
             override = {
