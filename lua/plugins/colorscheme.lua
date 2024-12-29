@@ -48,12 +48,25 @@ return {
       "0xstepit/flow.nvim",
       lazy = false,
       priority = 1000,
+      tag = "v1.0.0",
       opts = {
-         transparent = true,
-         transparent_background_level = 1,
-         background = "hard",
-         disable_italic_comments = false,
-         italics = true,
+         theme = {
+            style = "dark", --  "dark" | "light"
+            contrast = "default", -- "default" | "high"
+            transparent = true, -- true | false
+         },
+         colors = {
+            mode = "default", -- "default" | "dark" | "light"
+            fluo = "pink", -- "pink" | "cyan" | "yellow" | "orange" | "green"
+         },
+         ui = {
+            borders = "inverse", -- "theme" | "inverse" | "fluo" | "none"
+            aggressive_spell = false, -- true | false
+         },
+         config = function(_, opts)
+            require("flow").setup(opts)
+            vim.cmd("colorscheme flow")
+         end,
       },
    },
 
