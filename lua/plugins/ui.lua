@@ -1,67 +1,65 @@
 -- See http://www.lazyvim.org/plugins/ui
 return {
-   opts = {
-      options = {
-         mode = "tabs",
-         show_buffer_close_icons = false,
-         show_close_icon = false,
-      },
-   },
 
    -- Replace the UI for `messages`, `cmdline` and the `popupmenu`
    {
       "folke/noice.nvim",
-      event = "VeryLazy",
-      dependencies = {
-         -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
-         "MunifTanjim/nui.nvim",
-         -- OPTIONAL:
-         --   `nvim-notify` is only needed, if you want to use the notification view.
-         --   If not available, we use `mini` as the fallback
-         "rcarriga/nvim-notify",
-      },
-
       opts = function(_, opts)
-         -- Merge the lsp config
-         opts.lsp = {
-            override = {
-               ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
-               ["vim.lsp.util.stylize_markdown"] = true,
-               ["cmp.entry.get_documentation"] = true,
+         table.insert(opts.routes, {
+            filter = {
+               event = "notify",
+               find = "No information available",
+            },
+            opts = { skip = true },
+         })
+         local focused = true
+         vim.api.nvim_create_autocmd("FocusGained", {
+            callback = function()
+               focused = true
+            end,
+         })
+         vim.api.nvim_create_autocmd("FocusLost", {
+            callback = function()
+               focused = false
+            end,
+         })
+         table.insert(opts.routes, 1, {
+            filter = {
+               cond = function()
+                  return not focused
+               end,
+            },
+            view = "notify_send",
+            opts = { stop = false },
+         })
+
+         opts.commands = {
+            all = {
+               -- options for the message history that you get with `:Noice`
+               view = "split",
+               opts = { enter = true, format = "details" },
+               filter = {},
             },
          }
 
-         -- Merge the routes config
-         opts.routes = opts.routes or {}
-         vim.list_extend(opts.routes, {
-            {
-               filter = {
-                  event = "notify",
-                  find = "No information available",
-               },
-               opts = { skip = true },
-            },
-            {
-               filter = {
-                  event = "msg_show",
-                  any = {
-                     { find = "%d+L, %d+B" },
-                     { find = "; after #%d+" },
-                     { find = "; before #%d+" },
-                  },
-               },
-               view = "mini",
-            },
+         vim.api.nvim_create_autocmd("FileType", {
+            pattern = "markdown",
+            callback = function(event)
+               vim.schedule(function()
+                  require("noice.text.markdown").keys(event.buf)
+               end)
+            end,
          })
 
-         -- Merge the presets config
-         opts.presets = vim.tbl_deep_extend("force", opts.presets or {}, {
-            lsp_doc_border = true,
-            bottom_search = true,
-            command_palette = true,
-            long_message_to_split = true,
-         })
+         opts.presets.lsp_doc_border = true
       end,
+   },
+
+   {
+      "rcarriga/nvim-notify",
+      opts = {
+         timeout = 5000,
+      },
    },
 
    -- Neotree
@@ -89,7 +87,7 @@ return {
    {
       "rcarriga/nvim-notify",
       opts = {
-         timeout = 10000,
+         timeout = 5000,
       },
    },
 
@@ -126,6 +124,20 @@ return {
             -- theme = "midnight-desert",
          },
       },
+      opts = function(_, opts)
+         local LazyVim = require("lazyvim.util")
+         opts.sections.lualine_c[4] = {
+            LazyVim.lualine.pretty_path({
+               length = 0,
+               relative = "cwd",
+               modified_hl = "MatchParen",
+               directory_hl = "",
+               filename_hl = "Bold",
+               modified_sign = "",
+               readonly_icon = " 󰌾 ",
+            }),
+         }
+      end,
    },
 
    -- Filename
@@ -139,25 +151,20 @@ return {
          require("incline").setup({
             highlight = {
                groups = {
-                  InlcineNormal = {
-                     guibg = colors.magenta500,
-                     guifg = colors.base04,
-                  },
-                  InclineNormalNC = {
-                     guifg = colors.violet500,
-                     guibg = colors.base03,
-                  },
+                  InclineNormal = { guibg = colors.magenta500, guifg = colors.base04 },
+                  InclineNormalNC = { guifg = colors.violet500, guibg = colors.base03 },
                },
             },
-            window = { margin = { vertical = 0, horizontal = 0 } },
+            window = { margin = { vertical = 0, horizontal = 1 } },
             hide = {
                cursorline = true,
             },
             render = function(props)
                local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":t")
                if vim.bo[props.buf].modified then
-                  filename = "[+]" .. filename
+                  filename = "[+] " .. filename
                end
+
                local icon, color = require("nvim-web-devicons").get_icon_color(filename)
                return { { icon, guifg = color }, { " " }, { filename } }
             end,
@@ -176,27 +183,52 @@ return {
       end,
    },
 
-   -- Disable new dashboard
-   { "folke/snacks.nvim", opts = { dashboard = { enabled = false } } },
+   {
+      "folke/zen-mode.nvim",
+      cmd = "ZenMode",
+      opts = {
+         plugins = {
+            gitsigns = true,
+            tmux = true,
+            kitty = { enabled = false, font = "+2" },
+         },
+      },
+      keys = { { "<leader>z", "<cmd>ZenMode<cr>", desc = "Zen Mode" } },
+   },
 
    -- Logo
    -- Generated with: https://patorjk.com/software/taag/#p=display&f=ANSI%20Shadow&t=TOO%20LAZY
    {
-      "nvimdev/dashboard-nvim",
-      event = "VimEnter",
-      opts = function(_, opts)
-         local logo = [[
+      "snacks.nvim",
+      opts = {
+         dashboard = {
+            preset = {
+               header = [[
 ████████╗ ██████╗  ██████╗     ██╗      █████╗ ███████╗██╗   ██╗
 ╚══██╔══╝██╔═══██╗██╔═══██╗    ██║     ██╔══██╗╚══███╔╝╚██╗ ██╔╝
    ██║   ██║   ██║██║   ██║    ██║     ███████║  ███╔╝  ╚████╔╝ 
    ██║   ██║   ██║██║   ██║    ██║     ██╔══██║ ███╔╝    ╚██╔╝  
    ██║   ╚██████╔╝╚██████╔╝    ███████╗██║  ██║███████╗   ██║   
    ╚═╝    ╚═════╝  ╚═════╝     ╚══════╝╚═╝  ╚═╝╚══════╝   ╚═╝   
-         ]]
-         logo = string.rep("\n", 8) .. logo .. "\n\n"
-
-         opts.config = opts.config or {} -- Ensure `opts.config` exists before indexing it to avoid errors.
-         opts.config.header = vim.split(logo, "\n")
-      end,
+               ]],
+            },
+         },
+      },
+      keys = {
+         {
+            "<leader>n",
+            function()
+               Snacks.notifier.show_history()
+            end,
+            desc = "Notification History",
+         },
+         {
+            "<leader>un",
+            function()
+               Snacks.notifier.hide()
+            end,
+            desc = "Dismiss All Notifications",
+         },
+      },
    },
 }

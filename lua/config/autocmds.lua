@@ -8,11 +8,10 @@ vim.api.nvim_create_autocmd("InsertLeave", {
    command = "set nopaste",
 })
 
--- Fix conceallevel for json files.
+-- Disable cancel. Default 3.
 vim.api.nvim_create_autocmd("FileType", {
-   pattern = { "json", "jsonc" },
+   pattern = { "json", "jsonc", "markdown" },
    callback = function()
-      vim.wo.spell = false
-      vim.wo.conceallevel = 0
+      vim.wo.conceallevel = 0 -- fully visible.
    end,
 })
