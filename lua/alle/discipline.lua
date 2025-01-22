@@ -15,8 +15,8 @@ function M.cowboy()
             count = 0
          end
          if count >= 10 then
-            ok, id = pcall(vim.notify, "Hold it Cowboy! 🤠 ", vim.log.levels.WARN, {
-               -- icons = "🤠",
+            ok, id = pcall(vim.notify, "Believe it! 🤡", vim.log.levels.WARN, {
+               -- icons = "🤡",
                replace = id,
                keep = function()
                   return count >= 10
