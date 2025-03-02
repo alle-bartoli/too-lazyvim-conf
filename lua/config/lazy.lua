@@ -22,13 +22,13 @@ require("lazy").setup({
          import = "lazyvim.plugins",
          opts = {
             -- Configure colorscheme
-            -- colorscheme = "flow",
+            colorscheme = "flow",
             -- colorscheme = "lackluster",
             -- colorscheme = "habamax",
             -- colorscheme = "grail",
             -- colorscheme = "deviuspro",
             -- colorscheme = "midnight-desert",
-            colorscheme = "solarized-osaka",
+            -- colorscheme = "solarized-osaka",
             news = { lazyvim = true, neovim = true },
          },
       },
