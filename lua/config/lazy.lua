@@ -23,21 +23,21 @@ require("lazy").setup({
          opts = {
             -- Configure colorscheme
             colorscheme = "flow",
-            -- colorscheme = "lackluster",
-            -- colorscheme = "habamax",
-            -- colorscheme = "grail",
-            -- colorscheme = "deviuspro",
-            -- colorscheme = "midnight-desert",
-            -- colorscheme = "solarized-osaka",
+            --colorscheme = "lackluster",
+            --colorscheme = "habamax",
+            --colorscheme = "grail",
+            --colorscheme = "deviuspro",
+            --colorscheme = "midnight-desert",
+            --colorscheme = "solarized-osaka",
+            --colorscheme = "vesper",
             news = { lazyvim = true, neovim = true },
          },
       },
+
       -- Import any extras modules here
       { import = "lazyvim.plugins.extras.linting.eslint" },
       { import = "lazyvim.plugins.extras.formatting.prettier" },
       { import = "lazyvim.plugins.extras.util.mini-hipatterns" },
-      { import = "lazyvim.plugins.extras.dap.core" },
-      { import = "lazyvim.plugins.extras.lang.rust" },
       { import = "lazyvim.plugins.extras.lang.toml" },
       { import = "lazyvim.plugins.extras.lang.typescript" },
       { import = "lazyvim.plugins.extras.lang.json" },
@@ -46,10 +46,13 @@ require("lazy").setup({
       { import = "lazyvim.plugins.extras.lang.python" },
       { import = "lazyvim.plugins.extras.lsp.neoconf" },
       { import = "lazyvim.plugins.extras.util.mini-hipatterns" },
+      { import = "lazyvim.plugins.extras.dap.core" },
+      -- { import = "lazyvim.plugins.extras.lang.rust" }, Installed with :LazyExtras
+      -- { import = "lazyvim.plugins.extras.vscode" }, Installed with :LazyExtras
       -- { import = "lazyvim.plugins.extras.ui.dashboard-nvim" },
       -- { import = "lazyvim.plugins.extras.ui.mini-animate" },
-      -- { import = "lazyvim.plugins.extras.vscode" }, Installed with :LazyExtras
-      -- { import = "lazyvim.plugins.extras.coding.copilot" }, Installed with :LazyExtras
+      -- { import = "lazyvim.plugins.extras.coding.copilot" }, Installed with :LazyExtras but disabled
+
       -- Import/override with your plugins.
       { import = "plugins" },
    },
@@ -63,9 +66,9 @@ require("lazy").setup({
       -- since a lot the plugin that support versioning,
       -- have outdated releases, which may break your Neovim install.
       version = false, -- always use the latest git commit
-      -- version = "*", -- try installing the latest stable version for plugins that support semver.
+      -- version = "*", -- try installing the latest stable version for plugins that support semver
    },
-   checker = { enabled = true }, -- automatically check for plugin updates.
+   checker = { enabled = true }, -- automatically check for plugin updates
    performance = {
       cache = {
          enabled = true,
