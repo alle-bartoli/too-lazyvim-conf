@@ -1,27 +1,43 @@
--- Custom notication about over using simple move keys.
+-- discipline.lua
+-- Custom notification about overusing simple move keys.
+
 local M = {}
 
-function M.cowboy()
-   ---@type table?
+--- Notifies the user if they overuse movement keys like hjkl (arrows exluded).
+function M.clown()
+   ---@type number|string|nil
    local id
    local ok = true
 
-   for _, key in ipairs({ "h", "j", "k", "l", "+", "-", "<Up>", "<Down>", "<Left>", "<Right>" }) do
+   for _, key in ipairs({
+      "h",
+      "j",
+      "k",
+      "l",
+      "+",
+      "-",
+      --"<Up>",
+      --"<Down>",
+      --"<Left>",
+      --"<Right>"
+   }) do
       local count = 0
       local timer = assert(vim.uv.new_timer())
       local map = key
+
       vim.keymap.set("n", key, function()
          if vim.v.count > 0 then
             count = 0
          end
+
          if count >= 10 then
-            ok, id = pcall(vim.notify, "Believe it! 🤡", vim.log.levels.WARN, {
-               -- icons = "🤡",
+            ok, id = pcall(vim.notify, "Hold on fam 🤡", vim.log.levels.WARN, {
                replace = id,
                keep = function()
                   return count >= 10
                end,
             })
+
             if not ok then
                id = nil
                return map
