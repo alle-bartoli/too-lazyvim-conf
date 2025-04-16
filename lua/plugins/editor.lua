@@ -235,4 +235,18 @@ return {
          },
       },
    },
+
+   -- Use tmp `nvim-spectre` instead of broken `grug-far`
+   {
+      "nvim-pack/nvim-spectre",
+      keys = {
+         {
+            "<leader>sr",
+            function()
+               require("spectre").open()
+            end,
+            desc = "Search and Replace",
+         },
+      },
+   },
 }

@@ -20,18 +20,6 @@ require("lazy").setup({
       {
          "LazyVim/LazyVim",
          import = "lazyvim.plugins",
-         opts = {
-            -- Configure colorscheme
-            colorscheme = "flow",
-            --colorscheme = "lackluster",
-            --colorscheme = "habamax",
-            --colorscheme = "grail",
-            --colorscheme = "deviuspro",
-            --colorscheme = "midnight-desert",
-            --colorscheme = "solarized-osaka",
-            --colorscheme = "vesper",
-            news = { lazyvim = true, neovim = true },
-         },
       },
 
       -- Import any extras modules here
