@@ -1,3 +1,5 @@
+-- ~/.config/nvim/lua/plugins/code.lua
+--
 return {
    -- Create annotations with one keybind,
    -- and jump your cursor in the inserted annotation

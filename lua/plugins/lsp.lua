@@ -1,3 +1,5 @@
+-- ~/.config/nvim/lua/plugins/lsp.lua
+
 return {
    -- tools
    {
@@ -18,23 +20,48 @@ return {
       end,
    },
 
-   -- lsp servers
+   -- LSP
    {
       "neovim/nvim-lspconfig",
-      opts = {
-         inlay_hints = { enabled = false },
-         ---@type lspconfig.options
-         servers = {
+      opts = function(_, opts)
+         local util = require("lspconfig.util")
+         local Keys = require("lazyvim.plugins.lsp.keymaps").get()
+
+         vim.list_extend(Keys, {
+            {
+               "gd",
+               "<cmd>FzfLua lsp_definitions jump1=true ignore_current_line=true silent=true<cr>",
+               desc = "Goto Definition",
+               has = "definition",
+            },
+            {
+               "gr",
+               "<cmd>FzfLua lsp_references jump1=true ignore_current_line=true silent=true<cr>",
+               desc = "References",
+               nowait = true,
+            },
+            {
+               "gI",
+               "<cmd>FzfLua lsp_implementations jump1=true ignore_current_line=true silent=true<cr>",
+               desc = "Goto Implementation",
+            },
+            {
+               "gy",
+               "<cmd>FzfLua lsp_typedefs jump1=true ignore_current_line=true silent=true<cr>",
+               desc = "Goto T[y]pe Definition",
+            },
+         })
+
+         -- Modifica o estendi le opzioni esistenti
+         opts.inlay_hints = { enabled = false }
+
+         opts.servers = vim.tbl_deep_extend("force", opts.servers or {}, {
             cssls = {},
             tailwindcss = {
-               root_dir = function(...)
-                  return require("lspconfig.util").root_pattern(".git")(...)
-               end,
+               root_dir = util.root_pattern(".git"),
             },
             tsserver = {
-               root_dir = function(...)
-                  return require("lspconfig.util").root_pattern(".git")(...)
-               end,
+               root_dir = util.root_pattern(".git"),
                single_file_support = false,
                settings = {
                   typescript = {
@@ -70,7 +97,6 @@ return {
                },
             },
             lua_ls = {
-               -- enabled = false,
                single_file_support = true,
                settings = {
                   Lua = {
@@ -80,11 +106,6 @@ return {
                      completion = {
                         workspaceWord = true,
                         callSnippet = "Both",
-                     },
-                     misc = {
-                        parameters = {
-                           -- "--log-level=trace",
-                        },
                      },
                      hint = {
                         enable = true,
@@ -102,24 +123,23 @@ return {
                      },
                      diagnostics = {
                         disable = { "incomplete-signature-doc", "trailing-space" },
-                        -- enable = false,
                         groupSeverity = {
                            strong = "Warning",
                            strict = "Warning",
                         },
                         groupFileStatus = {
-                           ["ambiguity"] = "Opened",
-                           ["await"] = "Opened",
-                           ["codestyle"] = "None",
-                           ["duplicate"] = "Opened",
-                           ["global"] = "Opened",
-                           ["luadoc"] = "Opened",
-                           ["redefined"] = "Opened",
-                           ["strict"] = "Opened",
-                           ["strong"] = "Opened",
+                           ambiguity = "Opened",
+                           await = "Opened",
+                           codestyle = "None",
+                           duplicate = "Opened",
+                           global = "Opened",
+                           luadoc = "Opened",
+                           redefined = "Opened",
+                           strict = "Opened",
+                           strong = "Opened",
                            ["type-check"] = "Opened",
-                           ["unbalanced"] = "Opened",
-                           ["unused"] = "Opened",
+                           unbalanced = "Opened",
+                           unused = "Opened",
                         },
                         unusedLocalExclude = { "_*" },
                      },
@@ -134,25 +154,9 @@ return {
                   },
                },
             },
-         },
-         setup = {},
-      },
-   },
-   {
-      "neovim/nvim-lspconfig",
-      opts = function()
-         local keys = require("lazyvim.plugins.lsp.keymaps").get()
-         vim.list_extend(keys, {
-            {
-               "gd",
-               function()
-                  -- DO NOT REUSE WINDOW
-                  require("telescope.builtin").lsp_definitions({ reuse_win = false })
-               end,
-               desc = "Goto Definition",
-               has = "definition",
-            },
          })
+
+         return opts
       end,
    },
 }

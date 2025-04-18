@@ -48,6 +48,12 @@ return {
       },
    },
 
+   {
+      "CosecSecCot/cosec-twilight.nvim",
+      -- no setup function required (didn't make one :P)
+      -- (you can change and customize it using lush according to your preference)
+   },
+
    -- chama-chomo/grail
    {
       "chama-chomo/grail",
@@ -226,5 +232,22 @@ return {
             --highlights = require("vesper").bufferline.highlights, -- To use the theme with bufferline.nvim, you can use the following configuration
          })
       end,
+   },
+
+   -- Configure and load colorscheme
+   {
+      "LazyVim/LazyVim",
+      opts = {
+         --colorscheme = "flow",
+         --colorscheme = "lackluster",
+         --colorscheme = "habamax",
+         --colorscheme = "grail",
+         --colorscheme = "deviuspro",
+         --colorscheme = "midnight-desert",
+         --colorscheme = "cosec-twilight",
+         colorscheme = "solarized-osaka",
+         --colorscheme = "vesper",
+         news = { lazyvim = true, neovim = true },
+      },
    },
 }

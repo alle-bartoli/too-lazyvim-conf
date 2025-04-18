@@ -1,4 +1,6 @@
--- Configure editor
+-- ~/.config/nvim/lua/plugins/editor.lua
+
+-- Editor confiuration
 
 -- `mfussenegger/nvim-lint`
 -- Thanks to `luigir-it`: https://github.com/LazyVim/LazyVim/discussions/4094#discussioncomment-10178217
@@ -155,21 +157,6 @@ return {
       "fzf-lua", -- opts = nil
    },
 
-   -- LSP
-   {
-      "neovim/nvim-lspconfig",
-      opts = function()
-         local Keys = require("lazyvim.plugins.lsp.keymaps").get()
-         -- stylua: ignore
-         vim.list_extend(Keys, {
-           { "gd", "<cmd>FzfLua lsp_definitions     jump_to_single_result=true ignore_current_line=true<cr>", desc = "Goto Definition", has = "definition" },
-           { "gr", "<cmd>FzfLua lsp_references      jump_to_single_result=true ignore_current_line=true<cr>", desc = "References", nowait = true },
-           { "gI", "<cmd>FzfLua lsp_implementations jump_to_single_result=true ignore_current_line=true<cr>", desc = "Goto Implementation" },
-           { "gy", "<cmd>FzfLua lsp_typedefs        jump_to_single_result=true ignore_current_line=true<cr>", desc = "Goto T[y]pe Definition" },
-         })
-      end,
-   },
-
    -- Todo Comments
    {
       "folke/todo-comments.nvim",
@@ -245,6 +232,20 @@ return {
             ["markdownlint-cli2"] = {
                args = { "--config", HOME .. "/.markdownlint-cli2.yaml", "--" },
             },
+         },
+      },
+   },
+
+   -- Use tmp `nvim-spectre` instead of broken `grug-far`
+   {
+      "nvim-pack/nvim-spectre",
+      keys = {
+         {
+            "<leader>sr",
+            function()
+               require("spectre").open()
+            end,
+            desc = "Search and Replace",
          },
       },
    },

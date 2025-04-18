@@ -29,6 +29,7 @@ NVIM_APPNAME=alle-bartoli/too-lazyvim-conf/ nvim
 ### colorscheme
 
 - [0xstepit/flow.nvim](https://dotfyle.com/plugins/0xstepit/flow.nvim)
+- [datsfilipe/vesper.nvim](https://dotfyle.com/plugins/datsfilipe/vesper.nvim)
 - [craftzdog/solarized-osaka.nvim](https://dotfyle.com/plugins/craftzdog/solarized-osaka.nvim)
 - [slugbyte/lackluster.nvim](https://dotfyle.com/plugins/slugbyte/lackluster.nvim)
 
@@ -55,8 +56,8 @@ NVIM_APPNAME=alle-bartoli/too-lazyvim-conf/ nvim
 
 ### fuzzy-finder
 
-- [ibhagwan/fzf-lua](https://dotfyle.com/plugins/ibhagwan/fzf-lua)
 - [nvim-telescope/telescope.nvim](https://dotfyle.com/plugins/nvim-telescope/telescope.nvim)
+- [ibhagwan/fzf-lua](https://dotfyle.com/plugins/ibhagwan/fzf-lua)
 
 ### icon
 
@@ -89,8 +90,8 @@ NVIM_APPNAME=alle-bartoli/too-lazyvim-conf/ nvim
 
 ### statusline
 
-- [nvim-lualine/lualine.nvim](https://dotfyle.com/plugins/nvim-lualine/lualine.nvim)
 - [b0o/incline.nvim](https://dotfyle.com/plugins/b0o/incline.nvim)
+- [nvim-lualine/lualine.nvim](https://dotfyle.com/plugins/nvim-lualine/lualine.nvim)
 
 ### syntax
 
