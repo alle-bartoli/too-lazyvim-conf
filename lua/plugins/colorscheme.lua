@@ -66,7 +66,7 @@ return {
          require("grail").setup({
             -- Your config here.
             transparent_background_level = 1,
-            background = "hard",
+            --background = "hard",
             disable_italic_comments = false,
             italics = true,
          })
@@ -112,7 +112,6 @@ return {
       priority = 1000,
       init = function()
          local lackluster = require("lackluster")
-
          local color = lackluster.color -- blue, green, red, orange, black, lack, luster, gray1-9
 
          lackluster.setup({
@@ -132,15 +131,15 @@ return {
                mini_diff = false,
                navic = false,
                noice = false,
-               notify = false,
+               notify = true,
                oil = false,
                rainbow_delimiter = false,
                scrollbar = false,
-               telescope = true,
+               telescope = false,
                todo_comments = false,
                tree = false,
                trouble = false,
-               which_key = false,
+               which_key = true,
                yanky = false,
             },
             -- tweak_color allows you to overwrite the default colors in the lackluster theme
@@ -171,14 +170,14 @@ return {
             --   1) a hexcode like "#a1b2c3" for a custom color.
             --   2) "default" or nil will just use whatever lackluster's default is.
             tweak_syntax = {
-               string = "#a1d1ed", -- "#e5a8ff",
+               string = "#a1d1ed",
                string_escape = color.yellow,
-               comment = color.gray5, -- "#78b37d", -- color.gray4, -- or gray5
+               comment = color.lack, -- "#78b37d", -- color.gray4, -- or gray5
                builtin = color.yellow, -- builtin modules and functions.
                type = "#e5a8ff", -- color.orange,
                keyword = "#764279",
                keyword_return = "#ffea70",
-               keyword_exception = "#ffea70", -- "default",
+               keyword_exception = color.orange, -- "default",
             },
             -- You can overwrite the following background colors by setting them to one of...
             --   1) a hexcode like "#a1b2c3" for a custom color
@@ -187,8 +186,8 @@ return {
             tweak_background = {
                normal = "none", -- transparent
                -- normal = 'none',    -- transparent
-               -- normal = '#a1b2c3',    -- hexcode
-               -- normal = color.green,    -- lackluster color
+               -- normal = '#a1b2c3', -- hexcode
+               -- normal = color.green, -- lackluster color
                telescope = "none",
                menu = color.gray3,
                popup = "default",
@@ -239,13 +238,13 @@ return {
       "LazyVim/LazyVim",
       opts = {
          --colorscheme = "flow",
-         --colorscheme = "lackluster",
+         colorscheme = "lackluster",
          --colorscheme = "habamax",
          --colorscheme = "grail",
          --colorscheme = "deviuspro",
          --colorscheme = "midnight-desert",
          --colorscheme = "cosec-twilight",
-         colorscheme = "solarized-osaka",
+         --colorscheme = "solarized-osaka",
          --colorscheme = "vesper",
          news = { lazyvim = true, neovim = true },
       },
