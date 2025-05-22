@@ -1,75 +1,50 @@
 -- See https://www.lazyvim.org/configuration/lazy.nvim
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.uv.fs_stat(lazypath) then
-   -- bootstrap lazy.nvim
-   vim.fn.system({
-      "git",
-      "clone",
-      "--filter=blob:none",
-      "https://github.com/folke/lazy.nvim.git",
-      "--branch=stable",
-      lazypath,
-   })
+if not (vim.uv or vim.loop).fs_stat(lazypath) then
+   local lazyrepo = "https://github.com/folke/lazy.nvim.git"
+   local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
+   if vim.v.shell_error ~= 0 then
+      vim.api.nvim_echo({
+         { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
+         { out, "WarningMsg" },
+         { "\nPress any key to exit..." },
+      }, true, {})
+      vim.fn.getchar()
+      os.exit(1)
+   end
 end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
    spec = {
-      -- Add LazyVim and import its plugins
-      {
-         "LazyVim/LazyVim",
-         import = "lazyvim.plugins",
-      },
-
-      -- Import any extras modules here
-      { import = "lazyvim.plugins.extras.linting.eslint" },
-      { import = "lazyvim.plugins.extras.formatting.prettier" },
-      { import = "lazyvim.plugins.extras.util.mini-hipatterns" },
-      { import = "lazyvim.plugins.extras.lang.toml" },
-      { import = "lazyvim.plugins.extras.lang.typescript" },
-      { import = "lazyvim.plugins.extras.lang.json" },
-      { import = "lazyvim.plugins.extras.lang.tailwind" },
-      { import = "lazyvim.plugins.extras.lang.markdown" },
-      { import = "lazyvim.plugins.extras.lang.python" },
-      { import = "lazyvim.plugins.extras.lsp.neoconf" },
-      { import = "lazyvim.plugins.extras.util.mini-hipatterns" },
-      { import = "lazyvim.plugins.extras.dap.core" },
-      -- { import = "lazyvim.plugins.extras.lang.rust" }, Installed with :LazyExtras
-      -- { import = "lazyvim.plugins.extras.vscode" }, Installed with :LazyExtras
-      -- { import = "lazyvim.plugins.extras.ui.dashboard-nvim" },
-      -- { import = "lazyvim.plugins.extras.ui.mini-animate" },
-      -- { import = "lazyvim.plugins.extras.coding.copilot" }, Installed with :LazyExtras but disabled
-
-      -- Import/override with your plugins.
+      -- add LazyVim and import its plugins
+      { "LazyVim/LazyVim", import = "lazyvim.plugins" },
+      -- import/override with your plugins
       { import = "plugins" },
    },
    defaults = {
-      -- By default, only LazyVim plugins will be lazy-loaded.
-      -- Your custom plugins will load during startup.
-      -- If you know what you're doing, you can set this to `true` to
-      -- have all your custom plugins lazy-loaded by default.
+      -- By default, only LazyVim plugins will be lazy-loaded. Your custom plugins will load during startup.
+      -- If you know what you're doing, you can set this to `true` to have all your custom plugins lazy-loaded by default.
       lazy = false,
-      -- It's recommended to leave version=false for now,
-      -- since a lot the plugin that support versioning,
+      -- It's recommended to leave version=false for now, since a lot the plugin that support versioning,
       -- have outdated releases, which may break your Neovim install.
       version = false, -- always use the latest git commit
       -- version = "*", -- try installing the latest stable version for plugins that support semver
    },
-   checker = { enabled = true }, -- automatically check for plugin updates
+   install = { colorscheme = { "tokyonight", "habamax" } },
+   checker = {
+      enabled = true, -- check for plugin updates periodically
+      notify = true, -- notify on update
+   }, -- automatically check for plugin updates
    performance = {
-      cache = {
-         enabled = true,
-         -- disable_events = {},
-      },
       rtp = {
          -- disable some rtp plugins
          disabled_plugins = {
             "gzip",
             -- "matchit",
             -- "matchparen",
-            "netrwPlugin",
-            "rplugin",
+            -- "netrwPlugin",
             "tarPlugin",
             "tohtml",
             "tutor",
@@ -77,12 +52,4 @@ require("lazy").setup({
          },
       },
    },
-   ui = {
-      custom_keys = {
-         ["<localleader>d"] = function(plugin)
-            dd(plugin)
-         end,
-      },
-   },
-   debug = false,
 })

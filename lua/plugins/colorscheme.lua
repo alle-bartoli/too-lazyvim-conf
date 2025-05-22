@@ -1,3 +1,4 @@
+-- ~/.config/nvim/lua/plugins/colorscheme.lua
 -- See https://www.lazyvim.org/plugins/colorscheme
 return {
    {

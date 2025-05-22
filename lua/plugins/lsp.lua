@@ -20,12 +20,35 @@ return {
       end,
    },
 
+   --  CONFORM
+   {
+      "stevearc/conform.nvim",
+      opts = {
+         formatters_by_ft = {
+            javascript = { "prettier" },
+            typescript = { "prettier" },
+            javascriptreact = { "prettier" },
+            typescriptreact = { "prettier" },
+            json = { "prettier" },
+            html = { "prettier" },
+            css = { "prettier" },
+            markdown = { "prettier" },
+         },
+         format_on_save = {
+            lsp_fallback = true,
+            timeout_ms = 500,
+         },
+      },
+   },
+
    -- LSP
    {
       "neovim/nvim-lspconfig",
       opts = function(_, opts)
          local util = require("lspconfig.util")
          local Keys = require("lazyvim.plugins.lsp.keymaps").get()
+
+         util.root_pattern(".prettierrc", ".prettierrc.js", "prettier.config.js", "package.json", ".git")
 
          vim.list_extend(Keys, {
             {
@@ -60,9 +83,15 @@ return {
             tailwindcss = {
                root_dir = util.root_pattern(".git"),
             },
+            eslint = {
+               root_dir = util.root_pattern(".eslintrc.json", "package.json", ".git"),
+            },
             tsserver = {
                root_dir = util.root_pattern(".git"),
                single_file_support = false,
+               on_attach = function(client)
+                  client.server_capabilities.documentFormattingProvider = false
+               end,
                settings = {
                   typescript = {
                      inlayHints = {
