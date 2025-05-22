@@ -35,10 +35,10 @@ require("lazy").setup({
       { import = "lazyvim.plugins.extras.lsp.neoconf" },
       { import = "lazyvim.plugins.extras.util.mini-hipatterns" },
       { import = "lazyvim.plugins.extras.dap.core" },
+      { import = "lazyvim.plugins.extras.ui.mini-animate" },
       -- { import = "lazyvim.plugins.extras.lang.rust" }, Installed with :LazyExtras
       -- { import = "lazyvim.plugins.extras.vscode" }, Installed with :LazyExtras
       -- { import = "lazyvim.plugins.extras.ui.dashboard-nvim" },
-      -- { import = "lazyvim.plugins.extras.ui.mini-animate" },
       -- { import = "lazyvim.plugins.extras.coding.copilot" }, Installed with :LazyExtras but disabled
 
       -- Import/override with your plugins.

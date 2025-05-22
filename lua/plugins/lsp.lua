@@ -60,6 +60,9 @@ return {
             tailwindcss = {
                root_dir = util.root_pattern(".git"),
             },
+            eslint = {
+               root_dir = util.root_pattern(".eslintrc.json", "package.json", ".git"),
+            },
             tsserver = {
                root_dir = util.root_pattern(".git"),
                single_file_support = false,
