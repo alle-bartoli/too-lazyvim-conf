@@ -28,7 +28,7 @@ end
 return {
    "mfussenegger/nvim-dap",
    dependencies = { "banjo/package-pilot.nvim" },
-   opts = function(_, opts)
+   config = function()
       local dap = require("dap")
       local js_filetypes = { "typescript", "javascript", "typescriptreact", "javascriptreact" }
 
