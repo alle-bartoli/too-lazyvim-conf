@@ -290,7 +290,7 @@ return {
          --colorscheme = "grail",
          --colorscheme = "deviuspro",
          --colorscheme = "cosec-twilight",
-         --colorscheme = "solarized-osaka",
+         -- colorscheme = "solarized-osaka",
          --colorscheme = "vesper",
          colorscheme = "catppuccin",
          news = { lazyvim = true, neovim = true },

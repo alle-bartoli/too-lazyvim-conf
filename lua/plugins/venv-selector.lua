@@ -11,7 +11,6 @@ return {
       "nvim-telescope/telescope.nvim",
    },
    opts = {
-      -- Your options go here
       name = "venv",
       auto_refresh = false,
    },

@@ -34,10 +34,11 @@ return {
             css = { "prettier" },
             markdown = { "prettier" },
          },
-         format_on_save = {
-            lsp_fallback = true,
-            timeout_ms = 500,
-         },
+         -- Suppress LazyVim warning (Don't set `opts.format_on_save` for `conform.nvim`)
+         --format_on_save = {
+         --lsp_fallback = true,
+         --timeout_ms = 500,
+         --},
       },
    },
 
@@ -72,6 +73,16 @@ return {
                "gy",
                "<cmd>FzfLua lsp_typedefs jump1=true ignore_current_line=true silent=true<cr>",
                desc = "Goto T[y]pe Definition",
+            },
+            {
+               "<leader>cM",
+               LazyVim.lsp.action["source.addMissingImports.ts"],
+               desc = "Add missing imports",
+            },
+            {
+               "<leader>cD",
+               LazyVim.lsp.action["source.fixAll.ts"],
+               desc = "Fix all diagnostics",
             },
          })
 
