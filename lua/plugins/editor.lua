@@ -172,7 +172,7 @@ return {
    {
       "folke/flash.nvim",
       enabled = false,
-      ---@type Flash.Config
+      ---@type table
       opts = {
          search = {
             forward = true,
@@ -186,23 +186,37 @@ return {
    {
       "echasnovski/mini.hipatterns",
       event = "BufReadPre",
-      opts = {
-         highlighters = {
-            hsl_color = {
-               pattern = "hsl%(%d+,? %d+%%?,? %d+%%?%)",
-               group = function(_, match)
-                  local utils = require("solarized-osaka.hsl")
-                  --- @type string, string, string
-                  local nh, ns, nl = match:match("hsl%((%d+),? (%d+)%%?,? (%d+)%%?%)")
-                  --- @type number?, number?, number?
-                  local h, s, l = tonumber(nh), tonumber(ns), tonumber(nl)
-                  --- @type string
-                  local hex_color = utils.hslToHex(h, s, l)
-                  return MiniHipatterns.compute_hex_color_group(hex_color, "bg")
-               end,
+      opts = function()
+         local hipatterns = require("mini.hipatterns")
+         local hsl_utils = require("solarized-osaka.hsl")
+
+         return {
+            highlighters = {
+               hsl_color = {
+                  pattern = "hsl%(%d+,%s*%d+%%,%s*%d+%%%)",
+                  group = function(_, match)
+                     ---@type string
+                     local str = match
+                     local nh, ns, nl = str:match("hsl%((%d+),%s*(%d+)%%,%s*(%d+)%%%)")
+                     local h, s, l = tonumber(nh), tonumber(ns), tonumber(nl)
+
+                     if h == nil or s == nil or l == nil then
+                        return nil -- fallback: don't highlight if parsing fails
+                     end
+
+                     local hex_color = hsl_utils.hslToHex(h, s, l)
+                     return hipatterns.compute_hex_color_group(hex_color, "bg")
+                  end,
+               },
+               hex_color = {
+                  pattern = "#%x%x%x%x%x%x?", -- #RGB o #RRGGBB
+                  group = function(_, match)
+                     return hipatterns.compute_hex_color_group(match, "bg")
+                  end,
+               },
             },
-         },
-      },
+         }
+      end,
    },
 
    {
