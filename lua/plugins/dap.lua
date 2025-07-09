@@ -32,9 +32,62 @@ return {
       local dap = require("dap")
       local js_filetypes = { "typescript", "javascript", "typescriptreact", "javascriptreact" }
 
+      -- Symbols
+      vim.fn.sign_define("DapBreakpoint", { text = "●", texthl = "Error", linehl = "", numhl = "" })
+      vim.fn.sign_define("DapStopped", { text = "▶", texthl = "Success" })
+      vim.fn.sign_define("DapBreakpointRejected", { text = "◌", texthl = "WarningMsg" })
+
+      -- Configure adapters
+      -- vscode-js-debug (modern)
+      dap.adapters["pwa-node"] = {
+         type = "server",
+         host = "localhost",
+         port = "${port}",
+         executable = {
+            command = "node",
+            args = {
+               vim.fn.expand("~/.local/share/nvim/vscode-js-debug/dist/src/vsDebugServer.js"),
+               "${port}",
+            },
+         },
+      }
+
+      -- vscode-node-debug2 (older but stable)
+      dap.adapters["node2"] = {
+         type = "executable",
+         command = "node",
+         args = {
+            vim.fn.expand("~/.local/share/nvim/vscode-node-debug2/out/src/nodeDebug.js"),
+         },
+      }
+
       local current_file = vim.fn.expand("%:t")
       for _, language in ipairs(js_filetypes) do
          dap.configurations[language] = {
+            -- node2 + ts-node
+            {
+               type = "node2",
+               request = "launch",
+               name = "Debug current file (ts-node)",
+               runtimeExecutable = "node",
+               runtimeArgs = {
+                  "-r",
+                  "dotenv/config",
+                  "-r",
+                  "ts-node/register",
+                  "-r",
+                  "tsconfig-paths/register",
+               },
+               args = { "${file}" },
+               cwd = "${workspaceFolder}",
+               envFile = vim.fn.expand("${workspaceFolder}/.env"),
+               env = { NODE_ENV = "development" },
+               sourceMaps = true,
+               protocol = "inspector",
+               skipFiles = { "<node_internals>/**" },
+               console = "integratedTerminal",
+            },
+            -- pwa-node launch
             {
                type = "pwa-node",
                request = "launch",
@@ -42,6 +95,7 @@ return {
                program = "${file}",
                cwd = "${workspaceFolder}",
             },
+            -- pwa-node attach
             {
                type = "pwa-node",
                request = "attach",
@@ -49,6 +103,7 @@ return {
                processId = require("dap.utils").pick_process,
                cwd = "${workspaceFolder}",
             },
+            -- TSX launcher
             {
                name = "tsx (" .. current_file .. ")",
                type = "node",
@@ -60,6 +115,7 @@ return {
                internalConsoleOptions = "neverOpen",
                skipFiles = { "<node_internals>/**", "${workspaceFolder}/node_modules/**" },
             },
+            -- Script via pnpm
             {
                type = "node",
                request = "launch",

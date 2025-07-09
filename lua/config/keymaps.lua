@@ -61,8 +61,3 @@ keymap.set("n", "rh", "<Cmd>vertical resize -5<CR>", { desc = "Resize window lef
 keymap.set("n", "rl", "<Cmd>vertical resize +5<CR>", { desc = "Resize window right" })
 keymap.set("n", "rk", "<Cmd>resize +5<CR>", { desc = "Resize window taller" })
 keymap.set("n", "rj", "<Cmd>resize -5<CR>", { desc = "Resize window shorter" })
-
--- Diagnostic
-keymap.set("n", "<C-j>", function()
-   vim.diagnostic.goto_next()
-end, opts)
