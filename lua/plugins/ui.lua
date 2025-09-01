@@ -105,6 +105,13 @@ return {
             show_close_icon = false,
          },
       },
+      -- NOTE: tmp workaround -> https://github.com/LazyVim/LazyVim/pull/6354#issuecomment-3202799735
+      init = function()
+         local bufline = require("catppuccin.groups.integrations.bufferline")
+         function bufline.get()
+            return bufline.get_theme()
+         end
+      end,
    },
 
    -- Statusline
@@ -112,8 +119,10 @@ return {
       "nvim-lualine/lualine.nvim",
       event = "VeryLazy",
       dependencies = { "nvim-tree/nvim-web-devicons" },
-      opts = {
-         options = {
+      opts = function(_, opts)
+         -- set theme
+         ---@type table
+         opts.options = vim.tbl_deep_extend("force", opts.options or {}, {
             -- theme = "solarized_dark",
             theme = "lackluster",
             -- theme = "flow",
@@ -122,10 +131,11 @@ return {
             -- theme = "grail",
             -- theme = "deviuspro",
             -- theme = "midnight-desert",
-         },
-      },
-      opts = function(_, opts)
+         })
+
+         -- add LazyVim pretty_path to lualine_c[4]
          local LazyVim = require("lazyvim.util")
+         ---@type table
          opts.sections.lualine_c[4] = {
             LazyVim.lualine.pretty_path({
                length = 0,

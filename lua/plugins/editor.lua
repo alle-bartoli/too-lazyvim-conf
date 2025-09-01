@@ -219,23 +219,6 @@ return {
       end,
    },
 
-   {
-      "saghen/blink.cmp",
-      build = "cargo build --release",
-      opts = {
-         completion = {
-            menu = {
-               winblend = vim.o.pumblend,
-            },
-         },
-         signature = {
-            window = {
-               winblend = vim.o.pumblend,
-            },
-         },
-      },
-   },
-
    -- `markdownlint-cli2` config.
    -- Thanks to `luigir-it`: https://github.com/LazyVim/LazyVim/discussions/4094#discussioncomment-10178217
    {

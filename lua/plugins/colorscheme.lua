@@ -181,7 +181,7 @@ return {
                -- normal = 'none',    -- transparent
                -- normal = '#a1b2c3', -- hexcode
                -- normal = color.green, -- lackluster color
-               telescope = "none",
+               telescope = "default",
                menu = color.gray3,
                popup = "default",
             },
