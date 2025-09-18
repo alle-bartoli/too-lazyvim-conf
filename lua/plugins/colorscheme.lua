@@ -1,5 +1,7 @@
 -- ~/.config/nvim/lua/plugins/colorscheme.lua
+
 -- See https://www.lazyvim.org/plugins/colorscheme
+
 return {
    {
       "craftzdog/solarized-osaka.nvim",
@@ -52,17 +54,18 @@ return {
       "chama-chomo/grail",
       version = false,
       lazy = false,
-      priority = 1000, -- make sure to load this before all the other start plugins.
-      -- Optional.
-      -- Default configuration will be used if setup isn't called.
+      priority = 1000, -- make sure to load this before all the other start plugins
+      -- Optional
+      -- Default configuration will be used if setup isn't called
       config = function()
-         require("grail").setup({
-            -- Your config here.
-            transparent_background_level = 1,
-            background = "hard",
-            disable_italic_comments = false,
-            italics = true,
-         })
+         ---@class Config
+         -- require("grail").setup({
+         --    -- Your config here
+         --    transparent_background_level = 1,
+         --    background = "hard",
+         --    disable_italic_comments = false,
+         --    italics = true,
+         -- })
       end,
    },
 
@@ -71,26 +74,30 @@ return {
       "DeviusVim/deviuspro.nvim",
    },
 
-   -- flow.nvim
+   -- flow.nvim: https://github.com/0xstepit/flow.nvim
    {
       "0xstepit/flow.nvim",
       lazy = false,
       priority = 1000,
-      tag = "v2.0.0",
+      tag = "v2.0.1",
       opts = {
          theme = {
-            --style = "dark", --  "dark" | "light"
-            --contrast = "default", -- "default" | "high"
+            style = "dark", --  "dark" | "light"
+            contrast = "high", -- "default" | "high"
             transparent = true, -- true | false
          },
-         --colors = {
-         --mode = "default", -- "default" | "dark" | "light"
-         --fluo = "pink", -- "pink" | "cyan" | "yellow" | "orange" | "green"
-         --},
-         --ui = {
-         -- borders = "inverse", -- "theme" | "inverse" | "fluo" | "none"
-         -- aggressive_spell = false, -- true | false
-         --},
+         colors = {
+            mode = "default", -- "default" | "dark" | "light"
+            fluo = "cyan", -- "pink" | "cyan" | "yellow" | "orange" | "green"
+            custom = {
+               saturation = "", -- "" | string representing an integer between 0 and 100
+               light = "", -- "" | string representing an integer between 0 and 100
+            },
+         },
+         ui = {
+            borders = "inverse", -- "theme" | "inverse" | "fluo" | "none"
+            aggressive_spell = false, -- true | false
+         },
          config = function(_, opts)
             require("flow").setup(opts)
             vim.cmd("colorscheme flow")
@@ -278,21 +285,25 @@ return {
             -- For more plugins integrations please scroll down (https://github.com/catppuccin/nvim#integrations)
          },
       },
+      config = function(_, opts)
+         require("catppuccin").setup(opts)
+         vim.cmd.colorscheme("catppuccin-macchiato")
+      end,
    },
 
    -- Configure and load colorscheme
    {
       "LazyVim/LazyVim",
       opts = {
-         --colorscheme = "flow",
+         colorscheme = "flow",
          --colorscheme = "lackluster",
          --colorscheme = "habamax",
          --colorscheme = "grail",
          --colorscheme = "deviuspro",
          --colorscheme = "cosec-twilight",
-         -- colorscheme = "solarized-osaka",
+         --colorscheme = "solarized-osaka",
          --colorscheme = "vesper",
-         colorscheme = "catppuccin",
+         --colorscheme = "catppuccin",
          news = { lazyvim = true, neovim = true },
       },
    },

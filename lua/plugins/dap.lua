@@ -1,4 +1,5 @@
 -- ~/.config/nvim/lua/plugins/dap.lua
+
 -- See https://www.banjocode.com/post/nvim/debug-node
 
 local function pick_script()

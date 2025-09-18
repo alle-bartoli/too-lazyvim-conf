@@ -1,3 +1,5 @@
+-- ~/.config/nvim/lua/config/lazy.lua
+
 -- See https://www.lazyvim.org/configuration/lazy.nvim
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"

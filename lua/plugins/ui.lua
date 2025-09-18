@@ -55,13 +55,6 @@ return {
       end,
    },
 
-   {
-      "rcarriga/nvim-notify",
-      opts = {
-         timeout = 5000,
-      },
-   },
-
    -- Neotree
    {
       "nvim-neo-tree/neo-tree.nvim",
@@ -88,6 +81,9 @@ return {
       "rcarriga/nvim-notify",
       opts = {
          timeout = 5000,
+         background_colour = function()
+            return vim.fn.synIDattr(vim.fn.hlID("Normal"), "bg") or "#000000"
+         end,
       },
    },
 
@@ -106,12 +102,12 @@ return {
          },
       },
       -- NOTE: tmp workaround -> https://github.com/LazyVim/LazyVim/pull/6354#issuecomment-3202799735
-      init = function()
-         local bufline = require("catppuccin.groups.integrations.bufferline")
-         function bufline.get()
-            return bufline.get_theme()
-         end
-      end,
+      -- init = function()
+      --    local bufline = require("catppuccin.groups.integrations.bufferline")
+      --    function bufline.get()
+      --       return bufline.get_theme()
+      --    end
+      -- end,
    },
 
    -- Statusline
@@ -184,7 +180,7 @@ return {
 
    -- Animations
    {
-      "echasnovski/mini.animate",
+      "nvim-mini/mini.animate",
       event = "VeryLazy",
       opts = function(_, opts)
          opts.scroll = {
@@ -193,24 +189,12 @@ return {
       end,
    },
 
-   {
-      "folke/zen-mode.nvim",
-      cmd = "ZenMode",
-      opts = {
-         plugins = {
-            gitsigns = true,
-            tmux = true,
-            kitty = { enabled = false, font = "+2" },
-         },
-      },
-      keys = { { "<leader>z", "<cmd>ZenMode<cr>", desc = "Zen Mode" } },
-   },
-
    -- Logo
    -- Generated with: https://patorjk.com/software/taag/#p=display&f=ANSI%20Shadow&t=TOO%20LAZY
    {
       "snacks.nvim",
       opts = {
+         ---@type snacks.Config
          dashboard = {
             preset = {
                header = [[
@@ -221,6 +205,13 @@ return {
    ██║   ╚██████╔╝╚██████╔╝    ███████╗██║  ██║███████╗   ██║   
    ╚═╝    ╚═════╝  ╚═════╝     ╚══════╝╚═╝  ╚═╝╚══════╝   ╚═╝   
                ]],
+            },
+         },
+         terminal = {
+            config = {
+               {
+                  win = { style = "terminal" },
+               },
             },
          },
       },

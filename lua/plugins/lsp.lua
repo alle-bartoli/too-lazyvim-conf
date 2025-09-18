@@ -1,9 +1,9 @@
 -- ~/.config/nvim/lua/plugins/lsp.lua
 
 return {
-   -- tools
+   -- MASON
    {
-      "williamboman/mason.nvim",
+      "mason-org/mason.nvim",
       opts = function(_, opts)
          vim.list_extend(opts.ensure_installed, {
             "eslint-lsp",
@@ -86,9 +86,7 @@ return {
             },
          })
 
-         -- Modifica o estendi le opzioni esistenti
          opts.inlay_hints = { enabled = false }
-
          opts.servers = vim.tbl_deep_extend("force", opts.servers or {}, {
             cssls = {},
             tailwindcss = {

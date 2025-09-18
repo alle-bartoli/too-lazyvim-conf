@@ -13,10 +13,20 @@
 local HOME = os.getenv("HOME")
 
 return {
+
    -- File browser
+   {
+      "fzf-lua", -- opts = nil
+   },
+
+   -- fzf-lua (fzf improved)
    {
       "ibhagwan/fzf-lua",
       cmd = "FzfLua",
+      -- optional for icon support
+      dependencies = { "nvim-tree/nvim-web-devicons" },
+      -- or if using mini.icons/mini.nvim
+      -- dependencies = { "nvim-mini/mini.icons" },
       opts = function(_, opts)
          local config = require("fzf-lua.config")
          local actions = require("fzf-lua.actions")
@@ -152,11 +162,6 @@ return {
       end,
    },
 
-   -- fzf-lua
-   {
-      "fzf-lua", -- opts = nil
-   },
-
    -- Todo Comments
    {
       "folke/todo-comments.nvim",
@@ -171,20 +176,21 @@ return {
    -- Navigate your code with search labels
    {
       "folke/flash.nvim",
-      enabled = false,
-      ---@type table
-      opts = {
-         search = {
-            forward = true,
-            multi_window = false,
-            wrap = false,
-            incremental = true,
-         },
+      event = "VeryLazy",
+      ---@type Flash.Config
+      opts = {},
+      -- stylua: ignore
+      keys = {
+        { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
+        { "S", mode = { "n", "x", "o" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
+        { "r", mode = "o", function() require("flash").remote() end, desc = "Remote Flash" },
+        { "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
+        { "<c-s>", mode = { "c" }, function() require("flash").toggle() end, desc = "Toggle Flash Search" },
       },
    },
 
    {
-      "echasnovski/mini.hipatterns",
+      "nvim-mini/mini.hipatterns",
       event = "BufReadPre",
       opts = function()
          local hipatterns = require("mini.hipatterns")

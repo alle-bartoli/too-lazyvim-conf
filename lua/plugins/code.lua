@@ -35,6 +35,19 @@ return {
       opts = {},
    },
 
+   -- friendly-snippets
+   {
+      "rafamadriz/friendly-snippets",
+      -- add blink.compat to dependencies
+      {
+         "saghen/blink.compat",
+         optional = true, -- make optional so it's only enabled if any extras need it
+         opts = {},
+         version = not vim.g.lazyvim_blink_main and "*",
+      },
+   },
+
+   -- blink.cmp
    {
       "saghen/blink.cmp",
 
@@ -84,19 +97,8 @@ return {
          -- when the Rust fuzzy matcher is not available, by using `implementation = "prefer_rust"`
          --
          -- See the fuzzy documentation for more information
-         fuzzy = { implementation = "lua" },
+         fuzzy = { implementation = "prefer_rust_with_warning" },
       },
       opts_extend = { "sources.default" },
-   },
-
-   {
-      "rafamadriz/friendly-snippets",
-      -- add blink.compat to dependencies
-      {
-         "saghen/blink.compat",
-         optional = true, -- make optional so it's only enabled if any extras need it
-         opts = {},
-         version = not vim.g.lazyvim_blink_main and "*",
-      },
    },
 }
