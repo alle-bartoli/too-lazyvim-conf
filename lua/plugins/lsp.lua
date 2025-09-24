@@ -15,12 +15,15 @@ return {
             "shfmt",
             "tailwindcss-language-server",
             "typescript-language-server",
+            "vtsls",
             "css-lsp",
+            "rust-analyzer",
+            "gopls",
          })
       end,
    },
 
-   --  CONFORM
+   -- CONFORM
    {
       "stevearc/conform.nvim",
       opts = {
@@ -34,11 +37,6 @@ return {
             css = { "prettier" },
             markdown = { "prettier" },
          },
-         -- Suppress LazyVim warning (Don't set `opts.format_on_save` for `conform.nvim`)
-         --format_on_save = {
-         --lsp_fallback = true,
-         --timeout_ms = 500,
-         --},
       },
    },
 
@@ -49,7 +47,45 @@ return {
          local util = require("lspconfig.util")
          local Keys = require("lazyvim.plugins.lsp.keymaps").get()
 
-         util.root_pattern(".prettierrc", ".prettierrc.js", "prettier.config.js", "package.json", ".git")
+         local function root_dir()
+            return util.root_pattern("tsconfig.json", "package.json", ".git")
+         end
+
+         -- Config inlay hints comune TS/JS
+         local function ts_inlay_hints()
+            return {
+               typescript = {
+                  inlayHints = {
+                     includeInlayParameterNameHints = "literal",
+                     includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+                     includeInlayFunctionParameterTypeHints = true,
+                     includeInlayVariableTypeHints = false,
+                     includeInlayPropertyDeclarationTypeHints = true,
+                     includeInlayFunctionLikeReturnTypeHints = true,
+                     includeInlayEnumMemberValueHints = true,
+                  },
+               },
+               javascript = {
+                  inlayHints = {
+                     includeInlayParameterNameHints = "all",
+                     includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+                     includeInlayFunctionParameterTypeHints = true,
+                     includeInlayVariableTypeHints = true,
+                     includeInlayPropertyDeclarationTypeHints = true,
+                     includeInlayFunctionLikeReturnTypeHints = true,
+                     includeInlayEnumMemberValueHints = true,
+                  },
+               },
+            }
+         end
+
+         -- Common `on_attach` TS/JS
+         local function ts_on_attach(client)
+            client.server_capabilities.documentFormattingProvider = false
+         end
+
+         -- Init root_pattern
+         util.root_pattern(".prettierrc", ".prettierrc.js", "prettier.config.js", "tsconfig.json", "package.json", ".git")
 
          vim.list_extend(Keys, {
             {
@@ -72,79 +108,59 @@ return {
             {
                "gy",
                "<cmd>FzfLua lsp_typedefs jump1=true ignore_current_line=true silent=true<cr>",
-               desc = "Goto T[y]pe Definition",
+               desc = "Goto Type Definition",
             },
-            {
-               "<leader>cM",
-               LazyVim.lsp.action["source.addMissingImports.ts"],
-               desc = "Add missing imports",
-            },
-            {
-               "<leader>cD",
-               LazyVim.lsp.action["source.fixAll.ts"],
-               desc = "Fix all diagnostics",
-            },
+            { "<leader>cM", LazyVim.lsp.action["source.addMissingImports.ts"], desc = "Add missing imports" },
+            { "<leader>cD", LazyVim.lsp.action["source.fixAll.ts"], desc = "Fix all diagnostics" },
          })
 
          opts.inlay_hints = { enabled = false }
          opts.servers = vim.tbl_deep_extend("force", opts.servers or {}, {
-            cssls = {},
-            tailwindcss = {
-               root_dir = util.root_pattern(".git"),
-            },
-            eslint = {
-               root_dir = util.root_pattern(".eslintrc.json", "package.json", ".git"),
-            },
-            tsserver = {
-               root_dir = util.root_pattern(".git"),
+            -- TypeScript / JavaScript
+
+            -- TODO: investigate why doesn't works
+            -- vtsls = {
+            --    enabled = true,
+            --    root_dir = root_dir(),
+            --    single_file_support = false,
+            --    settings = ts_inlay_hints(),
+            --    on_attach = ts_on_attach,
+            -- },
+
+            ts_ls = {
+               enabled = false,
+               root_dir = root_dir(),
                single_file_support = false,
-               on_attach = function(client)
-                  client.server_capabilities.documentFormattingProvider = false
-               end,
-               settings = {
-                  typescript = {
-                     inlayHints = {
-                        includeInlayParameterNameHints = "literal",
-                        includeInlayParameterNameHintsWhenArgumentMatchesName = false,
-                        includeInlayFunctionParameterTypeHints = true,
-                        includeInlayVariableTypeHints = false,
-                        includeInlayPropertyDeclarationTypeHints = true,
-                        includeInlayFunctionLikeReturnTypeHints = true,
-                        includeInlayEnumMemberValueHints = true,
-                     },
-                  },
-                  javascript = {
-                     inlayHints = {
-                        includeInlayParameterNameHints = "all",
-                        includeInlayParameterNameHintsWhenArgumentMatchesName = false,
-                        includeInlayFunctionParameterTypeHints = true,
-                        includeInlayVariableTypeHints = true,
-                        includeInlayPropertyDeclarationTypeHints = true,
-                        includeInlayFunctionLikeReturnTypeHints = true,
-                        includeInlayEnumMemberValueHints = true,
-                     },
-                  },
-               },
+               settings = ts_inlay_hints(),
+               on_attach = ts_on_attach,
             },
+
+            tsserver = {
+               enabled = false,
+               root_dir = root_dir(),
+               single_file_support = false,
+               settings = ts_inlay_hints(),
+               on_attach = ts_on_attach,
+            },
+
+            -- HTML / CSS / Tailwind
+            cssls = {},
+            tailwindcss = { root_dir = util.root_pattern(".git") },
             html = {},
-            yamlls = {
-               settings = {
-                  yaml = {
-                     keyOrdering = false,
-                  },
-               },
-            },
+
+            -- Linting
+            eslint = { root_dir = util.root_pattern(".eslintrc.json", "package.json", ".git") },
+
+            -- YAML
+            yamlls = { settings = { yaml = { keyOrdering = false } } },
+
+            -- Lua
             lua_ls = {
                single_file_support = true,
                settings = {
                   Lua = {
-                     workspace = {
-                        checkThirdParty = false,
-                     },
-                     completion = {
-                        workspaceWord = true,
-                        callSnippet = "Both",
-                     },
+                     workspace = { checkThirdParty = false },
+                     completion = { workspaceWord = true, callSnippet = "Both" },
                      hint = {
                         enable = true,
                         setType = false,
@@ -153,18 +169,11 @@ return {
                         semicolon = "Disable",
                         arrayIndex = "Disable",
                      },
-                     doc = {
-                        privateName = { "^_" },
-                     },
-                     type = {
-                        castNumberToInteger = true,
-                     },
+                     doc = { privateName = { "^_" } },
+                     type = { castNumberToInteger = true },
                      diagnostics = {
                         disable = { "incomplete-signature-doc", "trailing-space" },
-                        groupSeverity = {
-                           strong = "Warning",
-                           strict = "Warning",
-                        },
+                        groupSeverity = { strong = "Warning", strict = "Warning" },
                         groupFileStatus = {
                            ambiguity = "Opened",
                            await = "Opened",
@@ -183,12 +192,38 @@ return {
                      },
                      format = {
                         enable = false,
-                        defaultConfig = {
-                           indent_style = "space",
-                           indent_size = "2",
-                           continuation_indent_size = "2",
-                        },
+                        defaultConfig = { indent_style = "space", indent_size = "2", continuation_indent_size = "2" },
                      },
+                  },
+               },
+            },
+
+            -- Rust
+            rust_analyzer = {
+               settings = {
+                  ["rust-analyzer"] = {
+                     cargo = { allFeatures = true },
+                     checkOnSave = { command = "clippy" },
+                     inlayHints = {
+                        bindingModeHints = true,
+                        closureReturnTypeHints = "all",
+                        lifetimeElisionHints = "always",
+                        reborrowHints = true,
+                        typeHints = true,
+                     },
+                  },
+               },
+            },
+
+            -- Go
+            gopls = {
+               cmd = { "gopls" },
+               root_dir = util.root_pattern("go.mod", ".git"),
+               settings = {
+                  gopls = {
+                     analyses = { unusedparams = true, shadow = true },
+                     staticcheck = true,
+                     codelenses = { generate = true, gc_details = true, tidy = true, test = true },
                   },
                },
             },
