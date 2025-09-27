@@ -19,5 +19,9 @@ else
    vim.print = _G.dd
 end
 
+-- Enable 24-bit colour
+-- See: https://github.com/rcarriga/nvim-notify?tab=readme-ov-file#prerequisites
+vim.opt.termguicolors = true
+
 -- Bootstrap LazyVim and your plugin/config setup
 require("config.lazy")

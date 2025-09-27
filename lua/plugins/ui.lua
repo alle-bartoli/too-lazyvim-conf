@@ -4,6 +4,10 @@ return {
    -- Replace the UI for `messages`, `cmdline` and the `popupmenu`
    {
       "folke/noice.nvim",
+      dependencies = {
+         "rcarriga/nvim-notify",
+         "MunifTanjim/nui.nvim",
+      },
       opts = function(_, opts)
          table.insert(opts.routes, {
             filter = {
@@ -51,7 +55,8 @@ return {
             end,
          })
 
-         opts.presets.lsp_doc_border = true
+         opts.presets = { lsp_doc_border = true, bottom_search = true }
+         opts.notify = { enable = true } -- use `nvim-notify`
       end,
    },
 
@@ -80,11 +85,17 @@ return {
    {
       "rcarriga/nvim-notify",
       opts = {
+         stages = "slide",
          timeout = 5000,
-         background_colour = function()
-            return vim.fn.synIDattr(vim.fn.hlID("Normal"), "bg") or "#000000"
-         end,
+         background_colour = vim.fn.synIDattr(vim.fn.hlID("Normal"), "bg") or "#000000",
       },
+      config = function(_, opts)
+         local notify = require("notify")
+         notify.setup(opts)
+         vim.notify = notify
+         -- debug
+         -- print("Notify stages:", notify._config().stages)
+      end,
    },
 
    -- Bufferline
