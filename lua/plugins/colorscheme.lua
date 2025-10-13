@@ -90,7 +90,7 @@ return {
             mode = "default", -- "default" | "dark" | "light"
             fluo = "cyan", -- "pink" | "cyan" | "yellow" | "orange" | "green"
             custom = {
-               saturation = "", -- "" | string representing an integer between 0 and 100
+               saturation = "70", -- "" | string representing an integer between 0 and 100
                light = "", -- "" | string representing an integer between 0 and 100
             },
          },

@@ -127,6 +127,50 @@ return {
                skipFiles = { "<node_internals>/**", "${workspaceFolder}/node_modules/**" },
             },
          }
+
+         -- -- Use the Python executable from the current venv
+         -- -- venv-selector.nvim sets VIRTUAL_ENV automatically
+         local venv = os.getenv("VIRTUAL_ENV")
+         local python_path = venv and (venv .. "/bin/python") or "python"
+
+         -- Register debugpy adapter
+         dap.adapters.debugpy = {
+            type = "executable",
+            command = python_path, -- "python",
+            args = { "-m", "debugpy.adapter" },
+         }
+
+         -- Cleanup Python configurations
+         -- local dap_python = require("dap-python") -- built-in configurations
+         dap.configurations.python = {}
+
+         ----------------------------------
+         -- VS Code launch.json integration
+         ----------------------------------
+
+         local vscode = require("dap.ext.vscode")
+
+         -- Load .vscode/launch.json automatically (supports debugpy, node, etc.)
+         vscode.load_launchjs(nil, {
+            python = { "python" },
+            ["debugpy"] = { "python" },
+            ["pwa-node"] = { "javascript", "typescript", "javascriptreact", "typescriptreact" },
+            ["node2"] = { "javascript", "typescript" },
+         })
+
+         -- Auto reload launch.json on save
+         vim.api.nvim_create_autocmd("BufWritePost", {
+            pattern = "launch.json",
+            callback = function()
+               require("dap.ext.vscode").load_launchjs(nil, {
+                  python = { "python" },
+                  ["debugpy"] = { "python" },
+                  ["pwa-node"] = { "javascript", "typescript", "javascriptreact", "typescriptreact" },
+                  ["node2"] = { "javascript", "typescript" },
+               })
+               vim.notify("Reloaded launch.json for nvim-dap", vim.log.levels.INFO)
+            end,
+         })
       end
    end,
 }
