@@ -45,11 +45,6 @@ return {
       "neovim/nvim-lspconfig",
       opts = function(_, opts)
          local util = require("lspconfig.util")
-         local Keys = require("lazyvim.plugins.lsp.keymaps").get()
-
-         local function root_dir()
-            return util.root_pattern("tsconfig.json", "package.json", ".git")
-         end
 
          -- Config inlay hints comune TS/JS
          local function ts_inlay_hints()
@@ -80,48 +75,64 @@ return {
          end
 
          -- Common `on_attach` TS/JS
-         local function ts_on_attach(client)
+         local function ts_on_attach(client, bufnr)
+            -- LazyVim already handles keymaps & autocmd,
+            -- so it allows to customize client behaviour only
             client.server_capabilities.documentFormattingProvider = false
          end
 
-         -- Init root_pattern
-         util.root_pattern(".prettierrc", ".prettierrc.js", "prettier.config.js", "tsconfig.json", "package.json", ".git")
-
-         vim.list_extend(Keys, {
-            {
-               "gd",
-               "<cmd>FzfLua lsp_definitions jump1=true ignore_current_line=true silent=true<cr>",
-               desc = "Goto Definition",
-               has = "definition",
-            },
-            {
-               "gr",
-               "<cmd>FzfLua lsp_references jump1=true ignore_current_line=true silent=true<cr>",
-               desc = "References",
-               nowait = true,
-            },
-            {
-               "gI",
-               "<cmd>FzfLua lsp_implementations jump1=true ignore_current_line=true silent=true<cr>",
-               desc = "Goto Implementation",
-            },
-            {
-               "gy",
-               "<cmd>FzfLua lsp_typedefs jump1=true ignore_current_line=true silent=true<cr>",
-               desc = "Goto Type Definition",
-            },
-            { "<leader>cM", LazyVim.lsp.action["source.addMissingImports.ts"], desc = "Add missing imports" },
-            { "<leader>cD", LazyVim.lsp.action["source.fixAll.ts"], desc = "Fix all diagnostics" },
-         })
-
          opts.inlay_hints = { enabled = false }
+
+         ---@diagnostic disable-next-line: undefined-field
          opts.servers = vim.tbl_deep_extend("force", opts.servers or {}, {
+            -- Global keymaps
+            ["*"] = {
+               keys = {
+                  {
+                     "gd",
+                     "<cmd>FzfLua lsp_definitions jump1=true ignore_current_line=true silent=true<cr>",
+                     desc = "Goto Definition",
+                     has = "definition",
+                  },
+                  {
+                     "gr",
+                     "<cmd>FzfLua lsp_references jump1=true ignore_current_line=true silent=true<cr>",
+                     desc = "References",
+                     nowait = true,
+                  },
+                  {
+                     "gI",
+                     "<cmd>FzfLua lsp_implementations jump1=true ignore_current_line=true silent=true<cr>",
+                     desc = "Goto Implementation",
+                  },
+                  {
+                     "gy",
+                     "<cmd>FzfLua lsp_typedefs jump1=true ignore_current_line=true silent=true<cr>",
+                     desc = "Goto Type Definition",
+                  },
+                  {
+                     "<leader>cM",
+                     function()
+                        require("lazyvim.util").lsp.action["source.addMissingImports.ts"]()
+                     end,
+                     desc = "Add missing imports",
+                  },
+                  {
+                     "<leader>cD",
+                     function()
+                        require("lazyvim.util").lsp.action["source.fixAll.ts"]()
+                     end,
+                     desc = "Fix all diagnostics",
+                  },
+               },
+            },
+
             -- TypeScript / JavaScript
 
             -- TODO: investigate why doesn't works
             -- vtsls = {
             --    enabled = true,
-            --    root_dir = root_dir(),
+            --    root_dir = util.root_pattern("tsconfig.json", "package.json", ".git"),
             --    single_file_support = false,
             --    settings = ts_inlay_hints(),
             --    on_attach = ts_on_attach,
@@ -129,7 +140,7 @@ return {
 
             ts_ls = {
                enabled = false,
-               root_dir = root_dir(),
+               root_dir = util.root_pattern("tsconfig.json", "package.json", ".git"),
                single_file_support = false,
                settings = ts_inlay_hints(),
                on_attach = ts_on_attach,
@@ -137,7 +148,7 @@ return {
 
             tsserver = {
                enabled = false,
-               root_dir = root_dir(),
+               root_dir = util.root_pattern("tsconfig.json", "package.json", ".git"),
                single_file_support = false,
                settings = ts_inlay_hints(),
                on_attach = ts_on_attach,

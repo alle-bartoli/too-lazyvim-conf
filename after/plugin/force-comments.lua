@@ -1,5 +1,5 @@
 -- ~/.config/nvim/after/plugin/force-comments.lua
---
+
 -- Ensure termguicolors
 vim.opt.termguicolors = true
 
