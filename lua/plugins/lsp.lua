@@ -156,7 +156,7 @@ return {
 
             -- HTML / CSS / Tailwind
             cssls = {},
-            tailwindcss = { root_dir = util.root_pattern(".git") },
+            tailwindcss = {},
             html = {},
 
             -- Linting
