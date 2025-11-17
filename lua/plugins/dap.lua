@@ -142,7 +142,34 @@ return {
 
          -- Cleanup Python configurations
          -- local dap_python = require("dap-python") -- built-in configurations
-         dap.configurations.python = {}
+         dap.configurations.python = {
+            {
+               type = "debugpy",
+               request = "launch",
+               name = "Launch file",
+               program = "${file}", -- current buffer
+               pythonPath = function()
+                  -- prefer active venv
+                  -- local venv = os.getenv("VIRTUAL_ENV") -- already set
+                  if venv then
+                     return venv .. "/bin/python"
+                  end
+                  -- fallback to pyenv
+                  local pyenv_version = vim.fn.system("pyenv version-name"):gsub("%s+", "")
+                  if pyenv_version and #pyenv_version > 0 then
+                     return vim.fn.expand("~/.pyenv/versions/" .. pyenv_version .. "/bin/python")
+                  end
+                  return "python"
+               end,
+            },
+            {
+               type = "debugpy",
+               request = "attach",
+               name = "Attach to process",
+               processId = require("dap.utils").pick_process,
+               justMyCode = true,
+            },
+         }
 
          ----------------------------------
          -- VS Code launch.json integration
