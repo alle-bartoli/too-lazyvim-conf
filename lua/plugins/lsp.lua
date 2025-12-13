@@ -19,6 +19,7 @@ return {
             "css-lsp",
             "rust-analyzer",
             "gopls",
+            "nomicfoundation-solidity-language-server",
          })
       end,
    },
@@ -36,6 +37,7 @@ return {
             html = { "prettier" },
             css = { "prettier" },
             markdown = { "prettier" },
+            solidity = { "prettier" },
          },
       },
    },
@@ -237,6 +239,14 @@ return {
                      codelenses = { generate = true, gc_details = true, tidy = true, test = true },
                   },
                },
+            },
+
+            -- Solidity
+            solidity = {
+               cmd = { "nomicfoundation-solidity-language-server", "--stdio" },
+               filetypes = { "solidity" },
+               root_dir = util.root_pattern("foundry.toml", "hardhat.config.js", "hardhat.config.ts", "truffle-config.js", ".git"),
+               single_file_support = true,
             },
          })
 

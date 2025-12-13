@@ -31,6 +31,7 @@ return {
             "svelte",
             "rust", -- Required for rust
             "toml", -- Required for rust
+            "solidity", -- Solidity smart contracts
          },
       },
 

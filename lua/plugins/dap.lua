@@ -128,39 +128,66 @@ return {
             },
          }
 
-         -- -- Use the Python executable from the current venv
-         -- -- venv-selector.nvim sets VIRTUAL_ENV automatically
-         local venv = os.getenv("VIRTUAL_ENV")
-         local python_path = venv and (venv .. "/bin/python") or "python"
+         -- Detect venv automatically per project
+         local function find_project_venv()
+            local cwd = vim.fn.getcwd()
+            local possible = {
+               cwd .. "/venv/bin/python", -- standard venv folder
+               cwd .. "/.venv/bin/python", -- common alternative
+               cwd .. "/env/bin/python",
+            }
 
-         -- Register debugpy adapter
+            for _, path in ipairs(possible) do
+               if vim.fn.filereadable(path) == 1 then
+                  return path
+               end
+            end
+
+            -- fallback to pyenv if nothing found
+            local pyenv_version = vim.fn.system("pyenv version-name"):gsub("%s+", "")
+            if pyenv_version and #pyenv_version > 0 then
+               return vim.fn.expand("~/.pyenv/versions/" .. pyenv_version .. "/bin/python")
+            end
+
+            return "python" -- system fallback
+         end
+
+         -- Determine python path dynamically in launch config
+         local function get_python()
+            local v = os.getenv("VIRTUAL_ENV")
+            if v and v ~= "" then
+               return v .. "/bin/python"
+            end
+            local pyenv_version = vim.fn.system("pyenv version-name"):gsub("%s+", "")
+            if pyenv_version and #pyenv_version > 0 then
+               return vim.fn.expand("~/.pyenv/versions/" .. pyenv_version .. "/bin/python")
+            end
+            return "python"
+         end
+
          dap.adapters.debugpy = {
             type = "executable",
-            command = python_path, -- "python",
+            command = "python", -- fixed string; actual path handled in pythonPath
             args = { "-m", "debugpy.adapter" },
          }
 
-         -- Cleanup Python configurations
-         -- local dap_python = require("dap-python") -- built-in configurations
          dap.configurations.python = {
             {
                type = "debugpy",
                request = "launch",
                name = "Launch file",
-               program = "${file}", -- current buffer
-               pythonPath = function()
-                  -- prefer active venv
-                  -- local venv = os.getenv("VIRTUAL_ENV") -- already set
-                  if venv then
-                     return venv .. "/bin/python"
-                  end
-                  -- fallback to pyenv
-                  local pyenv_version = vim.fn.system("pyenv version-name"):gsub("%s+", "")
-                  if pyenv_version and #pyenv_version > 0 then
-                     return vim.fn.expand("~/.pyenv/versions/" .. pyenv_version .. "/bin/python")
-                  end
-                  return "python"
-               end,
+               program = "${file}",
+               cwd = vim.fn.getcwd(), -- project root
+               pythonPath = find_project_venv, -- dynamic per project
+            },
+            {
+               type = "debugpy",
+               request = "launch",
+               name = "Launch main.py as module",
+               program = "-m",
+               args = { "src.main" },
+               cwd = vim.fn.getcwd(), -- project root
+               pythonPath = find_project_venv, -- dynamic per project
             },
             {
                type = "debugpy",
@@ -168,6 +195,7 @@ return {
                name = "Attach to process",
                processId = require("dap.utils").pick_process,
                justMyCode = true,
+               pythonPath = find_project_venv, -- dynamic per project
             },
          }
 
@@ -189,7 +217,7 @@ return {
          vim.api.nvim_create_autocmd("BufWritePost", {
             pattern = "launch.json",
             callback = function()
-               require("dap.ext.vscode").load_launchjs(nil, {
+               vscode.load_launchjs(nil, {
                   python = { "python" },
                   ["debugpy"] = { "python" },
                   ["pwa-node"] = { "javascript", "typescript", "javascriptreact", "typescriptreact" },
