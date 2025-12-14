@@ -215,14 +215,32 @@ return {
             rust_analyzer = {
                settings = {
                   ["rust-analyzer"] = {
-                     cargo = { allFeatures = true },
-                     checkOnSave = { command = "clippy" },
+                     cargo = {
+                        -- Enable all features for better IDE support
+                        allFeatures = true,
+                        loadOutDirsFromCheck = true,
+                        buildScripts = { enable = true },
+                     },
+                     checkOnSave = {
+                        -- Enable clippy for code quality checks
+                        enable = true,
+                        command = "clippy",
+                     },
+                     procMacro = {
+                        enable = true,
+                        attributes = {
+                           enable = true,
+                        },
+                     },
+                     diagnostics = {
+                        experimental = { enable = true },
+                     },
                      inlayHints = {
-                        bindingModeHints = true,
-                        closureReturnTypeHints = "all",
-                        lifetimeElisionHints = "always",
-                        reborrowHints = true,
-                        typeHints = true,
+                        bindingModeHints = { enable = true },
+                        closureReturnTypeHints = { enable = "always" },
+                        lifetimeElisionHints = { enable = "always" },
+                        reborrowHints = { enable = true },
+                        typeHints = { enable = true },
                      },
                   },
                },
