@@ -239,17 +239,18 @@ return {
       },
    },
 
-   -- Use tmp `nvim-spectre` instead of broken `grug-far`
-   --{
-   --  "nvim-pack/nvim-spectre",
-   --  keys = {
-   --    {
-   --      "<leader>sr",
-   --     function()
-   --       require("spectre").open()
-   --   end,
-   --   desc = "Search and Replace",
-   -- },
-   -- },
-   --},
+   -- nvim-spectre: Search and replace
+   {
+      "nvim-pack/nvim-spectre",
+      dependencies = { "nvim-lua/plenary.nvim" },
+      keys = {
+         {
+            "<leader>sr",
+            function()
+               require("spectre").open()
+            end,
+            desc = "Search and Replace",
+         },
+      },
+   },
 }

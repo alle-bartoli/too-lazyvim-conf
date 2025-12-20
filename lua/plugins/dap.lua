@@ -152,19 +152,6 @@ return {
             return "python" -- system fallback
          end
 
-         -- Determine python path dynamically in launch config
-         local function get_python()
-            local v = os.getenv("VIRTUAL_ENV")
-            if v and v ~= "" then
-               return v .. "/bin/python"
-            end
-            local pyenv_version = vim.fn.system("pyenv version-name"):gsub("%s+", "")
-            if pyenv_version and #pyenv_version > 0 then
-               return vim.fn.expand("~/.pyenv/versions/" .. pyenv_version .. "/bin/python")
-            end
-            return "python"
-         end
-
          dap.adapters.debugpy = {
             type = "executable",
             command = "python", -- fixed string; actual path handled in pythonPath

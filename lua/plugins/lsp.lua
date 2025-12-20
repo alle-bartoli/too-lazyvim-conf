@@ -83,7 +83,7 @@ return {
             client.server_capabilities.documentFormattingProvider = false
          end
 
-         opts.inlay_hints = { enabled = false }
+         opts.inlay_hints = { enabled = true }
 
          ---@diagnostic disable-next-line: undefined-field
          opts.servers = vim.tbl_deep_extend("force", opts.servers or {}, {
@@ -130,26 +130,8 @@ return {
             },
 
             -- TypeScript / JavaScript
-
-            -- TODO: investigate why doesn't works
-            -- vtsls = {
-            --    enabled = true,
-            --    root_dir = util.root_pattern("tsconfig.json", "package.json", ".git"),
-            --    single_file_support = false,
-            --    settings = ts_inlay_hints(),
-            --    on_attach = ts_on_attach,
-            -- },
-
-            ts_ls = {
-               enabled = false,
-               root_dir = util.root_pattern("tsconfig.json", "package.json", ".git"),
-               single_file_support = false,
-               settings = ts_inlay_hints(),
-               on_attach = ts_on_attach,
-            },
-
-            tsserver = {
-               enabled = false,
+            vtsls = {
+               enabled = true,
                root_dir = util.root_pattern("tsconfig.json", "package.json", ".git"),
                single_file_support = false,
                settings = ts_inlay_hints(),

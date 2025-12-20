@@ -43,41 +43,11 @@ return {
       end,
    },
 
-   {
-      "CosecSecCot/cosec-twilight.nvim",
-      -- no setup function required (didn't make one :P)
-      -- (you can change and customize it using lush according to your preference)
-   },
-
-   -- chama-chomo/grail
-   {
-      "chama-chomo/grail",
-      version = false,
-      lazy = false,
-      priority = 1000, -- make sure to load this before all the other start plugins
-      -- Optional
-      -- Default configuration will be used if setup isn't called
-      config = function()
-         ---@class Config
-         -- require("grail").setup({
-         --    -- Your config here
-         --    transparent_background_level = 1,
-         --    background = "hard",
-         --    disable_italic_comments = false,
-         --    italics = true,
-         -- })
-      end,
-   },
-
-   -- deviuspro.nvim
-   {
-      "DeviusVim/deviuspro.nvim",
-   },
 
    -- flow.nvim: https://github.com/0xstepit/flow.nvim
    {
       "0xstepit/flow.nvim",
-      lazy = false,
+      lazy = true,
       priority = 1000,
       tag = "v2.0.1",
       opts = {
@@ -98,48 +68,44 @@ return {
             borders = "inverse", -- "theme" | "inverse" | "fluo" | "none"
             aggressive_spell = false, -- true | false
          },
-         config = function(_, opts)
-            require("flow").setup(opts)
-            vim.cmd("colorscheme flow")
-         end,
       },
    },
 
    -- lackluster
    {
       "slugbyte/lackluster.nvim",
-      lazy = false,
+      lazy = true,
       priority = 1000,
-      init = function()
+      config = function()
          local lackluster = require("lackluster")
          local color = lackluster.color -- blue, green, red, orange, black, lack, luster, gray1-9
 
          lackluster.setup({
             disable_plugin = {
-               bufferline = false,
-               cmp = true,
-               dashboard = true,
-               flash = false,
+               bufferline = false,     -- Using bufferline
+               cmp = true,             -- Using blink.cmp, not nvim-cmp
+               dashboard = false,      -- Using snacks dashboard
+               flash = false,          -- Using flash
                git_gutter = false,
-               git_signs = true,
+               git_signs = false,      -- Using gitsigns
                indentmini = false,
                headlines = false,
-               lazy = true,
-               lightbulb = true,
-               lsp_config = true,
-               mason = false,
+               lazy = false,           -- Using lazy.nvim
+               lightbulb = false,
+               lsp_config = false,     -- Using lspconfig
+               mason = false,          -- Using mason
                mini_diff = false,
                navic = false,
-               noice = true,
-               notify = true,
+               noice = false,          -- Using noice
+               notify = false,         -- Using nvim-notify
                oil = false,
                rainbow_delimiter = false,
                scrollbar = false,
-               telescope = false,
-               todo_comments = true,
-               tree = true,
-               trouble = true,
-               which_key = true,
+               telescope = true,       -- NOT using telescope
+               todo_comments = false,  -- Using todo-comments
+               tree = false,           -- Using neo-tree
+               trouble = false,        -- Using trouble
+               which_key = false,      -- Using which-key
                yanky = false,
             },
             -- tweak_color allows you to overwrite the default colors in the lackluster theme
@@ -204,38 +170,13 @@ return {
                },
             },
          })
-
-         -- !must set colorscheme after calling setup()!
-         -- vim.cmd.colorscheme("lackluster")
-         vim.cmd.colorscheme("lackluster-hack") -- my favorite
-         -- vim.cmd.colorscheme("lackluster-mint")
-      end,
-   },
-
-   -- vesper
-   {
-      "datsfilipe/vesper.nvim",
-      config = function()
-         require("vesper").setup({
-            -- Your config here
-            transparent = true, -- Boolean: Sets the background to transparent
-            italics = {
-               comments = true, -- Boolean: Italicizes comments
-               keywords = true, -- Boolean: Italicizes keywords
-               functions = true, -- Boolean: Italicizes functions
-               strings = true, -- Boolean: Italicizes strings
-               variables = true, -- Boolean: Italicizes variables
-            },
-            overrides = {}, -- A dictionary of group names, can be a function returning a dictionary or a table
-            palette_overrides = {},
-            --highlights = require("vesper").bufferline.highlights, -- To use the theme with bufferline.nvim, you can use the following configuration
-         })
       end,
    },
 
    {
       "catppuccin/nvim",
       name = "catppuccin",
+      lazy = true,
       priority = 1000,
       opts = {
          flavour = "auto", -- latte, frappe, macchiato, mocha
@@ -285,23 +226,19 @@ return {
             -- For more plugins integrations please scroll down (https://github.com/catppuccin/nvim#integrations)
          },
       },
-      config = function(_, opts)
-         require("catppuccin").setup(opts)
-         vim.cmd.colorscheme("catppuccin-macchiato")
-      end,
    },
 
    -- Configure and load colorscheme
    {
       "LazyVim/LazyVim",
       opts = {
-         colorscheme = "flow",
+         -- colorscheme = "flow",
          --colorscheme = "lackluster",
          --colorscheme = "habamax",
          --colorscheme = "grail",
          --colorscheme = "deviuspro",
          --colorscheme = "cosec-twilight",
-         --colorscheme = "solarized-osaka",
+         colorscheme = "solarized-osaka",
          --colorscheme = "vesper",
          --colorscheme = "catppuccin",
          news = { lazyvim = true, neovim = true },

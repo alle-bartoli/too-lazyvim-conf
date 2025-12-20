@@ -45,8 +45,7 @@ keymap.set("n", "<C-m>", "<C-i>", { desc = "Forward jump in jump list" })
 
 -- NewTab
 keymap.set("n", "te", ":tabedit<CR>", { desc = "New tab" })
-keymap.set("n", "<tab>", ":tabnext<CR>", { desc = "Next tab" })
-keymap.set("n", "<s-tab>", ":tabprev<CR>", { desc = "Previous tab" })
+-- Note: <tab> and <s-tab> are handled by bufferline in lua/plugins/ui.lua
 
 -- Split window
 keymap.set("n", "sho", ":split<CR>", { desc = "Horizontal split" })

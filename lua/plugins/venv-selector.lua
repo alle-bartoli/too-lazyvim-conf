@@ -8,11 +8,12 @@ return {
    dependencies = {
       "neovim/nvim-lspconfig",
       "mfussenegger/nvim-dap-python",
-      "nvim-telescope/telescope.nvim",
+      "ibhagwan/fzf-lua",
    },
    opts = {
       name = "venv",
       auto_refresh = false,
+      picker = "fzf-lua", -- Use fzf-lua instead of telescope
    },
    event = "VeryLazy", -- Optional: needed only if you want to type `:VenvSelect` without a keymapping
    keys = {
