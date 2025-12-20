@@ -83,8 +83,6 @@ return {
             client.server_capabilities.documentFormattingProvider = false
          end
 
-         opts.inlay_hints = { enabled = true }
-
          ---@diagnostic disable-next-line: undefined-field
          opts.servers = vim.tbl_deep_extend("force", opts.servers or {}, {
             -- Global keymaps
