@@ -43,7 +43,6 @@ return {
       end,
    },
 
-
    -- flow.nvim: https://github.com/0xstepit/flow.nvim
    {
       "0xstepit/flow.nvim",
@@ -82,30 +81,30 @@ return {
 
          lackluster.setup({
             disable_plugin = {
-               bufferline = false,     -- Using bufferline
-               cmp = true,             -- Using blink.cmp, not nvim-cmp
-               dashboard = false,      -- Using snacks dashboard
-               flash = false,          -- Using flash
+               bufferline = false, -- Using bufferline
+               cmp = true, -- Using blink.cmp, not nvim-cmp
+               dashboard = false, -- Using snacks dashboard
+               flash = false, -- Using flash
                git_gutter = false,
-               git_signs = false,      -- Using gitsigns
+               git_signs = false, -- Using gitsigns
                indentmini = false,
                headlines = false,
-               lazy = false,           -- Using lazy.nvim
+               lazy = false, -- Using lazy.nvim
                lightbulb = false,
-               lsp_config = false,     -- Using lspconfig
-               mason = false,          -- Using mason
+               lsp_config = false, -- Using lspconfig
+               mason = false, -- Using mason
                mini_diff = false,
                navic = false,
-               noice = false,          -- Using noice
-               notify = false,         -- Using nvim-notify
+               noice = false, -- Using noice
+               notify = false, -- Using nvim-notify
                oil = false,
                rainbow_delimiter = false,
                scrollbar = false,
-               telescope = true,       -- NOT using telescope
-               todo_comments = false,  -- Using todo-comments
-               tree = false,           -- Using neo-tree
-               trouble = false,        -- Using trouble
-               which_key = false,      -- Using which-key
+               telescope = true, -- NOT using telescope
+               todo_comments = false, -- Using todo-comments
+               tree = false, -- Using neo-tree
+               trouble = false, -- Using trouble
+               which_key = false, -- Using which-key
                yanky = false,
             },
             -- tweak_color allows you to overwrite the default colors in the lackluster theme
@@ -173,6 +172,7 @@ return {
       end,
    },
 
+   -- catppuccin
    {
       "catppuccin/nvim",
       name = "catppuccin",
@@ -228,19 +228,92 @@ return {
       },
    },
 
+   -- angelic
+   {
+      "sponkurtus2/angelic.nvim",
+      lazy = false,
+      priority = 1000,
+      -- config = function()
+      --    require("angelic").setup({
+      --       transparent = true, -- Boolean: Sets the background to transparent
+      --       italics = {
+      --          comments = true, -- Boolean: Italicizes comments
+      --          keywords = true, -- Boolean: Italicizes keywords
+      --          functions = true, -- Boolean: Italicizes functions
+      --          strings = true, -- Boolean: Italicizes strings
+      --          variables = true, -- Boolean: Italicizes variables
+      --       },
+      --       overrides = {}, -- A dictionary of group names, can be a function returning a dictionary or a table.
+      --       palette_overrides = {},
+      --    })
+      --    vim.cmd.colorscheme("angelic")
+      -- end,
+   },
+
+   --kanagawa
+   {
+      "rebelot/kanagawa.nvim",
+      lazy = true,
+      priority = 1000,
+      opts = {
+         compile = false,
+         undercurl = true,
+         commentStyle = { italic = true },
+         functionStyle = {},
+         keywordStyle = { italic = true },
+         statementStyle = { bold = true },
+         typeStyle = {},
+         transparent = true, -- transparent background
+         dimInactive = false,
+         terminalColors = true,
+         colors = {
+            theme = {
+               all = {
+                  ui = {
+                     bg_gutter = "none",
+                  },
+               },
+            },
+         },
+         theme = "dragon", -- "wave" | "dragon" | "lotus"
+         background = {
+            dark = "wave",
+            light = "lotus",
+         },
+      },
+   },
+
+   -- monokai-nightasty
+   {
+      "polirritmico/monokai-nightasty.nvim",
+      lazy = false,
+      priority = 1000,
+      opts = {
+         dark_style_background = "transparent",
+         hl_styles = {
+            -- Background styles for floating windows and sidebars (panels):
+            floats = "transparent", -- default, dark, transparent
+            sidebars = "transparent", -- default, dark, transparent
+         },
+      },
+   },
+
    -- Configure and load colorscheme
    {
       "LazyVim/LazyVim",
       opts = {
          -- colorscheme = "flow",
-         --colorscheme = "lackluster",
-         --colorscheme = "habamax",
-         --colorscheme = "grail",
-         --colorscheme = "deviuspro",
-         --colorscheme = "cosec-twilight",
-         colorscheme = "solarized-osaka",
-         --colorscheme = "vesper",
-         --colorscheme = "catppuccin",
+         -- colorscheme = "lackluster",
+         -- colorscheme = "habamax",
+         -- colorscheme = "grail",
+         -- colorscheme = "deviuspro",
+         -- colorscheme = "cosec-twilight",
+         -- colorscheme = "solarized-osaka",
+         colorscheme = "kanagawa",
+         -- colorscheme = "monokai-nightasty",
+         -- colorscheme = "angelic",
+         -- colorscheme = "vesper",
+         -- colorscheme = "catppuccin",
          news = { lazyvim = true, neovim = true },
       },
    },

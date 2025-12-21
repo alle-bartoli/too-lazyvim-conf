@@ -130,7 +130,10 @@ return {
          -- set theme
          ---@type table
          opts.options = vim.tbl_deep_extend("force", opts.options or {}, {
-            theme = "solarized-osaka",
+            -- theme = "monokai-nightasty",
+            theme = "kanagawa",
+            -- theme = "solarized-osaka",
+            -- theme = "angelic",
             -- theme = "solarized_dark",
             -- theme = "lackluster",
             -- theme = "flow",
