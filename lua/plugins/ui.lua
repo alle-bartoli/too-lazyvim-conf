@@ -87,7 +87,8 @@ return {
       opts = {
          stages = "slide",
          timeout = 5000,
-         background_colour = vim.fn.synIDattr(vim.fn.hlID("Normal"), "bg") or "#000000",
+         background_colour = "#000000", -- transparent mode compatible
+         -- background_colour = vim.fn.synIDattr(vim.fn.hlID("Normal"), "bg") or "#000000",
       },
       config = function(_, opts)
          local notify = require("notify")
@@ -130,8 +131,8 @@ return {
          -- set theme
          ---@type table
          opts.options = vim.tbl_deep_extend("force", opts.options or {}, {
-            -- theme = "monokai-nightasty",
-            theme = "kanagawa",
+            theme = "monokai-pro",
+            -- theme = "kanagawa",
             -- theme = "solarized-osaka",
             -- theme = "angelic",
             -- theme = "solarized_dark",
@@ -163,32 +164,67 @@ return {
    -- Filename
    {
       "b0o/incline.nvim",
-      dependencies = { "craftzdog/solarized-osaka.nvim" },
+      dependencies = { "loctvl842/monokai-pro.nvim" },
       event = "BufReadPre",
       priority = 1200,
       config = function()
-         local colors = require("solarized-osaka.colors").setup()
          require("incline").setup({
-            highlight = {
-               groups = {
-                  InclineNormal = { guibg = colors.magenta500, guifg = colors.base04 },
-                  InclineNormalNC = { guifg = colors.violet500, guibg = colors.base03 },
-               },
-            },
             window = { margin = { vertical = 0, horizontal = 1 } },
             hide = {
                cursorline = true,
             },
             render = function(props)
                local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":t")
+               local is_focused = vim.api.nvim_get_current_win() == props.win
+
+               -- Monokai Pro colors
+               local pink = "#ff6188"
+               local purple = "#ab9df2"
+               local base2 = "#2d2a2e"
+
                if vim.bo[props.buf].modified then
                   filename = "[+] " .. filename
                end
 
                local icon, color = require("nvim-web-devicons").get_icon_color(filename)
-               return { { icon, guifg = color }, { " " }, { filename } }
+
+               if is_focused then
+                  return {
+                     { icon and icon .. " " or "", guifg = color },
+                     { filename, guifg = base2, guibg = pink, gui = "bold" },
+                  }
+               else
+                  return {
+                     { icon and icon .. " " or "", guifg = color },
+                     { filename, guifg = purple },
+                  }
+               end
             end,
          })
+
+         -- BACKUP: solarized-osaka version
+         -- local colors = require("solarized-osaka.colors").setup()
+         -- require("incline").setup({
+         --    highlight = {
+         --       groups = {
+         --          InclineNormal = { guibg = colors.magenta500, guifg = colors.base04 },
+         --          InclineNormalNC = { guifg = colors.violet500, guibg = colors.base03 },
+         --       },
+         --    },
+         --    window = { margin = { vertical = 0, horizontal = 1 } },
+         --    hide = {
+         --       cursorline = true,
+         --    },
+         --    render = function(props)
+         --       local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":t")
+         --       if vim.bo[props.buf].modified then
+         --          filename = "[+] " .. filename
+         --       end
+         --
+         --       local icon, color = require("nvim-web-devicons").get_icon_color(filename)
+         --       return { { icon, guifg = color }, { " " }, { filename } }
+         --    end,
+         -- })
       end,
    },
 

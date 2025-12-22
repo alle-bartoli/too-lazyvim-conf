@@ -283,18 +283,62 @@ return {
       },
    },
 
-   -- monokai-nightasty
+   -- monokai-pro
    {
-      "polirritmico/monokai-nightasty.nvim",
-      lazy = false,
+      "loctvl842/monokai-pro.nvim",
+      lazy = true,
       priority = 1000,
       opts = {
-         dark_style_background = "transparent",
-         hl_styles = {
-            -- Background styles for floating windows and sidebars (panels):
-            floats = "transparent", -- default, dark, transparent
-            sidebars = "transparent", -- default, dark, transparent
+         transparent_background = true,
+         terminal_colors = true,
+         devicons = true, -- highlight the icons of `nvim-web-devicons`
+         styles = {
+            comment = { italic = true },
+            keyword = { italic = true }, -- any other keyword
+            type = { italic = true }, -- (preferred) int, long, char, etc
+            storageclass = { italic = true }, -- static, register, volatile, etc
+            structure = { italic = true }, -- struct, union, enum, etc
+            parameter = { italic = true }, -- parameter pass in function
+            annotation = { italic = true },
+            tag_attribute = { italic = true }, -- attribute of tag in reactjs
          },
+         filter = "pro", -- classic | octagon | pro | machine | ristretto | spectrum
+         -- Enable this will disable filter option
+         day_night = {
+            enable = false, -- turn off by default
+            day_filter = "pro", -- classic | octagon | pro | machine | ristretto | spectrum
+            night_filter = "spectrum", -- classic | octagon | pro | machine | ristretto | spectrum
+         },
+         inc_search = "background", -- underline | background
+         background_clear = {
+            "float_win",
+            "toggleterm",
+            "telescope",
+            "which-key",
+            "renamer",
+            "notify",
+            "neo-tree",
+            "bufferline", -- better used if background of `neo-tree` or `nvim-tree` is cleared
+         }, -- "float_win", "toggleterm", "telescope", "which-key", "renamer", "neo-tree", "nvim-tree", "bufferline"
+         plugins = {
+            bufferline = {
+               underline_selected = false,
+               underline_visible = false,
+            },
+            indent_blankline = {
+               context_highlight = "pro", -- default | pro
+               context_start_underline = false,
+            },
+         },
+         ---@param c Colorscheme
+         override = function(c)
+            return {
+               -- Subtle static indent guides
+               IblIndent = { fg = c.base.dimmed3 },
+               SnacksIndent = { fg = c.base.dimmed3 },
+               -- Scope/context lines keep default bright colors for visibility
+            }
+         end,
       },
    },
 
@@ -309,8 +353,8 @@ return {
          -- colorscheme = "deviuspro",
          -- colorscheme = "cosec-twilight",
          -- colorscheme = "solarized-osaka",
-         colorscheme = "kanagawa",
-         -- colorscheme = "monokai-nightasty",
+         -- colorscheme = "kanagawa",
+         colorscheme = "monokai-pro",
          -- colorscheme = "angelic",
          -- colorscheme = "vesper",
          -- colorscheme = "catppuccin",
