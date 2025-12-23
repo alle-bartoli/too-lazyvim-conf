@@ -22,42 +22,43 @@ NVIM_APPNAME=alle-bartoli/too-lazyvim-conf/ nvim
 
 ## Plugins
 
-### color
-
-- [echasnovski/mini.hipatterns](https://dotfyle.com/plugins/echasnovski/mini.hipatterns)
-
 ### colorscheme
 
 - [0xstepit/flow.nvim](https://dotfyle.com/plugins/0xstepit/flow.nvim)
-- [datsfilipe/vesper.nvim](https://dotfyle.com/plugins/datsfilipe/vesper.nvim)
 - [craftzdog/solarized-osaka.nvim](https://dotfyle.com/plugins/craftzdog/solarized-osaka.nvim)
+- [catppuccin/nvim](https://dotfyle.com/plugins/catppuccin/nvim)
+- [datsfilipe/vesper.nvim](https://dotfyle.com/plugins/datsfilipe/vesper.nvim)
 - [slugbyte/lackluster.nvim](https://dotfyle.com/plugins/slugbyte/lackluster.nvim)
-
-### colorscheme-creation
-
-- [rktjmp/lush.nvim](https://dotfyle.com/plugins/rktjmp/lush.nvim)
 
 ### comment
 
 - [folke/todo-comments.nvim](https://dotfyle.com/plugins/folke/todo-comments.nvim)
 - [danymat/neogen](https://dotfyle.com/plugins/danymat/neogen)
 
+### completion
+
+- [saghen/blink.cmp](https://dotfyle.com/plugins/saghen/blink.cmp)
+
 ### debugging
 
 - [mfussenegger/nvim-dap](https://dotfyle.com/plugins/mfussenegger/nvim-dap)
-
-### editing-support
-
-- [folke/zen-mode.nvim](https://dotfyle.com/plugins/folke/zen-mode.nvim)
 
 ### file-explorer
 
 - [nvim-neo-tree/neo-tree.nvim](https://dotfyle.com/plugins/nvim-neo-tree/neo-tree.nvim)
 
+### formatting
+
+- [stevearc/conform.nvim](https://dotfyle.com/plugins/stevearc/conform.nvim)
+
 ### fuzzy-finder
 
 - [nvim-telescope/telescope.nvim](https://dotfyle.com/plugins/nvim-telescope/telescope.nvim)
 - [ibhagwan/fzf-lua](https://dotfyle.com/plugins/ibhagwan/fzf-lua)
+
+### git
+
+- [kdheepak/lazygit.nvim](https://dotfyle.com/plugins/kdheepak/lazygit.nvim)
 
 ### icon
 
@@ -68,13 +69,14 @@ NVIM_APPNAME=alle-bartoli/too-lazyvim-conf/ nvim
 - [neovim/nvim-lspconfig](https://dotfyle.com/plugins/neovim/nvim-lspconfig)
 - [mfussenegger/nvim-lint](https://dotfyle.com/plugins/mfussenegger/nvim-lint)
 
-### lsp-installer
-
-- [williamboman/mason.nvim](https://dotfyle.com/plugins/williamboman/mason.nvim)
-
 ### motion
 
 - [folke/flash.nvim](https://dotfyle.com/plugins/folke/flash.nvim)
+
+### nvim-dev
+
+- [MunifTanjim/nui.nvim](https://dotfyle.com/plugins/MunifTanjim/nui.nvim)
+- [nvim-lua/plenary.nvim](https://dotfyle.com/plugins/nvim-lua/plenary.nvim)
 
 ### plugin-manager
 
@@ -84,14 +86,22 @@ NVIM_APPNAME=alle-bartoli/too-lazyvim-conf/ nvim
 
 - [LazyVim/LazyVim](https://dotfyle.com/plugins/LazyVim/LazyVim)
 
+### search
+
+- [nvim-pack/nvim-spectre](https://dotfyle.com/plugins/nvim-pack/nvim-spectre)
+
 ### snippet
 
 - [rafamadriz/friendly-snippets](https://dotfyle.com/plugins/rafamadriz/friendly-snippets)
 
+### startup
+
+- [nvimdev/dashboard-nvim](https://dotfyle.com/plugins/nvimdev/dashboard-nvim)
+
 ### statusline
 
-- [b0o/incline.nvim](https://dotfyle.com/plugins/b0o/incline.nvim)
 - [nvim-lualine/lualine.nvim](https://dotfyle.com/plugins/nvim-lualine/lualine.nvim)
+- [b0o/incline.nvim](https://dotfyle.com/plugins/b0o/incline.nvim)
 
 ### syntax
 
@@ -104,7 +114,6 @@ NVIM_APPNAME=alle-bartoli/too-lazyvim-conf/ nvim
 ### utility
 
 - [folke/noice.nvim](https://dotfyle.com/plugins/folke/noice.nvim)
-- [echasnovski/mini.animate](https://dotfyle.com/plugins/echasnovski/mini.animate)
 - [rcarriga/nvim-notify](https://dotfyle.com/plugins/rcarriga/nvim-notify)
 
 ## Language Servers
@@ -112,6 +121,7 @@ NVIM_APPNAME=alle-bartoli/too-lazyvim-conf/ nvim
 - astro
 - cmake
 - flow
+- gopls
 - graphql
 - pyright
 - ruff_lsp
