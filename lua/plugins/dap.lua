@@ -209,10 +209,60 @@ return {
                   ["debugpy"] = { "python" },
                   ["pwa-node"] = { "javascript", "typescript", "javascriptreact", "typescriptreact" },
                   ["node2"] = { "javascript", "typescript" },
+                  ["delve"] = { "go" },
                })
                vim.notify("Reloaded launch.json for nvim-dap", vim.log.levels.INFO)
             end,
          })
       end
+
+      ----------------------------------
+      -- Go / Delve configuration
+      ----------------------------------
+
+      dap.adapters.delve = {
+         type = "server",
+         port = "${port}",
+         executable = {
+            command = "dlv",
+            args = { "dap", "-l", "127.0.0.1:${port}" },
+         },
+      }
+
+      dap.configurations.go = {
+         {
+            type = "delve",
+            name = "Debug",
+            request = "launch",
+            program = "${file}",
+         },
+         {
+            type = "delve",
+            name = "Debug (go.mod)",
+            request = "launch",
+            program = "./${relativeFileDirname}",
+         },
+         {
+            type = "delve",
+            name = "Debug test",
+            request = "launch",
+            mode = "test",
+            program = "${file}",
+         },
+         {
+            type = "delve",
+            name = "Debug test (go.mod)",
+            request = "launch",
+            mode = "test",
+            program = "./${relativeFileDirname}",
+         },
+         {
+            type = "delve",
+            name = "Attach",
+            request = "attach",
+            mode = "local",
+            processId = require("dap.utils").pick_process,
+         },
+      }
    end,
 }

@@ -231,6 +231,11 @@ return {
       "mfussenegger/nvim-lint",
       optional = true,
       opts = {
+         linters_by_ft = {
+            -- Go: disable golangci-lint, rely on gopls + staticcheck instead
+            -- (golangci-lint's typecheck doesn't work well with go.work)
+            go = {},
+         },
          linters = {
             ["markdownlint-cli2"] = {
                args = { "--config", HOME .. "/.markdownlint-cli2.yaml", "--" },

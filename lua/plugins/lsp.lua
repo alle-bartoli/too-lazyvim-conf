@@ -19,6 +19,9 @@ return {
             "css-lsp",
             "rust-analyzer",
             "gopls",
+            "goimports",
+            "golangci-lint",
+            "delve",
             "nomicfoundation-solidity-language-server",
          })
       end,
@@ -38,6 +41,7 @@ return {
             css = { "prettier" },
             markdown = { "prettier" },
             solidity = { "prettier" },
+            go = { "goimports", "gofmt" },
          },
       },
    },
@@ -226,15 +230,22 @@ return {
                },
             },
 
-            -- Go
+            -- Go (extends lazyvim.plugins.extras.lang.go)
             gopls = {
-               cmd = { "gopls" },
-               root_dir = util.root_pattern("go.mod", ".git"),
+               -- Use root_markers (go.work first for multi-module workspaces)
+               root_markers = { "go.work", "go.mod", ".git" },
                settings = {
                   gopls = {
                      analyses = { unusedparams = true, shadow = true },
-                     staticcheck = true,
-                     codelenses = { generate = true, gc_details = true, tidy = true, test = true },
+                     hints = {
+                        assignVariableTypes = true,
+                        compositeLiteralFields = true,
+                        compositeLiteralTypes = true,
+                        constantValues = true,
+                        functionTypeParameters = true,
+                        parameterNames = true,
+                        rangeVariableTypes = true,
+                     },
                   },
                },
             },

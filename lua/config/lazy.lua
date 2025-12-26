@@ -28,6 +28,9 @@ require("lazy").setup({
       { import = "lazyvim.plugins.extras.dap.core" },
       --{ import = "lazyvim.plugins.extras.dap.python" },
 
+      -- import LazyVim Go extra for proper gopls + go.work support
+      { import = "lazyvim.plugins.extras.lang.go" },
+
       -- import/override with your plugins
       { import = "plugins" },
    },
