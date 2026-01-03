@@ -21,10 +21,20 @@ keymap.set("n", "<Leader>C", '"_C', { desc = "Change line without yanking (norma
 keymap.set("v", "<Leader>c", '"_c', { desc = "Change without yanking (visual)" })
 keymap.set("v", "<Leader>C", '"_C', { desc = "Change line without yanking (visual)" })
 
-keymap.set("n", "<Leader>d", '"_d', { desc = "Delete without yanking (normal)" })
-keymap.set("n", "<Leader>D", '"_D', { desc = "Delete line without yanking (normal)" })
-keymap.set("v", "<Leader>d", '"_d', { desc = "Delete without yanking (visual)" })
-keymap.set("v", "<Leader>D", '"_D', { desc = "Delete line without yanking (visual)" })
+keymap.set("n", "<Leader>x", '"_d', { desc = "Delete without yanking (normal)" })
+keymap.set("n", "<Leader>X", '"_D', { desc = "Delete line without yanking (normal)" })
+keymap.set("v", "<Leader>x", '"_x', { desc = "Delete without yanking (visual)" })
+keymap.set("v", "<Leader>X", '"_D', { desc = "Delete line without yanking (visual)" })
+
+-- DAP (Debug Adapter Protocol)
+keymap.set("n", "<Leader>db", function() require("dap").toggle_breakpoint() end, { desc = "Toggle breakpoint" })
+keymap.set("n", "<Leader>dc", function() require("dap").continue() end, { desc = "Continue/Start debugger" })
+keymap.set("n", "<Leader>do", function() require("dap").step_over() end, { desc = "Step over" })
+keymap.set("n", "<Leader>di", function() require("dap").step_into() end, { desc = "Step into" })
+keymap.set("n", "<Leader>dO", function() require("dap").step_out() end, { desc = "Step out" })
+keymap.set("n", "<Leader>dr", function() require("dap").repl.open() end, { desc = "Open REPL" })
+keymap.set("n", "<Leader>dl", function() require("dap").run_last() end, { desc = "Run last" })
+keymap.set("n", "<Leader>dt", function() require("dap").terminate() end, { desc = "Terminate" })
 
 -- Increment/decrement
 keymap.set("n", "+", "<C-a>", { desc = "Increment number under cursor" })
