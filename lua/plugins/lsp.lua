@@ -40,6 +40,7 @@ return {
             html = { "prettier" },
             css = { "prettier" },
             markdown = { "prettier" },
+            mdx = { "prettier" },
             solidity = { "prettier" },
             go = { "goimports", "gofmt" },
          },
