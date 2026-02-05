@@ -137,7 +137,7 @@ return {
             -- theme = "angelic",
             -- theme = "solarized_dark",
             -- theme = "lackluster",
-            -- theme = "flow",
+            --theme = "flow",
             -- theme = "habamax",
             -- theme = "grail",
             -- theme = "deviuspro",
