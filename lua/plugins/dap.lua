@@ -1,179 +1,211 @@
 -- ~/.config/nvim/lua/plugins/dap.lua
+-- Extends LazyVim's DAP extras with JS/TS adapters
 
 return {
-   "mfussenegger/nvim-dap",
-   dependencies = { "banjo/package-pilot.nvim" },
-   config = function()
-      local dap = require("dap")
+   -- Extend nvim-dap with JS/TS support
+   {
+      "mfussenegger/nvim-dap",
+      opts = function()
+         local dap = require("dap")
 
-      -- Symbols
-      vim.fn.sign_define("DapBreakpoint", { text = "●", texthl = "Error", linehl = "", numhl = "" })
-      vim.fn.sign_define("DapStopped", { text = "▶", texthl = "Success" })
-      vim.fn.sign_define("DapBreakpointRejected", { text = "◌", texthl = "WarningMsg" })
+         ----------------------------------
+         -- Node.js / TypeScript adapter
+         ----------------------------------
 
-      ----------------------------------
-      -- Node.js / TypeScript adapters
-      ----------------------------------
-
-      -- vscode-js-debug (modern)
-      dap.adapters["pwa-node"] = {
-         type = "server",
-         host = "localhost",
-         port = "${port}",
-         executable = {
-            command = "node",
-            args = {
-               vim.fn.expand("~/.local/share/nvim/vscode-js-debug/dist/src/vsDebugServer.js"),
-               "${port}",
+         dap.adapters["pwa-node"] = {
+            type = "server",
+            host = "127.0.0.1",
+            port = "${port}",
+            executable = {
+               command = "node",
+               args = {
+                  vim.fn.expand("~/.local/share/nvim/vscode-js-debug/dist/src/vsDebugServer.js"),
+                  "${port}",
+               },
             },
-         },
-      }
-
-      -- vscode-node-debug2 (older but stable)
-      dap.adapters["node2"] = {
-         type = "executable",
-         command = "node",
-         args = {
-            vim.fn.expand("~/.local/share/nvim/vscode-node-debug2/out/src/nodeDebug.js"),
-         },
-      }
-
-      ----------------------------------
-      -- Python / debugpy
-      ----------------------------------
-
-      local function find_project_venv()
-         local cwd = vim.fn.getcwd()
-         local possible = {
-            cwd .. "/venv/bin/python",
-            cwd .. "/.venv/bin/python",
-            cwd .. "/env/bin/python",
          }
 
-         for _, path in ipairs(possible) do
-            if vim.fn.filereadable(path) == 1 then
-               return path
+         -- Alias for compatibility
+         dap.adapters["node"] = dap.adapters["pwa-node"]
+
+         ----------------------------------
+         -- TypeScript/JavaScript configs
+         ----------------------------------
+
+         local js_based_languages = { "typescript", "javascript", "typescriptreact", "javascriptreact" }
+
+         for _, language in ipairs(js_based_languages) do
+            dap.configurations[language] = {
+               {
+                  type = "pwa-node",
+                  request = "launch",
+                  name = "Debug Current File (tsx)",
+                  runtimeExecutable = "npx",
+                  runtimeArgs = { "tsx", "${file}" },
+                  cwd = vim.fn.getcwd(),
+                  sourceMaps = true,
+                  resolveSourceMapLocations = {
+                     "${workspaceFolder}/**",
+                     "!**/node_modules/**",
+                  },
+                  skipFiles = { "<node_internals>/**", "**/node_modules/**" },
+               },
+               {
+                  type = "pwa-node",
+                  request = "launch",
+                  name = "Debug Jest - Current File",
+                  runtimeExecutable = "node",
+                  runtimeArgs = {
+                     "${workspaceFolder}/node_modules/jest/bin/jest.js",
+                     "--runInBand",
+                     "--no-cache",
+                     "--testTimeout=300000",
+                     "${file}",
+                  },
+                  cwd = vim.fn.getcwd(),
+                  sourceMaps = true,
+                  resolveSourceMapLocations = {
+                     "${workspaceFolder}/**",
+                     "!**/node_modules/**",
+                  },
+                  skipFiles = { "<node_internals>/**", "**/node_modules/**" },
+               },
+               {
+                  type = "pwa-node",
+                  request = "launch",
+                  name = "Debug Jest - All Tests",
+                  runtimeExecutable = "node",
+                  runtimeArgs = {
+                     "${workspaceFolder}/node_modules/jest/bin/jest.js",
+                     "--runInBand",
+                     "--no-cache",
+                     "--testTimeout=300000",
+                  },
+                  cwd = vim.fn.getcwd(),
+                  sourceMaps = true,
+                  resolveSourceMapLocations = {
+                     "${workspaceFolder}/**",
+                     "!**/node_modules/**",
+                  },
+                  skipFiles = { "<node_internals>/**", "**/node_modules/**" },
+               },
+               {
+                  type = "pwa-node",
+                  request = "attach",
+                  name = "Attach to Process",
+                  processId = require("dap.utils").pick_process,
+                  cwd = vim.fn.getcwd(),
+                  sourceMaps = true,
+                  skipFiles = { "<node_internals>/**", "**/node_modules/**" },
+               },
+            }
+         end
+      end,
+   },
+
+   ----------------------------------
+   -- Python / debugpy (keep existing)
+   ----------------------------------
+   {
+      "mfussenegger/nvim-dap",
+      opts = function()
+         local dap = require("dap")
+
+         local function find_project_venv()
+            local cwd = vim.fn.getcwd()
+            local possible = {
+               cwd .. "/venv/bin/python",
+               cwd .. "/.venv/bin/python",
+               cwd .. "/env/bin/python",
+            }
+            for _, path in ipairs(possible) do
+               if vim.fn.filereadable(path) == 1 then
+                  return path
+               end
             end
+            local pyenv_version = vim.fn.system("pyenv version-name"):gsub("%s+", "")
+            if pyenv_version and #pyenv_version > 0 then
+               return vim.fn.expand("~/.pyenv/versions/" .. pyenv_version .. "/bin/python")
+            end
+            return "python"
          end
 
-         local pyenv_version = vim.fn.system("pyenv version-name"):gsub("%s+", "")
-         if pyenv_version and #pyenv_version > 0 then
-            return vim.fn.expand("~/.pyenv/versions/" .. pyenv_version .. "/bin/python")
-         end
+         dap.adapters.debugpy = {
+            type = "executable",
+            command = "python",
+            args = { "-m", "debugpy.adapter" },
+         }
 
-         return "python"
-      end
+         dap.configurations.python = {
+            {
+               type = "debugpy",
+               request = "launch",
+               name = "Launch file",
+               program = "${file}",
+               cwd = vim.fn.getcwd(),
+               pythonPath = find_project_venv,
+            },
+            {
+               type = "debugpy",
+               request = "attach",
+               name = "Attach to process",
+               processId = require("dap.utils").pick_process,
+               justMyCode = true,
+               pythonPath = find_project_venv,
+            },
+         }
+      end,
+   },
 
-      dap.adapters.debugpy = {
-         type = "executable",
-         command = "python",
-         args = { "-m", "debugpy.adapter" },
-      }
+   ----------------------------------
+   -- Go / Delve (keep existing)
+   ----------------------------------
+   {
+      "mfussenegger/nvim-dap",
+      opts = function()
+         local dap = require("dap")
 
-      dap.configurations.python = {
-         {
-            type = "debugpy",
-            request = "launch",
-            name = "Launch file",
-            program = "${file}",
-            cwd = vim.fn.getcwd(),
-            pythonPath = find_project_venv,
-         },
-         {
-            type = "debugpy",
-            request = "launch",
-            name = "Launch main.py as module",
-            program = "-m",
-            args = { "src.main" },
-            cwd = vim.fn.getcwd(),
-            pythonPath = find_project_venv,
-         },
-         {
-            type = "debugpy",
-            request = "attach",
-            name = "Attach to process",
-            processId = require("dap.utils").pick_process,
-            justMyCode = true,
-            pythonPath = find_project_venv,
-         },
-      }
+         dap.adapters.delve = {
+            type = "server",
+            port = "${port}",
+            executable = {
+               command = "dlv",
+               args = { "dap", "-l", "127.0.0.1:${port}" },
+            },
+         }
 
-      ----------------------------------
-      -- Go / Delve
-      ----------------------------------
+         dap.configurations.go = {
+            {
+               type = "delve",
+               name = "Debug",
+               request = "launch",
+               program = "${file}",
+            },
+            {
+               type = "delve",
+               name = "Debug test",
+               request = "launch",
+               mode = "test",
+               program = "${file}",
+            },
+            {
+               type = "delve",
+               name = "Attach",
+               request = "attach",
+               mode = "local",
+               processId = require("dap.utils").pick_process,
+            },
+         }
+      end,
+   },
 
-      dap.adapters.delve = {
-         type = "server",
-         port = "${port}",
-         executable = {
-            command = "dlv",
-            args = { "dap", "-l", "127.0.0.1:${port}" },
-         },
-      }
-
-      dap.configurations.go = {
-         {
-            type = "delve",
-            name = "Debug",
-            request = "launch",
-            program = "${file}",
-         },
-         {
-            type = "delve",
-            name = "Debug (go.mod)",
-            request = "launch",
-            program = "./${relativeFileDirname}",
-         },
-         {
-            type = "delve",
-            name = "Debug test",
-            request = "launch",
-            mode = "test",
-            program = "${file}",
-         },
-         {
-            type = "delve",
-            name = "Debug test (go.mod)",
-            request = "launch",
-            mode = "test",
-            program = "./${relativeFileDirname}",
-         },
-         {
-            type = "delve",
-            name = "Attach",
-            request = "attach",
-            mode = "local",
-            processId = require("dap.utils").pick_process,
-         },
-      }
-
-      ----------------------------------
-      -- VS Code launch.json integration
-      -- JS/TS configs loaded from .vscode/launch.json
-      ----------------------------------
-
-      local vscode = require("dap.ext.vscode")
-
-      vscode.load_launchjs(nil, {
-         python = { "python" },
-         ["debugpy"] = { "python" },
-         ["pwa-node"] = { "javascript", "typescript", "javascriptreact", "typescriptreact" },
-         ["node2"] = { "javascript", "typescript" },
-         ["delve"] = { "go" },
-      })
-
-      vim.api.nvim_create_autocmd("BufWritePost", {
-         pattern = "launch.json",
-         callback = function()
-            vscode.load_launchjs(nil, {
-               python = { "python" },
-               ["debugpy"] = { "python" },
-               ["pwa-node"] = { "javascript", "typescript", "javascriptreact", "typescriptreact" },
-               ["node2"] = { "javascript", "typescript" },
-               ["delve"] = { "go" },
-            })
-            vim.notify("Reloaded launch.json for nvim-dap", vim.log.levels.INFO)
-         end,
-      })
-   end,
+   -- Custom signs
+   {
+      "mfussenegger/nvim-dap",
+      config = function()
+         vim.fn.sign_define("DapBreakpoint", { text = "●", texthl = "DiagnosticError" })
+         vim.fn.sign_define("DapStopped", { text = "▶", texthl = "DiagnosticOk", linehl = "Visual" })
+         vim.fn.sign_define("DapBreakpointRejected", { text = "◌", texthl = "DiagnosticWarn" })
+      end,
+   },
 }
