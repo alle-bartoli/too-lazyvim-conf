@@ -1,10 +1,11 @@
 -- ~/.config/nvim/lua/plugins/lsp.lua
 
 return {
-   -- MASON
+   -- MASON: Automatic installation of LSP servers, formatters, linters
    {
       "mason-org/mason.nvim",
       opts = function(_, opts)
+         -- Extend (not replace) LazyVim's default ensure_installed list
          vim.list_extend(opts.ensure_installed, {
             "eslint-lsp",
             "js-debug-adapter",
@@ -27,7 +28,7 @@ return {
       end,
    },
 
-   -- CONFORM
+   -- CONFORM: Formatter configuration (replaces null-ls formatting)
    {
       "stevearc/conform.nvim",
       opts = {
@@ -42,6 +43,7 @@ return {
             markdown = { "prettier" },
             mdx = { "prettier" },
             solidity = { "prettier" },
+            -- goimports first to organize imports, then gofmt for style
             go = { "goimports", "gofmt" },
          },
       },
@@ -53,15 +55,17 @@ return {
       opts = function(_, opts)
          local util = require("lspconfig.util")
 
-         -- Config inlay hints comune TS/JS
+         -- Shared inlay hints config for TypeScript/JavaScript
+         -- TS shows fewer hints (literal only) since types are explicit
+         -- JS shows more hints (all) to compensate for dynamic typing
          local function ts_inlay_hints()
             return {
                typescript = {
                   inlayHints = {
-                     includeInlayParameterNameHints = "literal",
+                     includeInlayParameterNameHints = "literal", -- Only for literals, not variables
                      includeInlayParameterNameHintsWhenArgumentMatchesName = false,
                      includeInlayFunctionParameterTypeHints = true,
-                     includeInlayVariableTypeHints = false,
+                     includeInlayVariableTypeHints = false, -- Avoid noise in typed TS
                      includeInlayPropertyDeclarationTypeHints = true,
                      includeInlayFunctionLikeReturnTypeHints = true,
                      includeInlayEnumMemberValueHints = true,
@@ -69,10 +73,10 @@ return {
                },
                javascript = {
                   inlayHints = {
-                     includeInlayParameterNameHints = "all",
+                     includeInlayParameterNameHints = "all", -- More hints needed in untyped JS
                      includeInlayParameterNameHintsWhenArgumentMatchesName = false,
                      includeInlayFunctionParameterTypeHints = true,
-                     includeInlayVariableTypeHints = true,
+                     includeInlayVariableTypeHints = true, -- Helpful in untyped JS
                      includeInlayPropertyDeclarationTypeHints = true,
                      includeInlayFunctionLikeReturnTypeHints = true,
                      includeInlayEnumMemberValueHints = true,
@@ -81,16 +85,18 @@ return {
             }
          end
 
-         -- Common `on_attach` TS/JS
+         -- Common on_attach for TS/JS servers
          local function ts_on_attach(client, bufnr)
-            -- LazyVim already handles keymaps & autocmd,
-            -- so it allows to customize client behaviour only
+            -- Disable LSP formatting to avoid conflicts with conform.nvim
+            -- LazyVim handles keymaps and autocmds, only customize client behavior here
             client.server_capabilities.documentFormattingProvider = false
          end
 
          ---@diagnostic disable-next-line: undefined-field
+         -- Deep merge to preserve LazyVim's default server configs
          opts.servers = vim.tbl_deep_extend("force", opts.servers or {}, {
-            -- Global keymaps
+            -- Global keymaps applied to ALL LSP servers
+            -- Override LazyVim defaults to use FzfLua instead of Telescope
             ["*"] = {
                keys = {
                   {
@@ -103,7 +109,7 @@ return {
                      "gr",
                      "<cmd>FzfLua lsp_references jump1=true ignore_current_line=true silent=true<cr>",
                      desc = "References",
-                     nowait = true,
+                     nowait = true, -- Don't wait for timeout (immediate execution)
                   },
                   {
                      "gI",
@@ -132,17 +138,23 @@ return {
                },
             },
 
-            -- TypeScript / JavaScript
+            -- TypeScript / JavaScript (vtsls is faster than tsserver)
             vtsls = {
                enabled = true,
+               -- Require project root (tsconfig/package.json), not just any .git repo
                root_dir = util.root_pattern("tsconfig.json", "package.json", ".git"),
-               single_file_support = false,
+               single_file_support = false, -- Avoid starting LSP for random JS files outside projects
                settings = ts_inlay_hints(),
                on_attach = ts_on_attach,
             },
 
             -- HTML / CSS / Tailwind
-            cssls = {},
+            cssls = {
+               settings = {
+                  -- Ignore @tailwind, @apply, and other PostCSS/Tailwind directives
+                  css = { lint = { unknownAtRules = "ignore" } },
+               },
+            },
             tailwindcss = {},
             html = {},
 
@@ -150,32 +162,38 @@ return {
             eslint = { root_dir = util.root_pattern(".eslintrc.json", "package.json", ".git") },
 
             -- YAML
+            -- Disable key ordering to allow flexible formatting (e.g., version at top)
             yamlls = { settings = { yaml = { keyOrdering = false } } },
 
             -- Lua
             lua_ls = {
-               single_file_support = true,
+               single_file_support = true, -- Allow LSP for standalone Lua scripts
                settings = {
                   Lua = {
+                     -- Don't prompt to configure workspace for neovim runtime
                      workspace = { checkThirdParty = false },
+                     -- Enable completion from all workspace words and show both snippet types
                      completion = { workspaceWord = true, callSnippet = "Both" },
                      hint = {
                         enable = true,
-                        setType = false,
+                        setType = false, -- Don't hint explicit type assignments (noisy)
                         paramType = true,
-                        paramName = "Disable",
+                        paramName = "Disable", -- Function param names are usually clear
                         semicolon = "Disable",
                         arrayIndex = "Disable",
                      },
+                     -- Treat underscore-prefixed as private
                      doc = { privateName = { "^_" } },
                      type = { castNumberToInteger = true },
                      diagnostics = {
+                        -- Disable noisy or subjective diagnostics
                         disable = { "incomplete-signature-doc", "trailing-space" },
+                        -- Downgrade strict checks to warnings instead of errors
                         groupSeverity = { strong = "Warning", strict = "Warning" },
                         groupFileStatus = {
                            ambiguity = "Opened",
                            await = "Opened",
-                           codestyle = "None",
+                           codestyle = "None", -- Disable codestyle checks (handled by stylua)
                            duplicate = "Opened",
                            global = "Opened",
                            luadoc = "Opened",
@@ -186,10 +204,11 @@ return {
                            unbalanced = "Opened",
                            unused = "Opened",
                         },
+                        -- Ignore unused variables starting with underscore
                         unusedLocalExclude = { "_*" },
                      },
                      format = {
-                        enable = false,
+                        enable = false, -- Use stylua instead
                         defaultConfig = { indent_style = "space", indent_size = "2", continuation_indent_size = "2" },
                      },
                   },
@@ -233,11 +252,13 @@ return {
 
             -- Go (extends lazyvim.plugins.extras.lang.go)
             gopls = {
-               -- Use root_markers (go.work first for multi-module workspaces)
+               -- Prioritize go.work for multi-module workspaces, fallback to go.mod
                root_markers = { "go.work", "go.mod", ".git" },
                settings = {
                   gopls = {
+                     -- Enable extra static analysis checks
                      analyses = { unusedparams = true, shadow = true },
+                     -- Comprehensive inlay hints for Go's implicit typing
                      hints = {
                         assignVariableTypes = true,
                         compositeLiteralFields = true,
@@ -255,6 +276,7 @@ return {
             solidity = {
                cmd = { "nomicfoundation-solidity-language-server", "--stdio" },
                filetypes = { "solidity" },
+               -- Detect project type by config file (Foundry, Hardhat, Truffle)
                root_dir = util.root_pattern("foundry.toml", "hardhat.config.js", "hardhat.config.ts", "truffle-config.js", ".git"),
                single_file_support = true,
             },

@@ -169,7 +169,7 @@ return {
             type = "server",
             port = "${port}",
             executable = {
-               command = "dlv",
+               command = vim.fn.expand("~/.local/go/bin/dlv"),
                args = { "dap", "-l", "127.0.0.1:${port}" },
             },
          }
@@ -177,9 +177,19 @@ return {
          dap.configurations.go = {
             {
                type = "delve",
-               name = "Debug",
+               name = "Debug Package",
                request = "launch",
-               program = "${file}",
+               program = "${fileDirname}",
+            },
+            {
+               type = "delve",
+               name = "Debug (args)",
+               request = "launch",
+               program = "${fileDirname}",
+               args = function()
+                  local args_string = vim.fn.input("Args: ")
+                  return vim.split(args_string, " +")
+               end,
             },
             {
                type = "delve",
@@ -187,6 +197,13 @@ return {
                request = "launch",
                mode = "test",
                program = "${file}",
+            },
+            {
+               type = "delve",
+               name = "Debug test (go.mod)",
+               request = "launch",
+               mode = "test",
+               program = "${workspaceFolder}",
             },
             {
                type = "delve",
@@ -199,13 +216,16 @@ return {
       end,
    },
 
-   -- Custom signs
+   -- Custom signs and logging
    {
       "mfussenegger/nvim-dap",
       config = function()
          vim.fn.sign_define("DapBreakpoint", { text = "●", texthl = "DiagnosticError" })
          vim.fn.sign_define("DapStopped", { text = "▶", texthl = "DiagnosticOk", linehl = "Visual" })
          vim.fn.sign_define("DapBreakpointRejected", { text = "◌", texthl = "DiagnosticWarn" })
+
+         -- Enable debug logging
+         require("dap").set_log_level("TRACE")
       end,
    },
 }

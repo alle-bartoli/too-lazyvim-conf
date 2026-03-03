@@ -215,7 +215,7 @@ return {
                   end,
                },
                hex_color = {
-                  pattern = "#%x%x%x%x%x%x?", -- #RGB o #RRGGBB
+                  pattern = "#%x%x%x%x%x%x", -- #RRGGBB (6 hex digits)
                   group = function(_, match)
                      return hipatterns.compute_hex_color_group(match, "bg")
                   end,
