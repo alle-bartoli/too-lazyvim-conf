@@ -24,6 +24,7 @@ return {
             "golangci-lint",
             "delve",
             "nomicfoundation-solidity-language-server",
+            "astro-language-server",
          })
       end,
    },
@@ -43,6 +44,7 @@ return {
             markdown = { "prettier" },
             mdx = { "prettier" },
             solidity = { "prettier" },
+            astro = { "prettier" },
             -- goimports first to organize imports, then gofmt for style
             go = { "goimports", "gofmt" },
          },
@@ -270,6 +272,12 @@ return {
                      },
                   },
                },
+            },
+
+            -- Astro
+            astro = {
+               -- Detect Astro project by config file
+               root_dir = util.root_pattern("astro.config.mjs", "astro.config.ts", "astro.config.js", "package.json"),
             },
 
             -- Solidity
