@@ -131,13 +131,14 @@ return {
          -- set theme
          ---@type table
          opts.options = vim.tbl_deep_extend("force", opts.options or {}, {
+            theme = "catppuccin-mocha",
             -- theme = "monokai-pro",
             -- theme = "kanagawa",
-            theme = "solarized-osaka",
+            -- theme = "solarized-osaka",
             -- theme = "angelic",
             -- theme = "solarized_dark",
             -- theme = "lackluster",
-            --theme = "flow",
+            -- theme = "flow",
             -- theme = "habamax",
             -- theme = "grail",
             -- theme = "deviuspro",

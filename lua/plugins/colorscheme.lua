@@ -21,7 +21,7 @@ return {
                variables = {},
                -- Background styles. Can be "dark", "transparent" or "normal"
                sidebars = "transparent",
-               floats = "dark", -- style for floating windows
+               floats = "transparent", -- style for floating windows
             },
             sidebars = { "qf", "help" }, -- Set a darker background on sidebar-like windows. For example: `["qf", "vista_kind", "terminal", "packer"]`
             day_brightness = 0.3, -- Adjusts the brightness of the colors of the **Day** style. Number between 0 and 1, from dull to vibrant colors
@@ -176,7 +176,7 @@ return {
    {
       "catppuccin/nvim",
       name = "catppuccin",
-      lazy = true,
+      lazy = false,
       priority = 1000,
       opts = {
          flavour = "auto", -- latte, frappe, macchiato, mocha
@@ -211,7 +211,23 @@ return {
             -- miscs = {}, -- Uncomment to turn off hard-coded styles
          },
          color_overrides = {},
-         custom_highlights = {},
+         custom_highlights = function(colors)
+            return {
+               NormalFloat = { bg = "NONE" },
+               FloatBorder = { bg = "NONE" },
+               FloatTitle = { bg = "NONE" },
+               NeoTreeNormal = { bg = "NONE" },
+               NeoTreeNormalNC = { bg = "NONE" },
+               NeoTreeEndOfBuffer = { bg = "NONE" },
+               SnacksNormal = { bg = "NONE" },
+               SnacksNormalNC = { bg = "NONE" },
+               SnacksPicker = { bg = "NONE" },
+               SnacksPickerList = { bg = "NONE" },
+               SnacksPickerPreview = { bg = "NONE" },
+               SnacksPickerInput = { bg = "NONE" },
+               SnacksPickerBorder = { bg = "NONE" },
+            }
+         end,
          default_integrations = true,
          integrations = {
             cmp = true,
@@ -352,12 +368,12 @@ return {
          -- colorscheme = "grail",
          -- colorscheme = "deviuspro",
          -- colorscheme = "cosec-twilight",
-         colorscheme = "solarized-osaka",
+         -- colorscheme = "solarized-osaka",
          -- colorscheme = "kanagawa",
          -- colorscheme = "monokai-pro",
          -- colorscheme = "angelic",
          -- colorscheme = "vesper",
-         -- colorscheme = "catppuccin",
+         colorscheme = "catppuccin",
          news = { lazyvim = true, neovim = true },
       },
    },
