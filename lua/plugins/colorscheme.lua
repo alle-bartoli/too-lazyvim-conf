@@ -185,7 +185,9 @@ return {
             dark = "mocha",
          },
          transparent_background = true, -- disables setting the background color.
-         show_end_of_buffer = false, -- shows the '~' characters after the end of buffers
+         float = {
+            transparent = true, -- transparent floating windows (v2.0+)
+         },
          term_colors = false, -- sets terminal colors (e.g. `g:terminal_color_0`)
          dim_inactive = {
             enabled = false, -- dims the background color of inactive window
@@ -213,19 +215,7 @@ return {
          color_overrides = {},
          custom_highlights = function(colors)
             return {
-               NormalFloat = { bg = "NONE" },
-               FloatBorder = { bg = "NONE" },
-               FloatTitle = { bg = "NONE" },
-               NeoTreeNormal = { bg = "NONE" },
-               NeoTreeNormalNC = { bg = "NONE" },
                NeoTreeEndOfBuffer = { bg = "NONE" },
-               SnacksNormal = { bg = "NONE" },
-               SnacksNormalNC = { bg = "NONE" },
-               SnacksPicker = { bg = "NONE" },
-               SnacksPickerList = { bg = "NONE" },
-               SnacksPickerPreview = { bg = "NONE" },
-               SnacksPickerInput = { bg = "NONE" },
-               SnacksPickerBorder = { bg = "NONE" },
             }
          end,
          default_integrations = true,
@@ -235,11 +225,12 @@ return {
             nvimtree = true,
             treesitter = true,
             notify = true,
+            neotree = true,
+            snacks = { enabled = true },
             mini = {
                enabled = true,
                indentscope_color = "",
             },
-            -- For more plugins integrations please scroll down (https://github.com/catppuccin/nvim#integrations)
          },
       },
    },
@@ -373,7 +364,7 @@ return {
          -- colorscheme = "monokai-pro",
          -- colorscheme = "angelic",
          -- colorscheme = "vesper",
-         colorscheme = "catppuccin",
+         colorscheme = "catppuccin-mocha",
          news = { lazyvim = true, neovim = true },
       },
    },
