@@ -19,6 +19,7 @@ return {
             "bash",
             "astro",
             "cmake",
+            "make",
             "cpp",
             "css",
             "scss",
