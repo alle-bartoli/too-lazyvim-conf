@@ -55,8 +55,6 @@ return {
    {
       "neovim/nvim-lspconfig",
       opts = function(_, opts)
-         local util = require("lspconfig.util")
-
          -- Shared inlay hints config for TypeScript/JavaScript
          -- TS shows fewer hints (literal only) since types are explicit
          -- JS shows more hints (all) to compensate for dynamic typing
@@ -90,7 +88,6 @@ return {
          -- Common on_attach for TS/JS servers
          local function ts_on_attach(client, bufnr)
             -- Disable LSP formatting to avoid conflicts with conform.nvim
-            -- LazyVim handles keymaps and autocmds, only customize client behavior here
             client.server_capabilities.documentFormattingProvider = false
          end
 
@@ -143,9 +140,9 @@ return {
             -- TypeScript / JavaScript (vtsls is faster than tsserver)
             vtsls = {
                enabled = true,
-               -- Require project root (tsconfig/package.json), not just any .git repo
-               root_dir = util.root_pattern("tsconfig.json", "package.json", ".git"),
-               single_file_support = false, -- Avoid starting LSP for random JS files outside projects
+               -- Only start in projects with explicit TS/JS config (avoids random .js files)
+               root_markers = { "tsconfig.json", "jsconfig.json", "package.json", ".git" },
+               single_file_support = false,
                settings = ts_inlay_hints(),
                on_attach = ts_on_attach,
             },
@@ -160,8 +157,24 @@ return {
             tailwindcss = {},
             html = {},
 
-            -- Linting
-            eslint = { root_dir = util.root_pattern(".eslintrc.json", "package.json", ".git") },
+            -- Linting: only start in projects that have an eslint config file
+            eslint = {
+               root_markers = {
+                  ".eslintrc.cjs",
+                  ".eslintrc.js",
+                  ".eslintrc.json",
+                  ".eslintrc.yaml",
+                  ".eslintrc.yml",
+                  "eslint.config.js",
+                  "eslint.config.mjs",
+                  "eslint.config.cjs",
+                  "package.json",
+                  ".git",
+               },
+               settings = {
+                  workingDirectories = { mode = "auto" },
+               },
+            },
 
             -- YAML
             -- Disable key ordering to allow flexible formatting (e.g., version at top)
@@ -274,18 +287,14 @@ return {
                },
             },
 
-            -- Astro
-            astro = {
-               -- Detect Astro project by config file
-               root_dir = util.root_pattern("astro.config.mjs", "astro.config.ts", "astro.config.js", "package.json"),
-            },
+            -- Astro: mason-lspconfig before_init auto-resolves tsdk from project node_modules
+            astro = {},
 
             -- Solidity
             solidity = {
                cmd = { "nomicfoundation-solidity-language-server", "--stdio" },
                filetypes = { "solidity" },
-               -- Detect project type by config file (Foundry, Hardhat, Truffle)
-               root_dir = util.root_pattern("foundry.toml", "hardhat.config.js", "hardhat.config.ts", "truffle-config.js", ".git"),
+               root_markers = { "foundry.toml", "hardhat.config.js", "hardhat.config.ts", "truffle-config.js", ".git" },
                single_file_support = true,
             },
          })

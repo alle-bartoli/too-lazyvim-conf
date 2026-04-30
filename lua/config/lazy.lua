@@ -31,6 +31,12 @@ require("lazy").setup({
       -- import LazyVim Go extra for proper gopls + go.work support
       { import = "lazyvim.plugins.extras.lang.go" },
 
+      -- Astro: sets up @astrojs/ts-plugin for vtsls + treesitter
+      { import = "lazyvim.plugins.extras.lang.astro" },
+
+      -- ESLint: adds workingDirectories auto-mode so eslint finds configs in subdirs
+      { import = "lazyvim.plugins.extras.linting.eslint" },
+
       -- import/override with your plugins
       { import = "plugins" },
    },
