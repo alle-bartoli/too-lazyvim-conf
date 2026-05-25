@@ -244,6 +244,28 @@ return {
       },
    },
 
+   -- D2 diagram language: syntax, ftdetect, indent, fmt, validate, ASCII preview
+   {
+      "terrastruct/d2-vim",
+      ft = "d2",
+      init = function()
+         -- Formatting
+         vim.g.d2_fmt_autosave = 1
+         vim.g.d2_fmt_fail_silently = 0
+
+         -- Validation (populate location list on save)
+         vim.g.d2_validate_autosave = 1
+         vim.g.d2_validate_fail_silently = 0
+         vim.g.d2_list_type = "locationlist"
+
+         -- ASCII preview (manual via <Leader>d2, not on every save)
+         vim.g.d2_ascii_autorender = 0
+         vim.g.d2_ascii_command = "d2"
+         vim.g.d2_ascii_preview_width = math.floor(vim.o.columns * 0.4)
+         vim.g.d2_ascii_mode = "extended"
+      end,
+   },
+
    -- nvim-spectre: Search and replace
    {
       "nvim-pack/nvim-spectre",

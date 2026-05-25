@@ -86,13 +86,13 @@ return {
          end
 
          -- Common on_attach for TS/JS servers
-         local function ts_on_attach(client, bufnr)
+         local function ts_on_attach(client, _bufnr)
             -- Disable LSP formatting to avoid conflicts with conform.nvim
             client.server_capabilities.documentFormattingProvider = false
          end
 
-         ---@diagnostic disable-next-line: undefined-field
          -- Deep merge to preserve LazyVim's default server configs
+         ---@diagnostic disable-next-line: undefined-field
          opts.servers = vim.tbl_deep_extend("force", opts.servers or {}, {
             -- Global keymaps applied to ALL LSP servers
             -- Override LazyVim defaults to use FzfLua instead of Telescope
