@@ -56,6 +56,14 @@ return {
          for _, language in ipairs(js_based_languages) do
             dap.configurations[language] = bun_configs
          end
+
+         -- Load per-project .vscode/launch.json (type "bun" entries) and
+         -- attach them to JS/TS filetypes so picker shows project presets.
+         pcall(function()
+            require("dap.ext.vscode").load_launchjs(nil, {
+               bun = js_based_languages,
+            })
+         end)
       end,
    },
 
