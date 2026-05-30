@@ -9,24 +9,15 @@ return {
          local dap = require("dap")
 
          ----------------------------------
-         -- Node.js / TypeScript adapter
+         -- Bun adapter (stdio shim wrapping bun-debug-adapter-protocol)
+         -- See ~/.config/nvim/docs/bun-debug.md for setup + patches.
          ----------------------------------
 
-         dap.adapters["pwa-node"] = {
-            type = "server",
-            host = "127.0.0.1",
-            port = "${port}",
-            executable = {
-               command = "node",
-               args = {
-                  vim.fn.expand("~/.local/share/nvim/vscode-js-debug/dist/src/vsDebugServer.js"),
-                  "${port}",
-               },
-            },
+         dap.adapters["bun"] = {
+            type = "executable",
+            command = "bun",
+            args = { vim.fn.expand("~/.local/share/bun-dap/bun-dap-stdio.mjs") },
          }
-
-         -- Alias for compatibility
-         dap.adapters["node"] = dap.adapters["pwa-node"]
 
          ----------------------------------
          -- TypeScript/JavaScript configs
@@ -34,110 +25,36 @@ return {
 
          local js_based_languages = { "typescript", "javascript", "typescriptreact", "javascriptreact" }
 
+         local bun_configs = {
+            {
+               type = "bun",
+               request = "launch",
+               name = "Bun: Debug Current File",
+               program = "${file}",
+               cwd = "${workspaceFolder}",
+               stopOnEntry = false,
+               watchMode = false,
+            },
+            {
+               type = "bun",
+               request = "launch",
+               name = "Bun: Debug Tests in Current File",
+               program = "${file}",
+               runtimeArgs = { "test" },
+               cwd = "${workspaceFolder}",
+               stopOnEntry = false,
+            },
+            {
+               type = "bun",
+               request = "attach",
+               name = "Bun: Attach (ws://localhost:6499)",
+               url = "ws://localhost:6499/",
+               stopOnEntry = false,
+            },
+         }
+
          for _, language in ipairs(js_based_languages) do
-            dap.configurations[language] = {
-               {
-                  type = "pwa-node",
-                  request = "launch",
-                  name = "Debug Current File (tsx)",
-                  runtimeExecutable = "npx",
-                  runtimeArgs = { "tsx", "${file}" },
-                  cwd = vim.fn.getcwd(),
-                  sourceMaps = true,
-                  resolveSourceMapLocations = {
-                     "${workspaceFolder}/**",
-                     "!**/node_modules/**",
-                  },
-                  skipFiles = { "<node_internals>/**", "**/node_modules/**" },
-               },
-               {
-                  type = "pwa-node",
-                  request = "launch",
-                  name = "Debug Jest - Current File",
-                  runtimeExecutable = "node",
-                  runtimeArgs = {
-                     "${workspaceFolder}/node_modules/jest/bin/jest.js",
-                     "--runInBand",
-                     "--no-cache",
-                     "--testTimeout=300000",
-                     "${file}",
-                  },
-                  cwd = vim.fn.getcwd(),
-                  sourceMaps = true,
-                  resolveSourceMapLocations = {
-                     "${workspaceFolder}/**",
-                     "!**/node_modules/**",
-                  },
-                  skipFiles = { "<node_internals>/**", "**/node_modules/**" },
-               },
-               {
-                  type = "pwa-node",
-                  request = "launch",
-                  name = "Debug Jest - All Tests",
-                  runtimeExecutable = "node",
-                  runtimeArgs = {
-                     "${workspaceFolder}/node_modules/jest/bin/jest.js",
-                     "--runInBand",
-                     "--no-cache",
-                     "--testTimeout=300000",
-                  },
-                  cwd = vim.fn.getcwd(),
-                  sourceMaps = true,
-                  resolveSourceMapLocations = {
-                     "${workspaceFolder}/**",
-                     "!**/node_modules/**",
-                  },
-                  skipFiles = { "<node_internals>/**", "**/node_modules/**" },
-               },
-               {
-                  type = "pwa-node",
-                  request = "launch",
-                  name = "Debug Vitest - Current File",
-                  runtimeExecutable = "node",
-                  runtimeArgs = {
-                     "--inspect-brk",
-                     "${workspaceFolder}/node_modules/vitest/vitest.mjs",
-                     "run",
-                     "--no-file-parallelism",
-                     "${file}",
-                  },
-                  cwd = vim.fn.getcwd(),
-                  sourceMaps = true,
-                  resolveSourceMapLocations = {
-                     "${workspaceFolder}/**",
-                     "!**/node_modules/**",
-                  },
-                  skipFiles = { "<node_internals>/**", "**/node_modules/**" },
-               },
-               {
-                  type = "pwa-node",
-                  request = "launch",
-                  name = "Debug Vitest - All Tests",
-                  runtimeExecutable = "node",
-                  runtimeArgs = {
-                     "--inspect-brk",
-                     "${workspaceFolder}/node_modules/vitest/vitest.mjs",
-                     "run",
-                     "--no-file-parallelism",
-                  },
-                  cwd = vim.fn.getcwd(),
-                  sourceMaps = true,
-                  resolveSourceMapLocations = {
-                     "${workspaceFolder}/**",
-                     "!**/node_modules/**",
-                  },
-                  skipFiles = { "<node_internals>/**", "**/node_modules/**" },
-               },
-               {
-                  type = "pwa-node",
-                  request = "attach",
-                  name = "Attach to Process",
-                  processId = require("dap.utils").pick_process,
-                  cwd = vim.fn.getcwd(),
-                  sourceMaps = true,
-                  skipFiles = { "<node_internals>/**", "**/node_modules/**" },
-               },
-            }
+            dap.configurations[language] = bun_configs
          end
       end,
    },
