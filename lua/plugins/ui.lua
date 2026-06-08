@@ -64,6 +64,15 @@ return {
    {
       "nvim-neo-tree/neo-tree.nvim",
       opts = {
+         -- force transparent window background regardless of colorscheme
+         event_handlers = {
+            {
+               event = "neo_tree_window_after_open",
+               handler = function()
+                  vim.wo.winhighlight = "Normal:Normal,NormalNC:Normal,SignColumn:Normal"
+               end,
+            },
+         },
          filesystem = {
             filtered_items = {
                visible = true,
@@ -131,18 +140,7 @@ return {
          -- set theme
          ---@type table
          opts.options = vim.tbl_deep_extend("force", opts.options or {}, {
-            theme = "catppuccin-mocha",
-            -- theme = "monokai-pro",
-            -- theme = "kanagawa",
-            -- theme = "solarized-osaka",
-            -- theme = "angelic",
-            -- theme = "solarized_dark",
-            -- theme = "lackluster",
-            -- theme = "flow",
-            -- theme = "habamax",
-            -- theme = "grail",
-            -- theme = "deviuspro",
-            -- theme = "midnight-desert",
+            theme = "auto",
          })
 
          -- add LazyVim pretty_path to lualine_c[4]
