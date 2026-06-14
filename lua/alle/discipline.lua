@@ -14,8 +14,6 @@ function M.clown()
       "j",
       "k",
       "l",
-      "+",
-      "-",
       --"<Up>",
       --"<Down>",
       --"<Left>",
@@ -31,6 +29,7 @@ function M.clown()
          end
 
          if count >= 10 then
+            ---@diagnostic disable-next-line: param-type-mismatch
             ok, id = pcall(vim.notify, "Hold on fam 🤡", vim.log.levels.WARN, {
                replace = id,
                keep = function()

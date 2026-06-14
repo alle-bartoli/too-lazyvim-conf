@@ -28,10 +28,7 @@ force_comment_highlights()
 vim.api.nvim_create_augroup("ForceComments", { clear = true })
 vim.api.nvim_create_autocmd({
    "ColorScheme", -- when the color scheme changes
-   "BufWinEnter", -- when opening a buffer
-   "WinEnter", -- when entering a window
    "VimEnter", -- at startup
-   "LspAttach", -- when LSP attaches
 }, {
    group = "ForceComments",
    pattern = "*",

@@ -14,11 +14,6 @@ local HOME = os.getenv("HOME")
 
 return {
 
-   -- File browser
-   {
-      "fzf-lua", -- opts = nil
-   },
-
    -- fzf-lua (fzf improved)
    {
       "ibhagwan/fzf-lua",
@@ -27,7 +22,7 @@ return {
       dependencies = { "nvim-tree/nvim-web-devicons" },
       -- or if using mini.icons/mini.nvim
       -- dependencies = { "nvim-mini/mini.icons" },
-      opts = function(_, opts)
+      opts = function(_, _)
          local config = require("fzf-lua.config")
          local actions = require("fzf-lua.actions")
 
@@ -48,6 +43,7 @@ return {
 
          -- Toggle root dir / cwd
          config.defaults.actions.files["ctrl-r"] = function(_, ctx)
+            ---@type table<string, any>
             local o = vim.deepcopy(ctx.__call_opts)
             o.root = o.root == false
             o.cwd = nil
@@ -194,7 +190,34 @@ return {
       event = "BufReadPre",
       opts = function()
          local hipatterns = require("mini.hipatterns")
-         local hsl_utils = require("solarized-osaka.hsl")
+
+         --- @dev Converts HSL color values to a hex string (#rrggbb).
+         --- Replaces the previous `solarized-osaka.hsl` dependency.
+         --- @param h number Hue in degrees [0, 360)
+         --- @param s number Saturation in percent [0, 100]
+         --- @param l number Lightness in percent [0, 100]
+         --- @return string hex `#rrggbb` color
+         local function hsl_to_hex(h, s, l)
+            local sn, ln = s / 100, l / 100
+            local c = (1 - math.abs(2 * ln - 1)) * sn
+            local x = c * (1 - math.abs((h / 60) % 2 - 1))
+            local m = ln - c / 2
+            local r, g, b = 0.0, 0.0, 0.0
+            if h < 60 then
+               r, g, b = c, x, 0
+            elseif h < 120 then
+               r, g, b = x, c, 0
+            elseif h < 180 then
+               r, g, b = 0, c, x
+            elseif h < 240 then
+               r, g, b = 0, x, c
+            elseif h < 300 then
+               r, g, b = x, 0, c
+            else
+               r, g, b = c, 0, x
+            end
+            return string.format("#%02x%02x%02x", (r + m) * 255, (g + m) * 255, (b + m) * 255)
+         end
 
          return {
             highlighters = {
@@ -210,7 +233,7 @@ return {
                         return nil -- fallback: don't highlight if parsing fails
                      end
 
-                     local hex_color = hsl_utils.hslToHex(h, s, l)
+                     local hex_color = hsl_to_hex(h, s, l)
                      return hipatterns.compute_hex_color_group(hex_color, "bg")
                   end,
                },

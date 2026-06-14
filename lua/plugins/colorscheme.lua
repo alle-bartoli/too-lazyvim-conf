@@ -519,14 +519,14 @@ return {
    {
       "LazyVim/LazyVim",
       opts = {
-         colorscheme = "bathory",
+         -- colorscheme = "bathory",
          -- colorscheme = "flow",
          -- colorscheme = "lackluster",
          -- colorscheme = "habamax",
          -- colorscheme = "grail",
          -- colorscheme = "deviuspro",
          -- colorscheme = "cosec-twilight",
-         -- colorscheme = "solarized-osaka",
+         colorscheme = "solarized-osaka",
          -- colorscheme = "kanagawa",
          -- colorscheme = "monokai-pro",
          -- colorscheme = "angelic",

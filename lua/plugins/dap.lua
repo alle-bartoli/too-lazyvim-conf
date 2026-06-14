@@ -1,12 +1,20 @@
 -- ~/.config/nvim/lua/plugins/dap.lua
--- Extends LazyVim's DAP extras with JS/TS adapters
+-- Extends LazyVim's DAP extras with JS/TS, Python, and Go adapters.
 
 return {
-   -- Extend nvim-dap with JS/TS support
    {
       "mfussenegger/nvim-dap",
       opts = function()
          local dap = require("dap")
+
+         ----------------------------------
+         -- Signs + logging
+         ----------------------------------
+
+         vim.fn.sign_define("DapBreakpoint", { text = "●", texthl = "DiagnosticError" })
+         vim.fn.sign_define("DapStopped", { text = "▶", texthl = "DiagnosticOk", linehl = "Visual" })
+         vim.fn.sign_define("DapBreakpointRejected", { text = "◌", texthl = "DiagnosticWarn" })
+         dap.set_log_level("TRACE")
 
          ----------------------------------
          -- Bun adapter (stdio shim wrapping bun-debug-adapter-protocol)
@@ -64,17 +72,13 @@ return {
                bun = js_based_languages,
             })
          end)
-      end,
-   },
 
-   ----------------------------------
-   -- Python / debugpy (keep existing)
-   ----------------------------------
-   {
-      "mfussenegger/nvim-dap",
-      opts = function()
-         local dap = require("dap")
+         ----------------------------------
+         -- Python / debugpy
+         ----------------------------------
 
+         --- @dev Resolves a Python interpreter for debugpy.
+         --- Prefers project-local venv (`venv`, `.venv`, `env`), then pyenv version, then PATH.
          local function find_project_venv()
             local cwd = vim.fn.getcwd()
             local possible = {
@@ -118,16 +122,10 @@ return {
                pythonPath = find_project_venv,
             },
          }
-      end,
-   },
 
-   ----------------------------------
-   -- Go / Delve (keep existing)
-   ----------------------------------
-   {
-      "mfussenegger/nvim-dap",
-      opts = function()
-         local dap = require("dap")
+         ----------------------------------
+         -- Go / Delve
+         ----------------------------------
 
          dap.adapters.delve = {
             type = "server",
@@ -177,19 +175,6 @@ return {
                processId = require("dap.utils").pick_process,
             },
          }
-      end,
-   },
-
-   -- Custom signs and logging
-   {
-      "mfussenegger/nvim-dap",
-      config = function()
-         vim.fn.sign_define("DapBreakpoint", { text = "●", texthl = "DiagnosticError" })
-         vim.fn.sign_define("DapStopped", { text = "▶", texthl = "DiagnosticOk", linehl = "Visual" })
-         vim.fn.sign_define("DapBreakpointRejected", { text = "◌", texthl = "DiagnosticWarn" })
-
-         -- Enable debug logging
-         require("dap").set_log_level("TRACE")
       end,
    },
 }

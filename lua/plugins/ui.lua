@@ -163,7 +163,6 @@ return {
    -- Filename
    {
       "b0o/incline.nvim",
-      dependencies = { "loctvl842/monokai-pro.nvim" },
       event = "BufReadPre",
       priority = 1200,
       config = function()
@@ -185,6 +184,7 @@ return {
                   filename = "[+] " .. filename
                end
 
+               ---@type string|nil, string|nil
                local icon, color = require("nvim-web-devicons").get_icon_color(filename)
 
                if is_focused then
