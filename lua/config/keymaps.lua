@@ -72,3 +72,13 @@ keymap.set("n", "rh", "<Cmd>vertical resize -5<CR>", { desc = "Resize window lef
 keymap.set("n", "rl", "<Cmd>vertical resize +5<CR>", { desc = "Resize window right" })
 keymap.set("n", "rk", "<Cmd>resize +5<CR>", { desc = "Resize window taller" })
 keymap.set("n", "rj", "<Cmd>resize -5<CR>", { desc = "Resize window shorter" })
+
+-- Pick colorscheme at runtime via vim.ui.select
+keymap.set("n", "<leader>uC", function()
+   local schemes = vim.fn.getcompletion("", "color")
+   vim.ui.select(schemes, { prompt = "Colorscheme:" }, function(choice)
+      if choice then
+         vim.cmd.colorscheme(choice)
+      end
+   end)
+end, { desc = "Pick colorscheme" })

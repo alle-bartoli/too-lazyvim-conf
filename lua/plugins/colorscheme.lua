@@ -518,21 +518,57 @@ return {
    -- Configure and load colorscheme
    {
       "LazyVim/LazyVim",
-      opts = {
-         -- colorscheme = "bathory",
-         -- colorscheme = "flow",
-         -- colorscheme = "lackluster",
-         -- colorscheme = "habamax",
-         -- colorscheme = "grail",
-         -- colorscheme = "deviuspro",
-         -- colorscheme = "cosec-twilight",
-         colorscheme = "solarized-osaka",
-         -- colorscheme = "kanagawa",
-         -- colorscheme = "monokai-pro",
-         -- colorscheme = "angelic",
-         -- colorscheme = "vesper",
-         -- colorscheme = "catppuccin-mocha",
-         news = { lazyvim = true, neovim = true },
-      },
+      opts = function()
+         -- Only schemes whose plugins are declared above (or builtins).
+         local favorites = {
+            "solarized-osaka",
+            "flow",
+            "lackluster",
+            "catppuccin-mocha",
+            "kanagawa",
+            "monokai-pro",
+            "angelic",
+            "bathory",
+            "habamax",
+         }
+
+         local DEFAULT = "catppuccin-mocha"
+
+         --- @dev Picks a colorscheme dynamically.
+         --- Priority: `$NVIM_COLORSCHEME` env var, then time of day,
+         --- then a random favorite as fallback. Falls back to `DEFAULT`
+         --- if the chosen scheme is not loadable.
+         --- @return string scheme Colorscheme name
+         local function pick()
+            local env = os.getenv("NVIM_COLORSCHEME")
+            if env and #env > 0 then
+               return env
+            end
+            local hour = tonumber(os.date("%H")) or 12
+            if hour >= 6 and hour < 18 then
+               return DEFAULT
+            end
+            math.randomseed(os.time())
+            return favorites[math.random(#favorites)]
+         end
+
+         local chosen = pick()
+
+         -- Guard: if scheme missing at load time, fall back to DEFAULT.
+         vim.api.nvim_create_autocmd("VimEnter", {
+            once = true,
+            callback = function()
+               local ok = pcall(vim.cmd.colorscheme, chosen)
+               if not ok then
+                  pcall(vim.cmd.colorscheme, DEFAULT)
+               end
+            end,
+         })
+
+         return {
+            colorscheme = chosen,
+            news = { lazyvim = true, neovim = true },
+         }
+      end,
    },
 }
