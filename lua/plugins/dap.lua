@@ -1,5 +1,6 @@
 -- ~/.config/nvim/lua/plugins/dap.lua
--- Extends LazyVim's DAP extras with JS/TS, Python, and Go adapters.
+-- Extends LazyVim's DAP extras with JS/TS (bun) and Go (delve) adapters.
+-- Python DAP handled by lang.python extra (nvim-dap-python).
 
 return {
    {
@@ -72,56 +73,6 @@ return {
                bun = js_based_languages,
             })
          end)
-
-         ----------------------------------
-         -- Python / debugpy
-         ----------------------------------
-
-         --- @dev Resolves a Python interpreter for debugpy.
-         --- Prefers project-local venv (`venv`, `.venv`, `env`), then pyenv version, then PATH.
-         local function find_project_venv()
-            local cwd = vim.fn.getcwd()
-            local possible = {
-               cwd .. "/venv/bin/python",
-               cwd .. "/.venv/bin/python",
-               cwd .. "/env/bin/python",
-            }
-            for _, path in ipairs(possible) do
-               if vim.fn.filereadable(path) == 1 then
-                  return path
-               end
-            end
-            local pyenv_version = vim.fn.system("pyenv version-name"):gsub("%s+", "")
-            if pyenv_version and #pyenv_version > 0 then
-               return vim.fn.expand("~/.pyenv/versions/" .. pyenv_version .. "/bin/python")
-            end
-            return "python"
-         end
-
-         dap.adapters.debugpy = {
-            type = "executable",
-            command = "python",
-            args = { "-m", "debugpy.adapter" },
-         }
-
-         dap.configurations.python = {
-            {
-               type = "debugpy",
-               request = "launch",
-               name = "Launch file",
-               program = "${file}",
-               cwd = vim.fn.getcwd(),
-               pythonPath = find_project_venv,
-            },
-            {
-               type = "debugpy",
-               request = "attach",
-               name = "Attach to process",
-               processId = require("dap.utils").pick_process,
-               justMyCode = true,
-               pythonPath = find_project_venv,
-            },
-         }
 
          ----------------------------------
          -- Go / Delve
