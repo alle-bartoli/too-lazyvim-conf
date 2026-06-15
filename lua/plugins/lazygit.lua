@@ -6,12 +6,7 @@ return {
    {
       "snacks.nvim",
       opts = {
-         lazygit = {
-            win = {
-               width = 0.9,
-               height = 0.9,
-            },
-         },
+         lazygit = { win = { style = "full" } },
       },
    },
 
