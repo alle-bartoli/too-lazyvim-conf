@@ -533,13 +533,21 @@ return {
          }
 
          local DEFAULT = "catppuccin-mocha"
+         local colorscheme_file = vim.fn.stdpath("config") .. "/.colorscheme"
 
          --- @dev Picks a colorscheme dynamically.
-         --- Priority: `$NVIM_COLORSCHEME` env var, then time of day,
-         --- then a random favorite as fallback. Falls back to `DEFAULT`
-         --- if the chosen scheme is not loadable.
+         --- Priority: saved file, `$NVIM_COLORSCHEME` env var, time of day,
+         --- random favorite. Falls back to `DEFAULT` if not loadable.
          --- @return string scheme Colorscheme name
          local function pick()
+            local f = io.open(colorscheme_file, "r")
+            if f then
+               local saved = f:read("*l")
+               f:close()
+               if saved and #saved > 0 then
+                  return saved
+               end
+            end
             local env = os.getenv("NVIM_COLORSCHEME")
             if env and #env > 0 then
                return env
@@ -561,6 +569,17 @@ return {
                local ok = pcall(vim.cmd.colorscheme, chosen)
                if not ok then
                   pcall(vim.cmd.colorscheme, DEFAULT)
+               end
+            end,
+         })
+
+         -- Save choice on ColorScheme change so it persists across restarts.
+         vim.api.nvim_create_autocmd("ColorScheme", {
+            callback = function(ev)
+               local fw = io.open(colorscheme_file, "w")
+               if fw then
+                  fw:write(ev.match .. "\n")
+                  fw:close()
                end
             end,
          })
