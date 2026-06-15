@@ -1,21 +1,18 @@
 -- ~/.config/nvim/lua/plugins/lazygit.lua
 
 return {
+   -- Snacks.lazygit handles <leader>gg (LazyVim default).
+   -- Configure the float window size via snacks opts.
    {
-      "kdheepak/lazygit.nvim",
-      cmd = {
-         "LazyGit",
-         "LazyGitConfig",
-         "LazyGitCurrentFile",
-         "LazyGitFilter",
-         "LazyGitFilterCurrentFile",
+      "snacks.nvim",
+      opts = {
+         lazygit = {
+            win = {
+               width = 0.9,
+               height = 0.9,
+            },
+         },
       },
-      dependencies = { "nvim-lua/plenary.nvim" },
-      keys = { { "<leader>gg", "<cmd>LazyGit<CR>", desc = "Open LazyGit" } },
-      config = function()
-         vim.g.lazygit_floating_window_scaling_factor = 0.9
-         vim.g.lazygit_use_neovim_remote = 0
-      end,
    },
 
    -- Diffview
