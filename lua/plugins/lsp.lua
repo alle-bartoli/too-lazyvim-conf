@@ -8,7 +8,8 @@ return {
          -- Extend (not replace) LazyVim's default ensure_installed list
          -- Extras handle: vtsls, js-debug-adapter (lang.typescript),
          -- eslint-lsp (linting.eslint), gopls, goimports, golangci-lint,
-         -- delve (lang.go), astro-language-server (lang.astro)
+         -- delve (lang.go), astro-language-server (lang.astro),
+         -- rust-analyzer, codelldb (lang.rust)
          vim.list_extend(opts.ensure_installed, {
             "stylua",
             "selene",
@@ -18,7 +19,6 @@ return {
             "tailwindcss-language-server",
             "typescript-language-server",
             "css-lsp",
-            "rust-analyzer",
             "nomicfoundation-solidity-language-server",
          })
       end,
@@ -211,40 +211,8 @@ return {
                },
             },
 
-            -- Rust
-            rust_analyzer = {
-               settings = {
-                  ["rust-analyzer"] = {
-                     cargo = {
-                        -- Enable all features for better IDE support
-                        allFeatures = true,
-                        loadOutDirsFromCheck = true,
-                        buildScripts = { enable = true },
-                     },
-                     checkOnSave = {
-                        -- Enable clippy for code quality checks
-                        enable = true,
-                        command = "clippy",
-                     },
-                     procMacro = {
-                        enable = true,
-                        attributes = {
-                           enable = true,
-                        },
-                     },
-                     diagnostics = {
-                        experimental = { enable = true },
-                     },
-                     inlayHints = {
-                        bindingModeHints = { enable = true },
-                        closureReturnTypeHints = { enable = "always" },
-                        lifetimeElisionHints = { enable = "always" },
-                        reborrowHints = { enable = true },
-                        typeHints = { enable = true },
-                     },
-                  },
-               },
-            },
+            -- Rust: handled by lang.rust extra (rustaceanvim).
+            -- Custom settings applied via rustaceanvim opts in this file below.
 
             -- Go (extends lazyvim.plugins.extras.lang.go)
             gopls = {
@@ -282,5 +250,36 @@ return {
 
          return opts
       end,
+   },
+
+   -- Rustaceanvim: extend lang.rust extra with custom rust-analyzer settings.
+   -- The extra provides cargo.allFeatures, buildScripts, procMacro, checkOnSave.
+   -- We add: clippy command, experimental diagnostics, detailed inlay hints.
+   {
+      "mrcjkb/rustaceanvim",
+      opts = {
+         server = {
+            default_settings = {
+               ["rust-analyzer"] = {
+                  checkOnSave = {
+                     command = "clippy",
+                  },
+                  procMacro = {
+                     attributes = { enable = true },
+                  },
+                  diagnostics = {
+                     experimental = { enable = true },
+                  },
+                  inlayHints = {
+                     bindingModeHints = { enable = true },
+                     closureReturnTypeHints = { enable = "always" },
+                     lifetimeElisionHints = { enable = "always" },
+                     reborrowHints = { enable = true },
+                     typeHints = { enable = true },
+                  },
+               },
+            },
+         },
+      },
    },
 }
