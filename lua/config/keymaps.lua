@@ -12,9 +12,6 @@ local opts = { noremap = true, silent = true }
 
 -- Do things without affecting the registers
 keymap.set("n", "x", '"_x', { desc = "Delete character without yanking" })
-keymap.set("n", "<Leader>p", '"0p', { desc = "Paste from yank register (normal)" })
-keymap.set("n", "<Leader>P", '"0P', { desc = "Paste from yank register before (normal)" })
-keymap.set("v", "<Leader>p", '"0p', { desc = "Paste from yank register (visual)" })
 
 keymap.set("n", "<Leader>c", '"_c', { desc = "Change without yanking (normal)" })
 keymap.set("n", "<Leader>C", '"_C', { desc = "Change line without yanking (normal)" })
@@ -27,18 +24,41 @@ keymap.set("v", "<Leader>x", '"_x', { desc = "Delete without yanking (visual)" }
 keymap.set("v", "<Leader>X", '"_D', { desc = "Delete line without yanking (visual)" })
 
 -- DAP (Debug Adapter Protocol)
-keymap.set("n", "<Leader>db", function() require("dap").toggle_breakpoint() end, { desc = "Toggle breakpoint" })
-keymap.set("n", "<Leader>dc", function() require("dap").continue() end, { desc = "Continue/Start debugger" })
-keymap.set("n", "<Leader>do", function() require("dap").step_over() end, { desc = "Step over" })
-keymap.set("n", "<Leader>di", function() require("dap").step_into() end, { desc = "Step into" })
-keymap.set("n", "<Leader>dO", function() require("dap").step_out() end, { desc = "Step out" })
-keymap.set("n", "<Leader>dr", function() require("dap").repl.open() end, { desc = "Open REPL" })
-keymap.set("n", "<Leader>dl", function() require("dap").run_last() end, { desc = "Run last" })
-keymap.set("n", "<Leader>dt", function() require("dap").terminate() end, { desc = "Terminate" })
+keymap.set("n", "<Leader>db", function()
+   require("dap").toggle_breakpoint()
+end, { desc = "Toggle breakpoint" })
+keymap.set("n", "<Leader>dc", function()
+   require("dap").continue()
+end, { desc = "Continue/Start debugger" })
+keymap.set("n", "<Leader>do", function()
+   require("dap").step_over()
+end, { desc = "Step over" })
+keymap.set("n", "<Leader>di", function()
+   require("dap").step_into()
+end, { desc = "Step into" })
+keymap.set("n", "<Leader>dO", function()
+   require("dap").step_out()
+end, { desc = "Step out" })
+keymap.set("n", "<Leader>dr", function()
+   require("dap").repl.open()
+end, { desc = "Open REPL" })
+keymap.set("n", "<Leader>dl", function()
+   require("dap").run_last()
+end, { desc = "Run last" })
+keymap.set("n", "<Leader>dt", function()
+   require("dap").terminate()
+end, { desc = "Terminate" })
 
--- Increment/decrement
-keymap.set("n", "+", "<C-a>", { desc = "Increment number under cursor" })
-keymap.set("n", "-", "<C-x>", { desc = "Decrement number under cursor" })
+-- Increment/decrement (routed through dial.nvim for booleans, dates, etc.)
+local function dial(increment)
+   return function()
+      local group = vim.g.dials_by_ft and vim.g.dials_by_ft[vim.bo.filetype] or "default"
+      local func = increment and "inc_normal" or "dec_normal"
+      return require("dial.map")[func](group)
+   end
+end
+keymap.set("n", "+", dial(true), { expr = true, desc = "Increment (dial)" })
+keymap.set("n", "-", dial(false), { expr = true, desc = "Decrement (dial)" })
 
 -- Delete a word backwards
 keymap.set("n", "dw", "vb_d", { desc = "Delete previous word (visual-back)" })

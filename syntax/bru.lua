@@ -70,16 +70,14 @@ local section_headers = {
    "tests",
    "docs",
 }
-vim.cmd(
-   [=[syntax match bruSectionHeader /^]=]
-      .. table.concat(section_headers, [=[\|^]=])
-      .. [=[/]=]
-)
+vim.cmd([=[syntax match bruSectionHeader /^]=] .. table.concat(section_headers, [=[\|^]=]) .. [=[/]=])
 
 -- ============================================================================
 -- URL HANDLING
 -- ============================================================================
-vim.cmd([=[syntax match bruURLLine /^\s*url:.*$/ contains=bruURLKey,bruVariable,bruEnvVariable,bruProcessEnvVariable,bruPathParam,bruQueryString]=])
+vim.cmd(
+   [=[syntax match bruURLLine /^\s*url:.*$/ contains=bruURLKey,bruVariable,bruEnvVariable,bruProcessEnvVariable,bruPathParam,bruQueryString]=]
+)
 vim.cmd([=[syntax match bruURLKey /^\s*url/ contained]=])
 vim.cmd([=[syntax match bruPathParam /:\w\+/ contained]=])
 vim.cmd([=[syntax match bruQueryString /?.*$/ contained contains=bruVariable,bruEnvVariable,bruProcessEnvVariable]=])
@@ -91,7 +89,9 @@ vim.cmd([=[syntax match bruKey /^\s\+[a-zA-Z_][a-zA-Z0-9_-]*\ze\s*:/]=])
 
 -- JSON strings
 vim.cmd([=[syntax region bruJSONString start=/"/ skip=/\\"/ end=/"/ contains=bruVariable,bruEnvVariable,bruProcessEnvVariable]=])
-vim.cmd([=[syntax region bruJSONStringSingle start=/'/ skip=/\\'/ end=/'/ contains=bruVariable,bruEnvVariable,bruProcessEnvVariable]=])
+vim.cmd(
+   [=[syntax region bruJSONStringSingle start=/'/ skip=/\\'/ end=/'/ contains=bruVariable,bruEnvVariable,bruProcessEnvVariable]=]
+)
 
 -- ============================================================================
 -- LITERALS
@@ -105,7 +105,9 @@ vim.cmd([=[syntax keyword bruNull null undefined]=])
 -- SPECIAL VALUES
 -- ============================================================================
 vim.cmd([=[syntax match bruHTTPMethod /:\s*\zs\(http\|https\|GET\|POST\|PUT\|PATCH\|DELETE\|HEAD\|OPTIONS\)\ze\s*$/]=])
-vim.cmd([=[syntax match bruContentType /:\s*\zs\(json\|text\|xml\|sparql\|form-urlencoded\|multipart-form\|graphql\|none\)\ze\s*$/]=])
+vim.cmd(
+   [=[syntax match bruContentType /:\s*\zs\(json\|text\|xml\|sparql\|form-urlencoded\|multipart-form\|graphql\|none\)\ze\s*$/]=]
+)
 vim.cmd([=[syntax match bruAuthType /:\s*\zs\(inherit\|basic\|bearer\|digest\|oauth2\|awsv4\|wsse\|none\)\ze\s*$/]=])
 
 -- ============================================================================
@@ -120,8 +122,12 @@ vim.cmd([=[syntax match bruAssertOp /\<contains\>/]=])
 -- ============================================================================
 -- SCRIPT BLOCKS (foldable regions)
 -- ============================================================================
-vim.cmd([=[syntax region bruScriptBlock start=/^script\(:\(pre-request\|post-response\)\)\?\s*{$/ end=/^}$/ contains=bruVariable,bruEnvVariable,bruProcessEnvVariable,bruJSONString,bruJSONStringSingle,bruComment,bruNumber,bruBoolean,bruNull keepend fold]=])
-vim.cmd([=[syntax region bruTestBlock start=/^tests\s*{$/ end=/^}$/ contains=bruVariable,bruEnvVariable,bruProcessEnvVariable,bruJSONString,bruJSONStringSingle,bruComment,bruNumber,bruBoolean,bruNull keepend fold]=])
+vim.cmd(
+   [=[syntax region bruScriptBlock start=/^script\(:\(pre-request\|post-response\)\)\?\s*{$/ end=/^}$/ contains=bruVariable,bruEnvVariable,bruProcessEnvVariable,bruJSONString,bruJSONStringSingle,bruComment,bruNumber,bruBoolean,bruNull keepend fold]=]
+)
+vim.cmd(
+   [=[syntax region bruTestBlock start=/^tests\s*{$/ end=/^}$/ contains=bruVariable,bruEnvVariable,bruProcessEnvVariable,bruJSONString,bruJSONStringSingle,bruComment,bruNumber,bruBoolean,bruNull keepend fold]=]
+)
 
 -- ============================================================================
 -- DELIMITERS
@@ -140,34 +146,35 @@ vim.cmd([=[syntax match bruStatusCode /\<[1-5]\d\d\>/]=])
 -- HIGHLIGHT GROUPS (apply from config or use defaults)
 -- ============================================================================
 local ok, config = pcall(require, "alle.bru.config")
-local highlights = ok and config.options.highlights or {
-   bruBlockName = "Keyword",
-   bruSectionHeader = "Type",
-   bruKey = "@property",
-   bruURLKey = "@property",
-   bruHTTPMethod = "Function",
-   bruContentType = "Type",
-   bruAuthType = "Type",
-   bruJSONString = "String",
-   bruJSONStringSingle = "String",
-   bruUUID = "Special",
-   bruNumber = "Number",
-   bruBoolean = "Boolean",
-   bruNull = "Constant",
-   bruStatusCode = "Number",
-   bruVariable = "Special",
-   bruEnvVariable = "@variable.builtin",
-   bruProcessEnvVariable = "@variable.builtin",
-   bruPathParam = "Label",
-   bruQueryString = "String",
-   bruAssertOp = "Operator",
-   bruComment = "Comment",
-   bruDisabled = "Comment",
-   bruBrace = "@punctuation.bracket",
-   bruBracket = "@punctuation.bracket",
-   bruParen = "@punctuation.bracket",
-   bruDelimiter = "@punctuation.delimiter",
-}
+local highlights = ok and config.options.highlights
+   or {
+      bruBlockName = "Keyword",
+      bruSectionHeader = "Type",
+      bruKey = "@property",
+      bruURLKey = "@property",
+      bruHTTPMethod = "Function",
+      bruContentType = "Type",
+      bruAuthType = "Type",
+      bruJSONString = "String",
+      bruJSONStringSingle = "String",
+      bruUUID = "Special",
+      bruNumber = "Number",
+      bruBoolean = "Boolean",
+      bruNull = "Constant",
+      bruStatusCode = "Number",
+      bruVariable = "Special",
+      bruEnvVariable = "@variable.builtin",
+      bruProcessEnvVariable = "@variable.builtin",
+      bruPathParam = "Label",
+      bruQueryString = "String",
+      bruAssertOp = "Operator",
+      bruComment = "Comment",
+      bruDisabled = "Comment",
+      bruBrace = "@punctuation.bracket",
+      bruBracket = "@punctuation.bracket",
+      bruParen = "@punctuation.bracket",
+      bruDelimiter = "@punctuation.delimiter",
+   }
 
 for group, target in pairs(highlights) do
    if type(target) == "string" then
