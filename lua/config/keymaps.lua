@@ -93,9 +93,24 @@ keymap.set("n", "rl", "<Cmd>vertical resize +5<CR>", { desc = "Resize window rig
 keymap.set("n", "rk", "<Cmd>resize +5<CR>", { desc = "Resize window taller" })
 keymap.set("n", "rj", "<Cmd>resize -5<CR>", { desc = "Resize window shorter" })
 
--- Pick colorscheme at runtime via vim.ui.select
+-- Pick colorscheme at runtime via vim.ui.select.
+-- Union of loaded schemes (runtimepath) + lazy-loaded plugin schemes
+-- detected by lazy.nvim. Selecting a lazy scheme triggers plugin load.
 keymap.set("n", "<leader>uC", function()
-   local schemes = vim.fn.getcompletion("", "color")
+   local set = {}
+   for _, s in ipairs(vim.fn.getcompletion("", "color")) do
+      set[s] = true
+   end
+   local ok, lazy = pcall(require, "lazy")
+   if ok then
+      for _, p in ipairs(lazy.plugins()) do
+         for _, cs in ipairs((p._ and p._.colorschemes) or {}) do
+            set[cs] = true
+         end
+      end
+   end
+   local schemes = vim.tbl_keys(set)
+   table.sort(schemes)
    vim.ui.select(schemes, { prompt = "Colorscheme:" }, function(choice)
       if choice then
          vim.cmd.colorscheme(choice)
