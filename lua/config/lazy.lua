@@ -24,15 +24,7 @@ require("lazy").setup({
       -- add LazyVim and import its plugins
       { "LazyVim/LazyVim", import = "lazyvim.plugins" },
 
-      -- import LazyVim DAP core extra
-      { import = "lazyvim.plugins.extras.dap.core" },
-      --{ import = "lazyvim.plugins.extras.dap.python" },
-
-      -- Astro: sets up @astrojs/ts-plugin for vtsls + treesitter
-      { import = "lazyvim.plugins.extras.lang.astro" },
-
-      -- ESLint: adds workingDirectories auto-mode so eslint finds configs in subdirs
-      { import = "lazyvim.plugins.extras.linting.eslint" },
+      -- All extras managed via :LazyExtras / lazyvim.json (single source of truth)
 
       -- import/override with your plugins
       { import = "plugins" },

@@ -2,8 +2,11 @@
   "extras": [
     "lazyvim.plugins.extras.coding.mini-surround",
     "lazyvim.plugins.extras.coding.yanky",
+    "lazyvim.plugins.extras.dap.core",
     "lazyvim.plugins.extras.editor.dial",
+    "lazyvim.plugins.extras.lang.astro",
     "lazyvim.plugins.extras.lang.go",
+    "lazyvim.plugins.extras.linting.eslint",
     "lazyvim.plugins.extras.test.core"
   ],
   "news": {
