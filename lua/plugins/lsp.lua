@@ -6,9 +6,10 @@ return {
       "mason-org/mason.nvim",
       opts = function(_, opts)
          -- Extend (not replace) LazyVim's default ensure_installed list
+         -- Extras handle: vtsls, js-debug-adapter (lang.typescript),
+         -- eslint-lsp (linting.eslint), gopls, goimports, golangci-lint,
+         -- delve (lang.go), astro-language-server (lang.astro)
          vim.list_extend(opts.ensure_installed, {
-            "eslint-lsp",
-            "js-debug-adapter",
             "stylua",
             "selene",
             "luacheck",
@@ -16,15 +17,9 @@ return {
             "shfmt",
             "tailwindcss-language-server",
             "typescript-language-server",
-            "vtsls",
             "css-lsp",
             "rust-analyzer",
-            "gopls",
-            "goimports",
-            "golangci-lint",
-            "delve",
             "nomicfoundation-solidity-language-server",
-            "astro-language-server",
          })
       end,
    },
@@ -119,20 +114,6 @@ return {
                      "gy",
                      "<cmd>FzfLua lsp_typedefs jump1=true ignore_current_line=true silent=true<cr>",
                      desc = "Goto Type Definition",
-                  },
-                  {
-                     "<leader>cM",
-                     function()
-                        require("lazyvim.util").lsp.action["source.addMissingImports.ts"]()
-                     end,
-                     desc = "Add missing imports",
-                  },
-                  {
-                     "<leader>cD",
-                     function()
-                        require("lazyvim.util").lsp.action["source.fixAll.ts"]()
-                     end,
-                     desc = "Fix all diagnostics",
                   },
                },
             },
