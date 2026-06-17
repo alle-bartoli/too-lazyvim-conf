@@ -20,6 +20,14 @@ return {
       cmd = "FzfLua",
       -- optional for icon support
       dependencies = { "nvim-tree/nvim-web-devicons" },
+      -- Define keys to have highest priority
+      keys = {
+         {
+            "<leader>gd",
+            "<cmd>DiffviewOpen<CR>",
+            desc = "Open Diffview",
+         },
+      },
       -- or if using mini.icons/mini.nvim
       -- dependencies = { "nvim-mini/mini.icons" },
       opts = function(_, _)
@@ -192,7 +200,6 @@ return {
          local hipatterns = require("mini.hipatterns")
 
          --- @dev Converts HSL color values to a hex string (#rrggbb).
-         --- Replaces the previous `solarized-osaka.hsl` dependency.
          --- @param h number Hue in degrees [0, 360)
          --- @param s number Saturation in percent [0, 100]
          --- @param l number Lightness in percent [0, 100]
