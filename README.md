@@ -25,9 +25,11 @@ NVIM_APPNAME=alle-bartoli/too-lazyvim-conf/ nvim
 ### colorscheme
 
 - [0xstepit/flow.nvim](https://dotfyle.com/plugins/0xstepit/flow.nvim)
+- [loctvl842/monokai-pro.nvim](https://dotfyle.com/plugins/loctvl842/monokai-pro.nvim)
 - [craftzdog/solarized-osaka.nvim](https://dotfyle.com/plugins/craftzdog/solarized-osaka.nvim)
+- [sponkurtus2/angelic.nvim](https://dotfyle.com/plugins/sponkurtus2/angelic.nvim)
+- [rebelot/kanagawa.nvim](https://dotfyle.com/plugins/rebelot/kanagawa.nvim)
 - [catppuccin/nvim](https://dotfyle.com/plugins/catppuccin/nvim)
-- [datsfilipe/vesper.nvim](https://dotfyle.com/plugins/datsfilipe/vesper.nvim)
 - [slugbyte/lackluster.nvim](https://dotfyle.com/plugins/slugbyte/lackluster.nvim)
 
 ### comment
@@ -53,12 +55,12 @@ NVIM_APPNAME=alle-bartoli/too-lazyvim-conf/ nvim
 
 ### fuzzy-finder
 
-- [nvim-telescope/telescope.nvim](https://dotfyle.com/plugins/nvim-telescope/telescope.nvim)
 - [ibhagwan/fzf-lua](https://dotfyle.com/plugins/ibhagwan/fzf-lua)
 
 ### git
 
 - [kdheepak/lazygit.nvim](https://dotfyle.com/plugins/kdheepak/lazygit.nvim)
+- [sindrets/diffview.nvim](https://dotfyle.com/plugins/sindrets/diffview.nvim)
 
 ### icon
 
@@ -68,6 +70,7 @@ NVIM_APPNAME=alle-bartoli/too-lazyvim-conf/ nvim
 
 - [neovim/nvim-lspconfig](https://dotfyle.com/plugins/neovim/nvim-lspconfig)
 - [mfussenegger/nvim-lint](https://dotfyle.com/plugins/mfussenegger/nvim-lint)
+- [mason-org/mason.nvim](https://dotfyle.com/plugins/mason-org/mason.nvim)
 
 ### motion
 
@@ -82,7 +85,7 @@ NVIM_APPNAME=alle-bartoli/too-lazyvim-conf/ nvim
 
 - [folke/lazy.nvim](https://dotfyle.com/plugins/folke/lazy.nvim)
 
-### preconfigured
+### pre-made-configuration
 
 - [LazyVim/LazyVim](https://dotfyle.com/plugins/LazyVim/LazyVim)
 
@@ -125,6 +128,7 @@ NVIM_APPNAME=alle-bartoli/too-lazyvim-conf/ nvim
 - graphql
 - pyright
 - ruff_lsp
+- solidity
 - svelte
 - vtsls
 
