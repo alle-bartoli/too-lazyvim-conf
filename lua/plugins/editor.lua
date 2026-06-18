@@ -20,14 +20,6 @@ return {
       cmd = "FzfLua",
       -- optional for icon support
       dependencies = { "nvim-tree/nvim-web-devicons" },
-      -- Define keys to have highest priority
-      keys = {
-         {
-            "<leader>gd",
-            "<cmd>DiffviewOpen<CR>",
-            desc = "Open Diffview",
-         },
-      },
       -- or if using mini.icons/mini.nvim
       -- dependencies = { "nvim-mini/mini.icons" },
       opts = function(_, _)

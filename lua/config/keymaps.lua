@@ -8,7 +8,7 @@ local discipline = require("alle.discipline")
 discipline.clown()
 
 local keymap = vim.keymap
-local opts = { noremap = true, silent = true }
+-- local opts = { noremap = true, silent = true }
 
 -- Do things without affecting the registers
 keymap.set("n", "x", '"_x', { desc = "Delete character without yanking" })
@@ -97,20 +97,26 @@ keymap.set("n", "rj", "<Cmd>resize -5<CR>", { desc = "Resize window shorter" })
 -- Union of loaded schemes (runtimepath) + lazy-loaded plugin schemes
 -- detected by lazy.nvim. Selecting a lazy scheme triggers plugin load.
 keymap.set("n", "<leader>uC", function()
+   --- @type table<string, boolean>
    local set = {}
    for _, s in ipairs(vim.fn.getcompletion("", "color")) do
       set[s] = true
    end
+
    local ok, lazy = pcall(require, "lazy")
    if ok then
       for _, p in ipairs(lazy.plugins()) do
-         for _, cs in ipairs((p._ and p._.colorschemes) or {}) do
+         local meta = p --[[@as table]]
+         local list = (meta._ and meta._.colorschemes) or {} ---@type string[]
+         for _, cs in ipairs(list) do
             set[cs] = true
          end
       end
    end
+
    local schemes = vim.tbl_keys(set)
    table.sort(schemes)
+
    vim.ui.select(schemes, { prompt = "Colorscheme:" }, function(choice)
       if choice then
          vim.cmd.colorscheme(choice)

@@ -19,6 +19,7 @@ return {
          { "<leader>gd", "<cmd>DiffviewOpen<CR>", desc = "Open Diffview" },
          { "<leader>gh", "<cmd>DiffviewFileHistory %<CR>", desc = "File History" },
          { "<leader>gH", "<cmd>DiffviewFileHistory<CR>", desc = "Repo History" },
+         { "<leader>gc", false },
          { "<leader>gc", "<cmd>DiffviewClose<CR>", desc = "Close Diffview" },
       },
       opts = {
