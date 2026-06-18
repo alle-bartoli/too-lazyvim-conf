@@ -272,15 +272,22 @@ return {
 
             -- Marksman
             marksman = {
-               on_attach = function(client, bufnr)
-                  -- Detach from fugitive/oil/non-file buffers (URI parses break marksman)
+               root_dir = function(bufnr, on_dir)
                   local name = vim.api.nvim_buf_get_name(bufnr)
-                  local buftype = vim.bo[bufnr].buftype
-                  if buftype ~= "" or name:match("^%w+://") and not name:match("^file://") or name:match("/%.git/") then
-                     vim.schedule(function()
-                        vim.lsp.buf_detach_client(bufnr, client.id)
-                     end)
+                  -- Skip non-file schemes (fugitive, oil, etc.)
+                  if name:match("^%w+://") and not name:match("^file://") then
+                     return
                   end
+                  -- Skip fugitive-style indexed paths and any .git/ path
+                  if name:match("/%.git/") or name:match(":%d+:") then
+                     return
+                  end
+                  -- Skip non-normal buffers
+                  if vim.bo[bufnr].buftype ~= "" then
+                     return
+                  end
+                  local root = vim.fs.root(bufnr, { ".marksman.toml", ".git" })
+                  on_dir(root or vim.fn.getcwd())
                end,
             },
          }) --[[@as table]]
