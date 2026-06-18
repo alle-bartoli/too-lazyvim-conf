@@ -87,7 +87,6 @@ return {
          end
 
          -- Deep merge to preserve LazyVim's default server configs
-         ---@diagnostic disable-next-line: undefined-field
          opts.servers = vim.tbl_deep_extend("force", opts.servers or {}, {
             -- Global keymaps applied to ALL LSP servers
             -- Override LazyVim defaults to use FzfLua instead of Telescope
@@ -246,7 +245,21 @@ return {
                root_markers = { "foundry.toml", "hardhat.config.js", "hardhat.config.ts", "truffle-config.js", ".git" },
                single_file_support = true,
             },
-         })
+
+            -- Marksman
+            marksman = {
+               on_attach = function(client, bufnr)
+                  -- Detach from fugitive/oil/non-file buffers (URI parses break marksman)
+                  local name = vim.api.nvim_buf_get_name(bufnr)
+                  local buftype = vim.bo[bufnr].buftype
+                  if buftype ~= "" or name:match("^%w+://") and not name:match("^file://") or name:match("/%.git/") then
+                     vim.schedule(function()
+                        vim.lsp.buf_detach_client(bufnr, client.id)
+                     end)
+                  end
+               end,
+            },
+         }) --[[@as table]]
 
          return opts
       end,

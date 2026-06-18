@@ -66,12 +66,11 @@ return {
             dap.configurations[language] = bun_configs
          end
 
-         -- Load per-project .vscode/launch.json (type "bun" entries) and
-         -- attach them to JS/TS filetypes so picker shows project presets.
+         -- Per-project .vscode/launch.json (type "bun" entries) loads automatically via dap providers.
+         -- Register "bun" -> JS/TS filetypes so picker maps project presets.
          pcall(function()
-            require("dap.ext.vscode").load_launchjs(nil, {
-               bun = js_based_languages,
-            })
+            local vscode = require("dap.ext.vscode") --[[@as table]]
+            vscode.type_to_filetypes["bun"] = js_based_languages
          end)
 
          ----------------------------------
