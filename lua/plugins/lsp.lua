@@ -151,8 +151,21 @@ return {
                   "package.json",
                   ".git",
                },
+               filetypes = {
+                  "javascript",
+                  "javascriptreact",
+                  "javascript.jsx",
+                  "typescript",
+                  "typescriptreact",
+                  "typescript.tsx",
+                  "vue",
+                  "svelte",
+                  "astro",
+               },
                settings = {
-                  workingDirectories = { mode = "auto" },
+                  workingDirectories = {
+                     mode = "auto",
+                  },
                },
             },
 
@@ -236,7 +249,18 @@ return {
             },
 
             -- Astro: mason-lspconfig before_init auto-resolves tsdk from project node_modules
-            astro = {},
+            astro = {
+               root_markers = {
+                  "package.json",
+                  "astro.config.mjs",
+                  "astro.config.ts",
+                  "astro.config.js",
+                  ".git",
+               },
+               filetypes = {
+                  "astro",
+               },
+            },
 
             -- Solidity
             solidity = {
