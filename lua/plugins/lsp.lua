@@ -81,9 +81,13 @@ return {
          end
 
          -- Common on_attach for TS/JS servers
-         local function ts_on_attach(client, _bufnr)
+         local function ts_on_attach(client, bufnr)
             -- Disable LSP formatting to avoid conflicts with conform.nvim
             client.server_capabilities.documentFormattingProvider = false
+            -- vtsls does not support documentHighlight in astro buffers
+            if vim.bo[bufnr].filetype == "astro" then
+               client.server_capabilities.documentHighlightProvider = false
+            end
          end
 
          -- Deep merge to preserve LazyVim's default server configs
@@ -123,6 +127,13 @@ return {
                -- Only start in projects with explicit TS/JS config (avoids random .js files)
                root_markers = { "tsconfig.json", "jsconfig.json", "package.json", ".git" },
                single_file_support = false,
+               filetypes = {
+                  "javascript",
+                  "javascriptreact",
+                  "typescript",
+                  "typescriptreact",
+                  "astro",
+               },
                settings = ts_inlay_hints(),
                on_attach = ts_on_attach,
             },
@@ -248,7 +259,7 @@ return {
                },
             },
 
-            -- Astro: mason-lspconfig before_init auto-resolves tsdk from project node_modules
+            -- Astro: tsdk must be explicit -- server won't find TS types otherwise
             astro = {
                root_markers = {
                   "package.json",
@@ -260,6 +271,26 @@ return {
                filetypes = {
                   "astro",
                },
+               init_options = {
+                  typescript = {
+                     tsdk = vim.fn.fnamemodify(
+                        vim.fn.resolve(vim.fn.exepath("tsserver")),
+                        ":h"
+                     ),
+                  },
+               },
+               before_init = function(_, config)
+                  -- Prefer project-local typescript over global
+                  local root = vim.fs.root(0, { "package.json", "astro.config.mjs", "astro.config.ts" })
+                  if root then
+                     local local_tsdk = root .. "/node_modules/typescript/lib"
+                     if vim.fn.isdirectory(local_tsdk) == 1 then
+                        config.init_options = config.init_options or {}
+                        config.init_options.typescript = config.init_options.typescript or {}
+                        config.init_options.typescript.tsdk = local_tsdk
+                     end
+                  end
+               end,
             },
 
             -- Solidity
