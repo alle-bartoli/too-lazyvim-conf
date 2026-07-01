@@ -86,6 +86,16 @@ return {
             },
          }
 
+         -- Keep the debugger alive when detaching from a remote/headless Delve session.
+         -- Without this, nvim-dap sends terminateDebuggee=true on disconnect, killing
+         -- the process even though Delve was started with --accept-multiclient.
+         dap.listeners.before["disconnect"]["keep_debuggee"] = function(session, body)
+            if session and session.config and session.config.request == "attach" and body then
+               ---@diagnostic disable-next-line: inject-field
+               body.terminateDebuggee = false
+            end
+         end
+
          dap.configurations.go = {
             {
                type = "delve",
