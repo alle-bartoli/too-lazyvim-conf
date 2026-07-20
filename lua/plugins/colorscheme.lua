@@ -536,7 +536,11 @@ return {
          styles = {
             bold = true,
             italic = true,
-            transparency = false,
+            -- Native rose-pine transparency. Must be true: with
+            -- `extend_background_behind_borders = true` and this false,
+            -- rose-pine forces an opaque `palette.surface` bg on Normal,
+            -- which breaks transparent mode.
+            transparency = true,
          },
 
          groups = {
