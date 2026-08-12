@@ -130,18 +130,29 @@ end, { desc = "Pick colorscheme" })
 
 local vault = vim.fn.expand("~/vault")
 
--- LazyVim maps <leader>n to "Notification History", which shadows the
--- <leader>n* vault prefix. Remove it so the prefix group works and
--- re-expose the history on <leader>uN (<leader>un stays "Dismiss All").
-pcall(vim.keymap.del, "n", "<leader>n")
-
-keymap.set("n", "<leader>uN", function()
-   if Snacks.config.picker and Snacks.config.picker.enabled then
-      Snacks.picker.notifications()
-   else
-      Snacks.notifier.show_history()
-   end
-end, { desc = "Notification History" })
+-- LazyVim core (lazyvim/plugins/ui.lua) maps <leader>n to "Notification
+-- History". A complete mapping shadows every <leader>n* vault keymap.
+--
+-- This cannot be fixed with `keys = { { "<leader>n", false } }` in a plugin
+-- spec: LazyVim's ui.lua fragment is registered *after* user fragments, so
+-- it re-adds the mapping. Rebind it here instead, at VeryLazy, once
+-- lazy.nvim has registered its keys.
+--
+-- Reuse LazyVim's own callback rather than reimplementing it, and warn
+-- loudly if upstream moves the mapping so this does not fail silently.
+local notif_history = vim.fn.maparg("<leader>n", "n", false, true)
+if notif_history and notif_history.callback then
+   keymap.set("n", "<leader>uN", notif_history.callback, {
+      desc = notif_history.desc or "Notification History",
+   })
+   vim.keymap.del("n", "<leader>n")
+else
+   vim.notify(
+      "vault: <leader>n is no longer LazyVim's Notification History; "
+         .. "review the vault prefix remap in config/keymaps.lua",
+      vim.log.levels.WARN
+   )
+end
 
 keymap.set("n", "<leader>nf", function()
    Snacks.picker.files({ cwd = vault })
