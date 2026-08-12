@@ -130,6 +130,19 @@ end, { desc = "Pick colorscheme" })
 
 local vault = vim.fn.expand("~/vault")
 
+-- LazyVim maps <leader>n to "Notification History", which shadows the
+-- <leader>n* vault prefix. Remove it so the prefix group works and
+-- re-expose the history on <leader>uN (<leader>un stays "Dismiss All").
+pcall(vim.keymap.del, "n", "<leader>n")
+
+keymap.set("n", "<leader>uN", function()
+   if Snacks.config.picker and Snacks.config.picker.enabled then
+      Snacks.picker.notifications()
+   else
+      Snacks.notifier.show_history()
+   end
+end, { desc = "Notification History" })
+
 keymap.set("n", "<leader>nf", function()
    Snacks.picker.files({ cwd = vault })
 end, { desc = "Vault: find note" })
@@ -143,6 +156,11 @@ keymap.set("n", "<leader>nt", function()
 end, { desc = "Vault: find tag" })
 
 keymap.set("n", "<leader>nd", function()
+   local clients = vim.lsp.get_clients({ name = "markdown_oxide", bufnr = 0 })
+   if #clients == 0 then
+      vim.notify("markdown_oxide not attached — open a note in ~/vault/", vim.log.levels.WARN)
+      return
+   end
    vim.cmd("Daily today")
 end, { desc = "Vault: today's daily note" })
 
