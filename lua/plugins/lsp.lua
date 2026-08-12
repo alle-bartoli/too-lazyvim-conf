@@ -273,10 +273,7 @@ return {
                },
                init_options = {
                   typescript = {
-                     tsdk = vim.fn.fnamemodify(
-                        vim.fn.resolve(vim.fn.exepath("tsserver")),
-                        ":h"
-                     ),
+                     tsdk = vim.fn.fnamemodify(vim.fn.resolve(vim.fn.exepath("tsserver")), ":h"),
                   },
                },
                before_init = function(_, config)
@@ -302,26 +299,26 @@ return {
             },
 
             -- Marksman
-            marksman = {
-               root_dir = function(bufnr, on_dir)
-                  local name = vim.api.nvim_buf_get_name(bufnr)
-                  -- Skip non-file schemes (fugitive, oil, etc.)
-                  if name:match("^%w+://") and not name:match("^file://") then
-                     return
-                  end
-                  -- Skip fugitive-style indexed paths and any .git/ path
-                  if name:match("/%.git/") or name:match(":%d+:") then
-                     return
-                  end
-                  -- Skip non-normal buffers
-                  if vim.bo[bufnr].buftype ~= "" then
-                     return
-                  end
-                  local root = vim.fs.root(bufnr, { ".marksman.toml", ".git" })
-                  on_dir(root or vim.fn.getcwd())
-               end,
+            marksman = false, -- Disabled: markdown-oxide handles PKM semantics
+
+            -- markdown-oxide: PKM LSP con wikilink, backlink, rename, completion
+            markdown_oxide = {
+               capabilities = {
+                  workspace = {
+                     didChangeWatchedFiles = { dynamicRegistration = true },
+                  },
+               },
             },
          }) --[[@as table]]
+
+         -- Setup hooks per server
+         opts.setup = opts.setup or {}
+         opts.setup.markdown_oxide = function(_, _)
+            vim.api.nvim_create_user_command("Daily", function(args)
+               vim.lsp.exec_cmd({ command = "jump", arguments = { args.args } }, { bufnr = 0 })
+            end, { nargs = "*", desc = "Open the daily note (today/tomorrow/yesterday)" })
+            return false -- lascia che LazyVim faccia il setup standard
+         end
 
          return opts
       end,

@@ -123,3 +123,49 @@ keymap.set("n", "<leader>uC", function()
       end
    end)
 end, { desc = "Pick colorscheme" })
+
+------------------------------------------------------------------------------
+-- Vault (markdown PKM) navigation
+------------------------------------------------------------------------------
+
+local vault = vim.fn.expand("~/vault")
+
+keymap.set("n", "<leader>nf", function()
+   Snacks.picker.files({ cwd = vault })
+end, { desc = "Vault: find note" })
+
+keymap.set("n", "<leader>ng", function()
+   Snacks.picker.grep({ cwd = vault })
+end, { desc = "Vault: text search" })
+
+keymap.set("n", "<leader>nt", function()
+   Snacks.picker.grep({ cwd = vault, search = "#\\w+" })
+end, { desc = "Vault: find tag" })
+
+keymap.set("n", "<leader>nd", function()
+   vim.cmd("Daily today")
+end, { desc = "Vault: today's daily note" })
+
+keymap.set("n", "<leader>np", function()
+   vim.cmd("MarkdownPreviewToggle")
+end, { desc = "Markdown: toggle preview (browser)" })
+
+keymap.set("n", "<leader>nn", function()
+   local name = vim.fn.input("New note: ")
+   if name == "" then
+      return
+   end
+   local path = vault .. "/notes/" .. name:gsub("%s+", "-"):lower() .. ".md"
+   vim.cmd("edit " .. path)
+   vim.api.nvim_buf_set_lines(0, 0, 0, false, {
+      "---",
+      "title: " .. name,
+      "date: " .. os.date("%Y-%m-%d"),
+      "tags: []",
+      "---",
+      "",
+      "# " .. name,
+      "",
+   })
+   vim.cmd("normal! G")
+end, { desc = "Vault: new note" })

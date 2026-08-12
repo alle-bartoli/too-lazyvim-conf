@@ -12,9 +12,22 @@ vim.api.nvim_create_autocmd("InsertLeave", {
 
 -- Disable cancel. Default 3.
 vim.api.nvim_create_autocmd("FileType", {
-   pattern = { "json", "jsonc", "markdown" },
+   pattern = { "json", "jsonc" },
    callback = function()
       vim.wo.conceallevel = 0 -- fully visible.
+   end,
+})
+
+-- Markdown: conceal for render-markdown.nvim, wrap + spell for reading/writing.
+-- Spells overrides the conceallevel=0 above for markdown buffers.
+vim.api.nvim_create_autocmd("FileType", {
+   pattern = { "markdown", "markdown_inline" },
+   callback = function()
+      vim.opt_local.conceallevel = 2
+      vim.opt_local.wrap = true
+      vim.opt_local.linebreak = true
+      vim.opt_local.spell = true
+      vim.opt_local.spelllang = "it,en"
    end,
 })
 
