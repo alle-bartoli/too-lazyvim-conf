@@ -62,6 +62,8 @@ local transparent_groups = {
    "NeoTreeNormal",
    "NeoTreeNormalNC",
    "NeoTreeEndOfBuffer",
+   "DiffviewNormal",
+   "DiffviewWinSeparator",
    "NotifyBackground",
    "MsgArea",
 }
