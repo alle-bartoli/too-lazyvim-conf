@@ -16,6 +16,7 @@ return {
       cmd = { "DiffviewOpen", "DiffviewClose", "DiffviewToggleFiles", "DiffviewFocusFiles", "DiffviewFileHistory" },
       dependencies = { "nvim-lua/plenary.nvim" },
       keys = {
+         { "<leader>gd", false },
          { "<leader>gd", "<cmd>DiffviewOpen<CR>", desc = "Open Diffview" },
          { "<leader>gh", "<cmd>DiffviewFileHistory %<CR>", desc = "File History" },
          { "<leader>gH", "<cmd>DiffviewFileHistory<CR>", desc = "Repo History" },
