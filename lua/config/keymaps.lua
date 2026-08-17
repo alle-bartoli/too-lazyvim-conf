@@ -167,12 +167,24 @@ keymap.set("n", "<leader>nt", function()
 end, { desc = "Vault: find tag" })
 
 keymap.set("n", "<leader>nd", function()
-   local clients = vim.lsp.get_clients({ name = "markdown_oxide", bufnr = 0 })
-   if #clients == 0 then
-      vim.notify("markdown_oxide not attached — open a note in ~/vault/", vim.log.levels.WARN)
-      return
+   local path = vault .. "/daily/" .. os.date("%Y-%m-%d") .. ".md"
+   if vim.fn.filereadable(path) == 0 then
+      vim.fn.mkdir(vault .. "/daily", "p")
+      vim.cmd("edit " .. path)
+      vim.api.nvim_buf_set_lines(0, 0, 0, false, {
+         "---",
+         "title: " .. os.date("%Y-%m-%d"),
+         "date: " .. os.date("%Y-%m-%d"),
+         "tags: [daily]",
+         "---",
+         "",
+         "# " .. os.date("%Y-%m-%d"),
+         "",
+      })
+      vim.cmd("normal! G")
+   else
+      vim.cmd("edit " .. path)
    end
-   vim.cmd("Daily today")
 end, { desc = "Vault: today's daily note" })
 
 keymap.set("n", "<leader>np", function()

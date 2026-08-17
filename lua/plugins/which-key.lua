@@ -8,9 +8,10 @@ return {
          spec = {
             { "s", group = "split/window", mode = "n" },
             { "r", group = "resize", mode = "n" },
-            { "<leader>t", group = "Test" },
-            { "<leader>v", group = "Venv" },
-            { "<leader>n", group = "Vault" },
+            { "<leader>t", group = "test" },
+            { "<leader>v", group = "venv" },
+            { "<leader>n", group = "vault" },
+            { "<leader>h", group = "hunk" },
          },
       },
    },
