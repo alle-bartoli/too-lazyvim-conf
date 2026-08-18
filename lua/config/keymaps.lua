@@ -128,18 +128,10 @@ end, { desc = "Pick colorscheme" })
 -- Vault (markdown PKM) navigation
 ------------------------------------------------------------------------------
 
-local vault = vim.fn.expand("~/vault")
+-- Load local plugin.
+local vault_actions = require("alle.vault")
+local vault = vault_actions.root
 
--- LazyVim core (lazyvim/plugins/ui.lua) maps <leader>n to "Notification
--- History". A complete mapping shadows every <leader>n* vault keymap.
---
--- This cannot be fixed with `keys = { { "<leader>n", false } }` in a plugin
--- spec: LazyVim's ui.lua fragment is registered *after* user fragments, so
--- it re-adds the mapping. Rebind it here instead, at VeryLazy, once
--- lazy.nvim has registered its keys.
---
--- Reuse LazyVim's own callback rather than reimplementing it, and warn
--- loudly if upstream moves the mapping so this does not fail silently.
 local notif_history = vim.fn.maparg("<leader>n", "n", false, true)
 if notif_history and notif_history.callback then
    keymap.set("n", "<leader>uN", notif_history.callback, {
@@ -148,8 +140,7 @@ if notif_history and notif_history.callback then
    vim.keymap.del("n", "<leader>n")
 else
    vim.notify(
-      "vault: <leader>n is no longer LazyVim's Notification History; "
-         .. "review the vault prefix remap in config/keymaps.lua",
+      "vault: <leader>n is no longer LazyVim's Notification History; " .. "review the vault prefix remap in config/keymaps.lua",
       vim.log.levels.WARN
    )
 end
@@ -166,47 +157,12 @@ keymap.set("n", "<leader>nt", function()
    Snacks.picker.grep({ cwd = vault, search = "#\\w+" })
 end, { desc = "Vault: find tag" })
 
-keymap.set("n", "<leader>nd", function()
-   local path = vault .. "/daily/" .. os.date("%Y-%m-%d") .. ".md"
-   if vim.fn.filereadable(path) == 0 then
-      vim.fn.mkdir(vault .. "/daily", "p")
-      vim.cmd("edit " .. path)
-      vim.api.nvim_buf_set_lines(0, 0, 0, false, {
-         "---",
-         "title: " .. os.date("%Y-%m-%d"),
-         "date: " .. os.date("%Y-%m-%d"),
-         "tags: [daily]",
-         "---",
-         "",
-         "# " .. os.date("%Y-%m-%d"),
-         "",
-      })
-      vim.cmd("normal! G")
-   else
-      vim.cmd("edit " .. path)
-   end
-end, { desc = "Vault: today's daily note" })
+keymap.set("n", "<leader>nd", vault_actions.open_daily, { desc = "Vault: today's daily note" })
+keymap.set("n", "<leader>nn", vault_actions.new_note, { desc = "Vault: new note" })
+keymap.set("n", "<leader>nP", vault_actions.new_project, { desc = "Vault: new project" })
+keymap.set("n", "<leader>nS", vault_actions.new_project_note, { desc = "Vault: new note in project" })
+keymap.set("n", "<leader>nT", vault_actions.new_from_template, { desc = "Vault: new note from template" })
 
 keymap.set("n", "<leader>np", function()
    vim.cmd("MarkdownPreviewToggle")
 end, { desc = "Markdown: toggle preview (browser)" })
-
-keymap.set("n", "<leader>nn", function()
-   local name = vim.fn.input("New note: ")
-   if name == "" then
-      return
-   end
-   local path = vault .. "/notes/" .. name:gsub("%s+", "-"):lower() .. ".md"
-   vim.cmd("edit " .. path)
-   vim.api.nvim_buf_set_lines(0, 0, 0, false, {
-      "---",
-      "title: " .. name,
-      "date: " .. os.date("%Y-%m-%d"),
-      "tags: []",
-      "---",
-      "",
-      "# " .. name,
-      "",
-   })
-   vim.cmd("normal! G")
-end, { desc = "Vault: new note" })
