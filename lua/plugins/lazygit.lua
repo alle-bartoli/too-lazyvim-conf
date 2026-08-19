@@ -6,7 +6,17 @@ return {
    {
       "snacks.nvim",
       opts = {
-         lazygit = { win = { style = "full", border = "rounded" } },
+         lazygit = {
+            -- Keep the Rose Pine theme separate from the base LazyGit config.
+            configure = false,
+            args = {
+               "--use-config-file="
+                  .. vim.fn.expand("~/Library/Application Support/lazygit/config.yml")
+                  .. ","
+                  .. vim.fn.expand("~/Library/Application Support/lazygit/rose-pine.yml"),
+            },
+            win = { style = "full", border = "rounded" },
+         },
       },
    },
 
