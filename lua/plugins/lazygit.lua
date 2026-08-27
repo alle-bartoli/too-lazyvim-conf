@@ -11,9 +11,9 @@ return {
             configure = false,
             args = {
                "--use-config-file="
-                  .. vim.fn.expand("~/Library/Application Support/lazygit/config.yml")
+                  .. vim.fn.expand("~/.config/lazygit/config.yml")
                   .. ","
-                  .. vim.fn.expand("~/Library/Application Support/lazygit/rose-pine.yml"),
+                  .. vim.fn.expand("~/.config/lazygit/rose-pine.yml"),
             },
             win = { style = "full", border = "rounded" },
          },
