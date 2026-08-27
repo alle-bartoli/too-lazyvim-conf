@@ -1,5 +1,13 @@
 -- ~/.config/nvim/lua/plugins/lazygit.lua
 
+local lazygit = require("util.lazygit")
+local lazygit_config_files = lazygit.config_files()
+local lazygit_args = {}
+
+if #lazygit_config_files > 0 then
+   lazygit_args = { "--use-config-file=" .. table.concat(lazygit_config_files, ",") }
+end
+
 return {
    -- Snacks.lazygit handles <leader>gg (LazyVim default).
    -- Configure the float window size via snacks opts.
@@ -9,12 +17,7 @@ return {
          lazygit = {
             -- Keep the Rose Pine theme separate from the base LazyGit config.
             configure = false,
-            args = {
-               "--use-config-file="
-                  .. vim.fn.expand("~/.config/lazygit/config.yml")
-                  .. ","
-                  .. vim.fn.expand("~/.config/lazygit/rose-pine.yml"),
-            },
+            args = lazygit_args,
             win = { style = "full", border = "rounded" },
          },
       },

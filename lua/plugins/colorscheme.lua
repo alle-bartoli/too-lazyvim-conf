@@ -461,7 +461,7 @@ return {
          }
 
          local function write_lazygit_theme(c)
-            local path = vim.fn.expand("~/.config/lazygit/theme.yml")
+            local path = require("util.lazygit").config_dir() .. "/theme.yml"
             local content = string.format(
                "gui:\n"
                   .. "  theme:\n"
