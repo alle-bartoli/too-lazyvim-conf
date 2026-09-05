@@ -124,8 +124,14 @@ return {
             -- TypeScript / JavaScript (vtsls is faster than tsserver)
             vtsls = {
                enabled = true,
-               -- Only start in projects with explicit TS/JS config (avoids random .js files)
-               root_markers = { "tsconfig.json", "jsconfig.json", "package.json", ".git" },
+               -- Start only in projects with an explicit TS/JS config.
+               -- The built-in vtsls root_dir otherwise falls back to cwd.
+               root_dir = function(bufnr, on_dir)
+                  local root = vim.fs.root(bufnr, { "tsconfig.json", "jsconfig.json", "package.json" })
+                  if root then
+                     on_dir(root)
+                  end
+               end,
                single_file_support = false,
                filetypes = {
                   "javascript",
@@ -145,7 +151,37 @@ return {
                   css = { lint = { unknownAtRules = "ignore" } },
                },
             },
-            tailwindcss = {},
+            -- Start Tailwind only in projects that declare a Tailwind/PostCSS config.
+            -- This avoids starting it for every Markdown/HTML file in a Git repository.
+            tailwindcss = {
+               root_dir = function(bufnr, on_dir)
+                  local root = vim.fs.root(bufnr, {
+                     "tailwind.config.js",
+                     "tailwind.config.cjs",
+                     "tailwind.config.mjs",
+                     "tailwind.config.ts",
+                     "postcss.config.js",
+                     "postcss.config.cjs",
+                     "postcss.config.mjs",
+                     "postcss.config.ts",
+                  })
+                  if root then
+                     on_dir(root)
+                  end
+               end,
+               filetypes = {
+                  "html",
+                  "css",
+                  "scss",
+                  "javascript",
+                  "javascriptreact",
+                  "typescript",
+                  "typescriptreact",
+                  "astro",
+                  "vue",
+                  "svelte",
+               },
+            },
             html = {},
 
             -- Linting: only start in projects that have an eslint config file
@@ -302,7 +338,10 @@ return {
             marksman = false, -- Disabled: markdown-oxide handles PKM semantics
 
             -- markdown-oxide: PKM LSP con wikilink, backlink, rename, completion
+            -- Limit it to vault markers instead of every Git repository.
             markdown_oxide = {
+               root_markers = { ".obsidian", ".moxide.toml" },
+               workspace_required = true,
                capabilities = {
                   workspace = {
                      didChangeWatchedFiles = { dynamicRegistration = true },

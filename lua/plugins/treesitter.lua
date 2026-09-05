@@ -40,7 +40,6 @@ return {
             "lua",
             "markdown",
             "markdown_inline",
-            "mdx",
             "jsdoc",
             "json",
             "jsonc",
