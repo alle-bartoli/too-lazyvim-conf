@@ -16,6 +16,15 @@ local FAVORITE_COLORSCHEMES = {
    "habamax",
 }
 
+--- Select the colorscheme used for this session.
+---
+--- Priority order:
+--- 1. The last manually selected scheme persisted in `COLORSCHEME_FILE`.
+--- 2. The `NVIM_COLORSCHEME` environment override.
+--- 3. `DEFAULT_COLORSCHEME` during daytime.
+--- 4. A random favorite at night.
+---
+---@return string colorscheme The name passed to `:colorscheme`.
 local function pick_colorscheme()
    local file = io.open(COLORSCHEME_FILE, "r")
    if file then
