@@ -2,10 +2,54 @@
 
 -- See https://www.lazyvim.org/plugins/colorscheme
 
+local DEFAULT_COLORSCHEME = "catppuccin-mocha"
+local COLORSCHEME_FILE = vim.fn.stdpath("config") .. "/.colorscheme"
+local FAVORITE_COLORSCHEMES = {
+   "solarized-osaka",
+   "flow",
+   "lackluster",
+   "catppuccin-mocha",
+   "kanagawa",
+   "monokai-pro",
+   "angelic",
+   "rose-pine",
+   "habamax",
+}
+
+local function pick_colorscheme()
+   local file = io.open(COLORSCHEME_FILE, "r")
+   if file then
+      local saved = file:read("*l")
+      file:close()
+      if saved and #saved > 0 then
+         return saved
+      end
+   end
+
+   local env = os.getenv("NVIM_COLORSCHEME")
+   if env and #env > 0 then
+      return env
+   end
+
+   local hour = tonumber(os.date("%H")) or 12
+   if hour >= 6 and hour < 18 then
+      return DEFAULT_COLORSCHEME
+   end
+
+   math.randomseed(os.time())
+   return FAVORITE_COLORSCHEMES[math.random(#FAVORITE_COLORSCHEMES)]
+end
+
+local SELECTED_COLORSCHEME = pick_colorscheme()
+
+local function is_selected_colorscheme(names)
+   return vim.tbl_contains(names, SELECTED_COLORSCHEME)
+end
+
 return {
    {
       "craftzdog/solarized-osaka.nvim",
-      lazy = true,
+      lazy = not is_selected_colorscheme({ "solarized-osaka" }),
       priority = 1000,
       opts = function()
          return {
@@ -46,7 +90,7 @@ return {
    -- flow.nvim: https://github.com/0xstepit/flow.nvim
    {
       "0xstepit/flow.nvim",
-      lazy = true,
+      lazy = not is_selected_colorscheme({ "flow" }),
       priority = 1000,
       tag = "v2.0.1",
       opts = {
@@ -73,7 +117,7 @@ return {
    -- lackluster
    {
       "slugbyte/lackluster.nvim",
-      lazy = true,
+      lazy = not is_selected_colorscheme({ "lackluster" }),
       priority = 1000,
       config = function()
          local lackluster = require("lackluster")
@@ -176,7 +220,7 @@ return {
    {
       "catppuccin/nvim",
       name = "catppuccin",
-      lazy = false,
+      lazy = not is_selected_colorscheme({ "catppuccin", "catppuccin-mocha" }),
       priority = 1000,
       opts = {
          flavour = "auto", -- latte, frappe, macchiato, mocha
@@ -238,7 +282,7 @@ return {
    -- angelic
    {
       "sponkurtus2/angelic.nvim",
-      lazy = false,
+      lazy = not is_selected_colorscheme({ "angelic" }),
       priority = 1000,
       -- config = function()
       --    require("angelic").setup({
@@ -349,177 +393,11 @@ return {
       },
    },
 
-   -- black-metal
-   {
-      "metalelf0/black-metal-theme-neovim",
-      lazy = false,
-      priority = 1000,
-      config = function()
-         -- colors/<theme>.lua calls setup({}) on load, resetting all custom opts.
-         -- Store opts in a local and re-apply them in the ColorScheme autocmd.
-         local opts = {
-            -----MAIN OPTIONS-----
-            --
-            -- Can be one of: bathory | burzum | dark-funeral | darkthrone | emperor | gorgoroth | immortal | impaled-nazarene | khold | marduk | mayhem | nile | taake | thyrfing | venom | windir
-            theme = "bathory",
-            -- Can be one of: 'light' | 'dark', or set via vim.o.background
-            variant = "dark",
-            -- Use an alternate, lighter bg
-            alt_bg = false,
-            -- If true, docstrings will be highlighted like strings, otherwise they will be
-            -- highlighted like comments. Note, behavior is dependent on the language server.
-            colored_docstrings = true,
-            -- If true, highlights the {sign,fold} column the same as cursorline
-            cursorline_gutter = true,
-            -- If true, highlights the gutter darker than the bg
-            dark_gutter = false,
-            -- if true favor treesitter highlights over semantic highlights
-            favor_treesitter_hl = false,
-            -- Don't set background of floating windows. Recommended for when using floating
-            -- windows with borders.
-            plain_float = false,
-            -- Show the end-of-buffer character
-            show_eob = true,
-            -- If true, enable the vim terminal colors
-            term_colors = true,
-            -- Keymap (in normal mode) to toggle between light and dark variants.
-            toggle_variant_key = nil,
-            -- Don't set background
-            transparent = true,
-
-            -----DIAGNOSTICS and CODE STYLE-----
-            --
-            diagnostics = {
-               darker = true, -- Darker colors for diagnostic
-               undercurl = true, -- Use undercurl for diagnostics
-               background = true, -- Use background color for virtual text
-            },
-            -- The following table accepts values the same as the `gui` option for normal
-            -- highlights. For example, `bold`, `italic`, `underline`, `none`.
-            code_style = {
-               comments = "italic",
-               conditionals = "none",
-               functions = "none",
-               keywords = "none",
-               headings = "bold", -- Markdown headings
-               operators = "none",
-               keyword_return = "none",
-               strings = "none",
-               variables = "none",
-            },
-
-            -----PLUGINS-----
-            --
-            -- The following options allow for more control over some plugin appearances.
-            plugin = {
-               lualine = {
-                  -- Bold lualine_a sections
-                  bold = true,
-                  -- Don't set section/component backgrounds. Recommended to not set
-                  -- section/component separators.
-                  plain = false,
-               },
-               cmp = { -- works for nvim.cmp and blink.nvim
-                  -- Don't highlight lsp-kind items. Only the current selection will be highlighted.
-                  plain = false,
-                  -- Reverse lsp-kind items' highlights in blink/cmp menu.
-                  reverse = false,
-               },
-            },
-
-            -- CUSTOM HIGHLIGHTS --
-            --
-            -- Override default colors
-            colors = {},
-            -- Override highlight groups
-            highlights = {
-               NeoTreeNormal = { bg = "NONE" },
-               NeoTreeNormalNC = { bg = "NONE" },
-            },
-         }
-
-         require("black-metal").setup(opts)
-
-         -- accent1 = string, accent2 = type, from each palette file
-         local bm_palettes = {
-            bathory = { accent1 = "#fbcb97", accent2 = "#e78a43", alt_bg = "#3E2018" },
-            burzum = { accent1 = "#ddeecc", accent2 = "#99bbaa", alt_bg = "#231c14" },
-            ["dark-funeral"] = { accent1 = "#fbcb97", accent2 = "#d0dfee", alt_bg = "#060f23" },
-            darkthrone = { accent1 = "#FFFFFF", accent2 = "#FFFFFF", alt_bg = "#000000" },
-            emperor = { accent1 = "#756482", accent2 = "#A8A1DE", alt_bg = "#20173B" },
-            gorgoroth = { accent1 = "#ddeecc", accent2 = "#9b8d7f", alt_bg = "#2a2325" },
-            immortal = { accent1 = "#7799bb", accent2 = "#556677", alt_bg = "#1b161f" },
-            ["impaled-nazarene"] = { accent1 = "#DC2A22", accent2 = "#B29740", alt_bg = "#191A11" },
-            khold = { accent1 = "#eceee3", accent2 = "#974b46", alt_bg = "#39121b" },
-            marduk = { accent1 = "#a5aaa7", accent2 = "#626b67", alt_bg = "#060b12" },
-            mayhem = { accent1 = "#f3ecd4", accent2 = "#eecc6c", alt_bg = "#4d2020" },
-            nile = { accent1 = "#aa9988", accent2 = "#777755", alt_bg = "#301807" },
-            taake = { accent1 = "#a29884", accent2 = "#83756a", alt_bg = "#403035" },
-            thyrfing = { accent1 = "#B04024", accent2 = "#AF4C35", alt_bg = "#31120a" },
-            venom = { accent1 = "#f8f7f2", accent2 = "#fc302e", alt_bg = "#211816" },
-            windir = { accent1 = "#D9D98E", accent2 = "#5E77A3", alt_bg = "#181c15" },
-         }
-
-         local function write_lazygit_theme(c)
-            local path = require("util.lazygit").config_dir() .. "/theme.yml"
-            local content = string.format(
-               "gui:\n"
-                  .. "  theme:\n"
-                  .. "    activeBorderColor:\n"
-                  .. '      - "%s"\n'
-                  .. "      - bold\n"
-                  .. "    inactiveBorderColor:\n"
-                  .. '      - "#505050"\n'
-                  .. "    optionsTextColor:\n"
-                  .. '      - "%s"\n'
-                  .. "    selectedLineBgColor:\n"
-                  .. '      - "#333333"\n'
-                  .. "    cherryPickedCommitBgColor:\n"
-                  .. '      - "%s"\n'
-                  .. "    cherryPickedCommitFgColor:\n"
-                  .. '      - "%s"\n'
-                  .. "    unstagedChangesColor:\n"
-                  .. '      - "#505050"\n'
-                  .. "    defaultFgColor:\n"
-                  .. '      - "#c1c1c1"\n'
-                  .. "    searchingActiveBorderColor:\n"
-                  .. '      - "%s"\n'
-                  .. "      - bold\n",
-               c.accent2,
-               c.accent1,
-               c.alt_bg,
-               c.accent2,
-               c.accent1
-            )
-            local f = io.open(path, "w")
-            if f then
-               f:write(content)
-               f:close()
-            end
-         end
-
-         vim.api.nvim_create_autocmd("ColorScheme", {
-            callback = function(ev)
-               -- strip -alt suffix so both "bathory" and "bathory-alt" match
-               local name = ev.match:gsub("%-alt$", "")
-               local palette = bm_palettes[name]
-               if palette then
-                  -- re-setup with our opts since colors/<theme>.lua reset M.__opts
-                  opts.theme = ev.match
-                  require("black-metal").setup(opts)
-                  require("black-metal.highlights").setup()
-                  write_lazygit_theme(palette)
-               end
-            end,
-         })
-      end,
-   },
-
    -- Rosé Pine
    {
       "rose-pine/neovim",
       name = "rose-pine",
-      lazy = false,
+      lazy = not is_selected_colorscheme({ "rose-pine" }),
       priority = 1000,
       opts = {
          variant = "auto", -- auto, main, moon, or dawn
@@ -616,57 +494,13 @@ return {
    {
       "LazyVim/LazyVim",
       opts = function()
-         -- Only schemes whose plugins are declared above (or builtins).
-         local favorites = {
-            "solarized-osaka",
-            "flow",
-            "lackluster",
-            "catppuccin-mocha",
-            "kanagawa",
-            "monokai-pro",
-            "angelic",
-            "rose-pine",
-            "bathory",
-            "habamax",
-         }
-
-         local DEFAULT = "catppuccin-mocha"
-         local colorscheme_file = vim.fn.stdpath("config") .. "/.colorscheme"
-
-         --- @dev Picks a colorscheme dynamically.
-         --- Priority: saved file, `$NVIM_COLORSCHEME` env var, time of day,
-         --- random favorite. Falls back to `DEFAULT` if not loadable.
-         --- @return string scheme Colorscheme name
-         local function pick()
-            local f = io.open(colorscheme_file, "r")
-            if f then
-               local saved = f:read("*l")
-               f:close()
-               if saved and #saved > 0 then
-                  return saved
-               end
-            end
-            local env = os.getenv("NVIM_COLORSCHEME")
-            if env and #env > 0 then
-               return env
-            end
-            local hour = tonumber(os.date("%H")) or 12
-            if hour >= 6 and hour < 18 then
-               return DEFAULT
-            end
-            math.randomseed(os.time())
-            return favorites[math.random(#favorites)]
-         end
-
-         local chosen = pick()
-
-         -- Guard: if scheme missing at load time, fall back to DEFAULT.
+         -- Guard: if scheme missing at load time, fall back to the default.
          vim.api.nvim_create_autocmd("VimEnter", {
             once = true,
             callback = function()
-               local ok = pcall(vim.cmd.colorscheme, chosen)
+               local ok = pcall(vim.cmd.colorscheme, SELECTED_COLORSCHEME)
                if not ok then
-                  pcall(vim.cmd.colorscheme, DEFAULT)
+                  pcall(vim.cmd.colorscheme, DEFAULT_COLORSCHEME)
                end
             end,
          })
@@ -674,7 +508,7 @@ return {
          -- Save choice on ColorScheme change so it persists across restarts.
          vim.api.nvim_create_autocmd("ColorScheme", {
             callback = function(ev)
-               local fw = io.open(colorscheme_file, "w")
+               local fw = io.open(COLORSCHEME_FILE, "w")
                if fw then
                   fw:write(ev.match .. "\n")
                   fw:close()
@@ -683,7 +517,7 @@ return {
          })
 
          return {
-            colorscheme = chosen,
+            colorscheme = SELECTED_COLORSCHEME,
             news = { lazyvim = true, neovim = true },
          }
       end,

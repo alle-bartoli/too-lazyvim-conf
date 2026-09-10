@@ -1,7 +1,6 @@
 {
   "LazyVim": { "branch": "main", "commit": "c10948c50b18fae7f256433afdef09e432410480" },
   "angelic.nvim": { "branch": "main", "commit": "15b009fcac3308554bb417b67def6be27811fa2d" },
-  "black-metal-theme-neovim": { "branch": "main", "commit": "ae50fc0f292a1710309090cb8ad8b3512f883251" },
   "blink.cmp": { "branch": "main", "commit": "78336bc89ee5365633bcf754d93df01678b5c08f" },
   "bufferline.nvim": { "branch": "main", "commit": "655133c3b4c3e5e05ec549b9f8cc2894ac6f51b3" },
   "catppuccin": { "branch": "main", "commit": "edefef779ab08ce1a4a404713e3012b0d202bd35" },

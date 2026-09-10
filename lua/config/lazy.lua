@@ -30,9 +30,8 @@ require("lazy").setup({
       { import = "plugins" },
    },
    defaults = {
-      -- By default, only LazyVim plugins will be lazy-loaded. Your custom plugins will load during startup.
-      -- If you know what you're doing, you can set this to `true` to have all your custom plugins lazy-loaded by default.
-      lazy = false,
+      -- Lazy-load custom plugins unless they declare an explicit startup trigger.
+      lazy = true,
       -- It's recommended to leave version=false for now, since a lot the plugin that support versioning,
       -- have outdated releases, which may break your Neovim install.
       version = false, -- always use the latest git commit
@@ -48,9 +47,9 @@ require("lazy").setup({
          -- disable some rtp plugins
          disabled_plugins = {
             "gzip",
-            -- "matchit",
-            -- "matchparen",
-            -- "netrwPlugin",
+            "matchit",
+            "matchparen",
+            "netrwPlugin",
             "tarPlugin",
             "tohtml",
             "tutor",
