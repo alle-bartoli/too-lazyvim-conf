@@ -91,7 +91,7 @@ NVIM_APPNAME=alle-bartoli/too-lazyvim-conf/ nvim
 
 ### search
 
-- [nvim-pack/nvim-spectre](https://dotfyle.com/plugins/nvim-pack/nvim-spectre)
+- [MagicDuck/grug-far.nvim](https://dotfyle.com/plugins/MagicDuck/grug-far.nvim)
 
 ### snippet
 

@@ -287,19 +287,4 @@ return {
          vim.g.d2_ascii_mode = "extended"
       end,
    },
-
-   -- nvim-spectre: Search and replace
-   {
-      "nvim-pack/nvim-spectre",
-      dependencies = { "nvim-lua/plenary.nvim" },
-      keys = {
-         {
-            "<leader>sr",
-            function()
-               require("spectre").open()
-            end,
-            desc = "Search and Replace",
-         },
-      },
-   },
 }
