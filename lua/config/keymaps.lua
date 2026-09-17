@@ -138,7 +138,15 @@ keymap.set("n", "<leader>cM", function()
       "**/*.md",
    }, {
       cwd = root,
-      term = true,
+      on_exit = function(_, code)
+         vim.schedule(function()
+            if code == 0 then
+               vim.notify("Formatted Markdown files", vim.log.levels.INFO)
+            else
+               vim.notify("Markdown formatting failed (exit code " .. code .. ")", vim.log.levels.ERROR)
+            end
+         end)
+      end,
    })
 end, {
    desc = "Format all Markdown files",
