@@ -310,7 +310,7 @@ return {
       -- end,
    },
 
-   --kanagawa
+   -- kanagawa
    {
       "rebelot/kanagawa.nvim",
       lazy = true,
