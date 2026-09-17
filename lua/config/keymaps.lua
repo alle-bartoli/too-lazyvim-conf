@@ -124,6 +124,26 @@ keymap.set("n", "<leader>uC", function()
    end)
 end, { desc = "Pick colorscheme" })
 
+-- Format all Markdown files helper.
+keymap.set("n", "<leader>cM", function()
+   local root = vim.fs.root(0, { ".git" }) or vim.fn.getcwd()
+
+   vim.fn.jobstart({
+      "pnpm",
+      "dlx",
+      "prettier@3",
+      "--write",
+      "--prose-wrap",
+      "preserve",
+      "**/*.md",
+   }, {
+      cwd = root,
+      term = true,
+   })
+end, {
+   desc = "Format all Markdown files",
+})
+
 ------------------------------------------------------------------------------
 -- Vault (markdown PKM) navigation
 ------------------------------------------------------------------------------
