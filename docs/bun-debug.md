@@ -44,11 +44,11 @@ Content-Length frames on stdio and translates them to/from
 
 ## DAP configs (in `lua/plugins/dap.lua`)
 
-| Name                                 | Use                                                 |
-| ------------------------------------ | --------------------------------------------------- |
-| `Bun: Debug Current File`            | Launch `${file}` under bun debugger                 |
-| `Bun: Debug Tests in Current File`   | Launch `bun test ${file}`                           |
-| `Bun: Attach (ws://localhost:6499)`  | Attach to running `bun --inspect=127.0.0.1:6499/`   |
+| Name                                | Use                                               |
+| ----------------------------------- | ------------------------------------------------- |
+| `Bun: Debug Current File`           | Launch `${file}` under bun debugger               |
+| `Bun: Debug Tests in Current File`  | Launch `bun test ${file}`                         |
+| `Bun: Attach (ws://localhost:6499)` | Attach to running `bun --inspect=127.0.0.1:6499/` |
 
 For attach mode, start bun manually first:
 
@@ -108,7 +108,12 @@ Re-enable shim logging (temporary, then revert):
 import { appendFileSync } from "node:fs";
 const LOG = "/tmp/bun-dap-shim.log";
 const tlog = (tag, obj) => {
-  try { appendFileSync(LOG, `[${new Date().toISOString()}] ${tag} ${JSON.stringify(obj)}\n`); } catch {}
+  try {
+    appendFileSync(
+      LOG,
+      `[${new Date().toISOString()}] ${tag} ${JSON.stringify(obj)}\n`,
+    );
+  } catch {}
 };
 // Wrap the adapter.on(...) handlers and stdin parser with tlog(...) calls.
 ```
