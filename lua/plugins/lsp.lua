@@ -151,8 +151,8 @@ return {
                   css = { lint = { unknownAtRules = "ignore" } },
                },
             },
-            -- Start Tailwind only in projects that declare a Tailwind/PostCSS config.
-            -- This avoids starting it for every Markdown/HTML file in a Git repository.
+            -- Start Tailwind only in projects that declare Tailwind/PostCSS.
+            -- Tailwind v4 commonly has no config file, so detect its package dependency.
             tailwindcss = {
                root_dir = function(bufnr, on_dir)
                   local root = vim.fs.root(bufnr, {
@@ -167,6 +167,32 @@ return {
                   })
                   if root then
                      on_dir(root)
+                     return
+                  end
+
+                  local package_root = vim.fs.root(bufnr, "package.json")
+                  if not package_root then
+                     return
+                  end
+
+                  local package_file = package_root .. "/package.json"
+                  local ok, package = pcall(function()
+                     return vim.json.decode(table.concat(vim.fn.readfile(package_file), "\n"))
+                  end)
+                  if not ok or type(package) ~= "table" then
+                     return
+                  end
+
+                  for _, dependency_group in pairs({ "dependencies", "devDependencies" }) do
+                     local dependencies = package[dependency_group]
+                     if dependencies and (
+                        dependencies.tailwindcss
+                        or dependencies["@tailwindcss/vite"]
+                        or dependencies["@tailwindcss/postcss"]
+                     ) then
+                        on_dir(package_root)
+                        return
+                     end
                   end
                end,
                filetypes = {

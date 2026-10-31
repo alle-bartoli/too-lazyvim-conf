@@ -11,8 +11,9 @@ vim.opt.title = true
 vim.opt.autoindent = true
 vim.opt.smartindent = true
 
--- Finding files - Search down into subfolders
-vim.opt.path:append({ "**" })
+-- Exclude dependencies from built-in file completion/search.
+-- Avoid `path=**`: recursively scanning every directory makes `:find` and
+-- filename completion block on large repositories.
 vim.opt.wildignore:append({ "*/node_modules/*" })
 
 -- Enable fzf (Default "telescope")
