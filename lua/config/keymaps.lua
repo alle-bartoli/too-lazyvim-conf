@@ -132,6 +132,7 @@ keymap.set("n", "<leader>cM", function()
       "pnpm",
       "dlx",
       "prettier@3",
+      "--no-config",
       "--write",
       "--prose-wrap",
       "preserve",
